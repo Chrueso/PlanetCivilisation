@@ -8,8 +8,6 @@ public abstract class Faction
     public string factionName;
     public float money;
 
-    public Dictionary
-
     public virtual void StartWorldTurn()
     {
         Debug.Log($"{factionName} is sucking dihh");
