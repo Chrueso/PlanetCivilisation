@@ -9,7 +9,6 @@ public class CameraController : MonoBehaviour
     private Vector3 startingPos = Vector2.zero;
     private void Start()
     {
-        print(TouchscreenHandler.main);
         cameraInstance = Camera.main;
         TouchscreenHandler.main.FingerDownCallback += PlayerFingerDown;
         TouchscreenHandler.main.FingerMoveCallback += PlayerFingerMove;
@@ -28,10 +27,6 @@ public class CameraController : MonoBehaviour
     private void PlayerFingerDown(object sender, TouchInfo e)
     {
         startingPos = cameraInstance.ScreenToWorldPoint(e.Pos);
-        
-        
-        
-        
     }
 
     private void PlayerFingerMove(object sender, TouchInfo e)

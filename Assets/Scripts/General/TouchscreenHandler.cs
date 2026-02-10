@@ -10,7 +10,6 @@ public class TouchscreenHandler : MonoBehaviour
     private static TouchscreenHandler instance;
     public static TouchscreenHandler main => instance;
 
-    public EventHandler TouchscreenHandlerInstanceEnabled;
     public EventHandler<TouchInfo> FingerDownCallback;
     public EventHandler<TouchInfo> FingerMoveCallback;
     public EventHandler<TouchInfo> FingerUpCallback;
@@ -30,8 +29,6 @@ public class TouchscreenHandler : MonoBehaviour
     private void OnEnable()
     {
         EnhancedTouchSupport.Enable();
-
-        //TouchscreenHandlerInstanceEnabled.Invoke(this, EventArgs.Empty);
     }
 
     private void OnDisable()
@@ -39,28 +36,7 @@ public class TouchscreenHandler : MonoBehaviour
         EnhancedTouchSupport.Disable();
     }
 
-    private void OnFingerDown(Finger finger)
-    {
-        TouchInfo touchInfo = new(currentTouch: finger.currentTouch, touchIndex: finger.index, 
-            lastTouch: finger.lastTouch, screenPos: finger.screenPosition, phase: finger.currentTouch.phase);
-        FingerDownCallback.Invoke(finger, touchInfo);
-        
-    }
-    private void OnFingerMove(Finger finger)
-    {
-        TouchInfo touchInfo = new(currentTouch: finger.currentTouch, touchIndex: finger.index,
-            lastTouch: finger.lastTouch, screenPos: finger.screenPosition, phase: finger.currentTouch.phase);
-        FingerMoveCallback.Invoke(finger, touchInfo);
-    }
-
-    private void OnFingerUp(Finger finger)
-    {
-        TouchInfo touchInfo = new(currentTouch: finger.currentTouch, touchIndex: finger.index,
-            lastTouch: finger.lastTouch, screenPos: finger.screenPosition, phase: finger.currentTouch.phase);
-        FingerUpCallback.Invoke(finger, touchInfo);
-    }
-
-    private void Update()
+    private void LateUpdate()
     {
         var activeTouches = Touch.activeTouches;
         foreach (Touch touch in activeTouches) 
