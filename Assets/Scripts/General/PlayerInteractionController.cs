@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerInteractionController : MonoBehaviour
 {
     private Camera cameraInstance;
+    private bool inPlanet = false;
     private void Start()
     {
         cameraInstance = Camera.main;
@@ -17,23 +18,44 @@ public class PlayerInteractionController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
-            print(hit.collider.gameObject.name);
-            if (hit.collider.gameObject.name == "Sphere")
+            string name = hit.collider.gameObject.name;
+            if (CheckPlanet(name))
             {
                 PlanetManagementInterface.main.ShowInterface();
                 CameraController.main.Disable();
                 cameraInstance.transform.position = new Vector3(hit.collider.gameObject.transform.position.x, cameraInstance.transform.position.y, hit.collider.gameObject.transform.position.z);
-                
+                print(GetPlanet(name).Pos);
+                inPlanet = true;
                 
             } else
-            {
-                
-                if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {   // YEAH THIS IS PRETTY FUCKING SHIT I KNOW
+                if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
                     PlanetManagementInterface.main.HideInterface();
                     CameraController.main.Enable();
+                    inPlanet = false;
                 }
+            }
+        } else
+        {
+            if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
+            {
+                PlanetManagementInterface.main.HideInterface();
+                CameraController.main.Enable();
+                inPlanet = false;
             }
         }
     }
+
+    private bool CheckPlanet(string planetName)
+    {
+        return PlanetMasterScript.main.Planets.ContainsKey(planetName);
+    }
+
+    private Planet GetPlanet(string planetName)
+    {
+        PlanetMasterScript.main.Planets.TryGetValue(planetName, out var result);
+        return result;
+    }
+
 }
