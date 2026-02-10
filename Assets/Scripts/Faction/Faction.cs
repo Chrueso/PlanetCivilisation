@@ -19,12 +19,12 @@ public class Faction
 
     public virtual void StartWorldTurn()
     {
-        Debug.Log($"{factionName} is sucking dihh for {money}");
+        Debug.Log($"{factionName} is doing stuff");
         EndWorldTurn();
     }
 
     public virtual void EndWorldTurn()
     {
-        Debug.Log($"{factionName} has finished dihh sucking");
+        Debug.Log($"{factionName} has finished doing stuff");
     }
 }
