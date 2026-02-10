@@ -1,22 +1,27 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public enum ResourceType
+public class Planet //Should be planet data cause u generate a base planet prefab and then assign data to it
 {
-    Rock,
-    Copper,
-    Iron,
-}
-
-public class Planet
-{
+    public string PlanetName { get; private set; }  
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
-
     public int Structures { get; private set; }
+    public FactionType FactionType { get; private set; }
 
-    public void Init()
+    // Constructor
+    public Planet(string planetName, List<ResourceType> additionalResources, FactionType factionType)
     {
+        PlanetName = planetName;
 
+        // Assign initial resources
+        Resources.Add(ResourceType.Rock, 0); // every planet has rock by default
+
+        // Assign the randomly generated resource type
+        foreach (var resource in additionalResources)
+        {
+            Resources.Add(resource, 0);
+        }
+
+        FactionType = factionType;
     }
 
     private void IncreaseResource()
