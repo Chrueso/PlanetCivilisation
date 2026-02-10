@@ -3,13 +3,12 @@ using System.Collections.Generic;
 public class Planet //Should be planet data cause u generate a base planet prefab and then assign data to it
 {
     public string PlanetName { get; private set; }  
-
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
-
     public int Structures { get; private set; }
+    public FactionType FactionType { get; private set; }
 
     // Constructor
-    public Planet(string planetName, List<ResourceType> additionalResources)
+    public Planet(string planetName, List<ResourceType> additionalResources, FactionType factionType)
     {
         PlanetName = planetName;
 
@@ -21,6 +20,8 @@ public class Planet //Should be planet data cause u generate a base planet prefa
         {
             Resources.Add(resource, 0);
         }
+
+        FactionType = factionType;
     }
 
     private void IncreaseResource()

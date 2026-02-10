@@ -53,12 +53,26 @@ public static class PlanetGenerator
         return types;
     }
 
+    // Randomize faction type this is temp change later idk wtf factions do
+    private static FactionType PickFactionType(System.Random rng) // should use the plannet name as seed
+    {
+        var values = System.Enum.GetValues(typeof(FactionType));
+
+        // Pick a random index
+        int index = rng.Next(values.Length);
+
+        // Return the enum value
+        return (FactionType)values.GetValue(index);
+    }
+
     public static Planet GeneratePlanet(System.Random rng)
     {
         string planetName = GeneratePlanetName(rng);
 
         List<ResourceType> additionalResources = GenerateAdditionalResource(rng);
 
-         return new Planet(planetName, additionalResources);
+        FactionType factionType = PickFactionType(rng);
+
+        return new Planet(planetName, additionalResources, factionType);
     }
 }

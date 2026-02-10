@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class GameManager : MonoBehaviour
     public int SeedInt { get; private set; }
 
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
+
+    [SerializeField] private List<Planet> allPlanets = new List<Planet>();
 
     private void Start()
     {
@@ -25,6 +28,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Generated Galaxy Name: {CurrentGalaxy.GalaxyName} with Seed: {SeedInt}");
 
+        allPlanets = CurrentGalaxy.Planets;
+
         Debug.Log("Planets in Galaxy:");
         foreach (var planet in CurrentGalaxy.Planets)
         {
@@ -32,7 +37,8 @@ public class GameManager : MonoBehaviour
             string resources = string.Join(", ", planet.Resources.Keys);
 
             // Print planet name, resources, and extra newline
-            Debug.Log($"{planet.PlanetName}\n{resources}\n");
+            Debug.Log($"{planet.PlanetName}\n{resources}\n{planet.FactionType}\n");
+
         }
     }
 
