@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 4086758065517463253}
   - component: {fileID: 5551207049685656768}
   m_Layer: 5
-  m_Name: PopReq
+  m_Name: BuildingReq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 3594471972454973845}
   - component: {fileID: 623870194763294782}
   m_Layer: 5
-  m_Name: PopName
+  m_Name: BuildingName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -614,7 +614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increase Pop
+  m_text: Build Structure
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1899,6 +1899,7 @@ GameObject:
   - component: {fileID: 6449174511891799916}
   - component: {fileID: 6684255084432600847}
   - component: {fileID: 9150568457999700491}
+  - component: {fileID: 2241349319815287126}
   m_Layer: 5
   m_Name: PlanetManagementInterface
   m_TagString: Untagged
@@ -1989,6 +1990,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2241349319815287126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4359449355901406396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5abe40ad93fb87149bb968e4c0f785aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetManagementInterface
+  resourceButton: {fileID: 3393218072079649103}
+  shipButton: {fileID: 1662710431131224619}
+  populationButton: {fileID: 4482350679368289068}
+  resourcePanel: {fileID: 1290631311696308000}
+  shipPanel: {fileID: 4370165724416576104}
+  populationPanel: {fileID: 478688964631600039}
 --- !u!1 &5247009752276843515
 GameObject:
   m_ObjectHideFlags: 0
@@ -2001,7 +2020,7 @@ GameObject:
   - component: {fileID: 4181015343780995221}
   - component: {fileID: 478688964631600039}
   m_Layer: 5
-  m_Name: PopulationPanel
+  m_Name: BuildingPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2084,7 +2103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2953457070064966027
 RectTransform:
   m_ObjectHideFlags: 0
