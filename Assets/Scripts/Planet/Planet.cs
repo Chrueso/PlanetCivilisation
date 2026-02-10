@@ -1,17 +1,33 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum ResourceType
+{
+    Rock,
+    Copper,
+    Iron,
+}
 
 public class Planet
 {
-    
-    private int resource;
-    private int structures;
+    public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
 
-    public int Resource { get => resource; }
-    public int Structures { get => structures; }
+    public int Structures { get; private set; }
+
+    public void Init()
+    {
+
+    }
 
     private void IncreaseResource()
     {
-        resource++;
+        if (Resources.Count > 0)
+        {
+            foreach (var resource in Resources.Keys)
+            {
+                Resources[resource] += 1;
+            }
+        }
     }
 
     public void PlanetResourceGain() => IncreaseResource();

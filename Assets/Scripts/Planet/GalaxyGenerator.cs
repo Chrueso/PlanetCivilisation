@@ -1,13 +1,16 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 
-public class SeedGenerator : MonoBehaviour
+public class GalaxyGenerator : MonoBehaviour
 {
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
 
     public System.Random PlanetNameRNG { get; private set; }
+
+    public List<string> GeneratedPlanetNames = new List<string>();
 
     static readonly string[] planetBaseNames =
     {
@@ -23,7 +26,7 @@ public class SeedGenerator : MonoBehaviour
         "Solara",
         "Iris",
         "Atlas"
-    };
+    }; 
 
     static readonly string[] galaxyBaseNames =
     {
@@ -49,7 +52,10 @@ public class SeedGenerator : MonoBehaviour
 
     private void Start()
     {
+        GalaxyName = GenerateGalaxyName();
         SeedInt = StringToHashCode(GalaxyName);
+
+        Debug.Log($"Generated Galaxy Name: {GalaxyName} with Seed: {SeedInt}");
 
         PlanetNameRNG = new System.Random(SeedInt);
 
@@ -76,12 +82,14 @@ public class SeedGenerator : MonoBehaviour
     // We use galaxy names as a seed to generate the galaxy which determines the map layout and the planets and other things generated
     private string GenerateGalaxyName()
     {
-
         System.Random rng = new System.Random();
-        char[] suffix = new char[4];
+
+        string baseName = galaxyBaseNames[rng.Next(galaxyBaseNames.Length)];
+
+        char[] suffix = new char[3];
         for (int i = 0; i < suffix.Length; i++)
             suffix[i] = chars[rng.Next(chars.Length)];
-        return new string(suffix);
+        return baseName + "-" + new string(suffix);
     }
 
     // We use planet names as a seed to generate aa unique planet visual/ resource/ etc
@@ -91,7 +99,7 @@ public class SeedGenerator : MonoBehaviour
         char[] suffix = new char[4];
         for (int i = 0; i < suffix.Length; i++)
             suffix[i] = chars[PlanetNameRNG.Next(chars.Length)];
-        return new string(baseName + "-" + suffix);
+        return baseName + "-" + new string(suffix);
     }
 
 
