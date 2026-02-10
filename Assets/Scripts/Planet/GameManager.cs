@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private int planetAmount = 50;
 
@@ -11,6 +11,18 @@ public class GameManager : MonoBehaviour
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
 
     [SerializeField] private List<Planet> allPlanets = new List<Planet>();
+    public List<Planet> PlanetsWithFactions { get; private set; } = new List<Planet>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (TurnManager.Instance == null)
+        {
+            GameObject tmObj = new GameObject("TurnManager");
+            tmObj.AddComponent<TurnManager>();
+        }
+    }
 
     private void Start()
     {
@@ -29,6 +41,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Generated Galaxy Name: {CurrentGalaxy.GalaxyName} with Seed: {SeedInt}");
 
         allPlanets = CurrentGalaxy.Planets;
+        PlanetsWithFactions = allPlanets.FindAll(planet => planet.FactionType != FactionType.Nothing);
 
         Debug.Log("Planets in Galaxy:");
         foreach (var planet in CurrentGalaxy.Planets)
