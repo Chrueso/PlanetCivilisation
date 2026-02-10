@@ -18,9 +18,13 @@ public class PlayerInteractionController : MonoBehaviour
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
             print(hit.collider.gameObject.name);
-            if (hit.collider.gameObject.name == "Sphere")
+
+            // i changed so it detect isit planet instead of check name of object (eexuan
+            Planet planet = hit.collider.GetComponent<Planet>();
+
+            if (planet != null)
             {
-                PlanetManagementInterface.main.ShowInterface();
+                PlanetManagementInterface.main.ShowInterface(planet);
                 CameraController.main.Disable();
                 cameraInstance.transform.position = new Vector3(hit.collider.gameObject.transform.position.x, cameraInstance.transform.position.y, hit.collider.gameObject.transform.position.z);
                 
