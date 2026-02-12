@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Planet //Should be planet data cause u generate a base planet prefab and then assign data to it
 {
@@ -33,7 +34,40 @@ public class Planet //Should be planet data cause u generate a base planet prefa
                 Resources[resource] += 1;
             }
         }
+    private string name;
+    private int population;
+    private List<Resource> resources;
+    private Structure structure;
+
+    public Planet(string name, List<Resource> resources, Structure structure)
+    {
+        this.name = name;
+        this.resources = resources;
+        this.structure = structure;
     }
 
-    public void PlanetResourceGain() => IncreaseResource();
+    public void GainResourcePerTurn() 
+    {
+        // Add resource to player data
+    }
+
+    public void GainStructureBenefit()
+    {
+        // Based on structure call functions to stuff
+    }
+
+    private void IncreasePopulation()
+    {
+
+    }
+
+    private void GetRarerOre()
+    {
+
+    }
+
+    private void CreateShip()
+    {
+
+    }
 }
