@@ -1,30 +1,42 @@
-using Unity.VisualScripting.FullSerializer;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Planet
 {
-    private Vector3 planetPos;
-    private int resource;
-    private int structures;
+    private string name;
+    private int population;
+    private List<Resource> resources;
+    private Structure structure;
 
-    public Vector3 Pos { get => planetPos; }
-    public int Resource { get => resource; }
-    public int Structures { get => structures; }
-    
-
-    public Planet(Vector3 pos, int resource, int structures)
+    public Planet(string name, List<Resource> resources, Structure structure)
     {
-        this.planetPos = pos;
-        this.resource = resource;
-        this.structures = structures;
+        this.name = name;
+        this.resources = resources;
+        this.structure = structure;
     }
 
-    private void IncreaseResource()
+    public void GainResourcePerTurn() 
     {
-        resource++;
+        // Add resource to player data
     }
-    
-    
 
-    public void PlanetResourceGain() => IncreaseResource();
+    public void GainStructureBenefit()
+    {
+        // Based on structure call functions to stuff
+    }
+
+    private void IncreasePopulation()
+    {
+
+    }
+
+    private void GetRarerOre()
+    {
+
+    }
+
+    private void CreateShip()
+    {
+
+    }
 }

@@ -23,12 +23,11 @@ public class PlayerInteractionController : MonoBehaviour
             {
                 PlanetManagementInterface.main.ShowInterface();
                 CameraController.main.Disable();
-                cameraInstance.transform.position = new Vector3(hit.collider.gameObject.transform.position.x, cameraInstance.transform.position.y, hit.collider.gameObject.transform.position.z);
-                print(GetPlanet(name).Pos);
+                cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 2f);
                 inPlanet = true;
                 
             } else
-            {   // YEAH THIS IS PRETTY FUCKING SHIT I KNOW
+            {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
                     PlanetManagementInterface.main.HideInterface();
