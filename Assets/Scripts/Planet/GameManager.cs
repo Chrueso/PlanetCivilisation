@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
         // Then using the galaxy seed to generate seeds for the things in game ask me if need clarity -Zen
         PlanetRNG = new System.Random(SeedInt);
-        // MoonNameRNG etc...
+        // MoonRNG etc...
         // Basically anything that needs a seed for generation in game should use this pattern
 
         // Then generate the galaxy

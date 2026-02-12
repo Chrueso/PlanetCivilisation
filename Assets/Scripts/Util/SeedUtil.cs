@@ -14,9 +14,9 @@ public static class SeedUtil
         }
     }
 
-    public static bool IsValidSeed(string seed)
-    {
-        return Regex.IsMatch(seed, @"^[A-Za-z]{6}\d{4}$");
+    //public static bool IsValidSeed(string seed)
+    //{
+    //    return Regex.IsMatch(seed, @"^[A-Za-z]{6}\d{4}$");
 
-    }
+    //}
 }
