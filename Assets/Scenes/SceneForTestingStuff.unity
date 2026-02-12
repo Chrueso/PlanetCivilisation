@@ -871,6 +871,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6684255084432600847, guid: 7f04903cfaee0f944be4c2837d0a0976, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8728197743693800964, guid: 7f04903cfaee0f944be4c2837d0a0976, type: 3}
       propertyPath: m_Pivot.x
       value: 0

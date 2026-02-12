@@ -1,3 +1,4 @@
+using Unity.Multiplayer.PlayMode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,13 +7,21 @@ public class PlanetManagementInterface : MonoBehaviour
     private static PlanetManagementInterface instance;
     private Canvas canvas;
     public static PlanetManagementInterface main => instance;
+
+    [Header("UI Buttons")]
     [SerializeField] private Button resourceButton;
     [SerializeField] private Button shipButton;
     [SerializeField] private Button populationButton;
 
+    [Header("UI Panels")]
     [SerializeField] private Image resourcePanel;
     [SerializeField] private Image shipPanel;
     [SerializeField] private Image populationPanel;
+
+    [Header("Planet Stats Display")]
+    [SerializeField] private PlanetStatsDisplay planetStatsDisplay; // Check Manager object if reference missing
+
+    private Planet currentSelectedPlanet;
 
     private void Awake()
     {
@@ -34,19 +43,6 @@ public class PlanetManagementInterface : MonoBehaviour
         populationButton.onClick.AddListener(TogglePopuPanel);
         canvas = GetComponent<Canvas>();
     }
-
-
-
-    private void ShowCanvas()
-    {
-        canvas.enabled = true;
-    }
-
-    private void HideCanvas()
-    {
-        canvas.enabled = false;
-    }
-
 
     private void ToggleResourcePanel()
     {
@@ -73,6 +69,21 @@ public class PlanetManagementInterface : MonoBehaviour
         populationPanel.gameObject.SetActive(false);
     }
 
-    public void ShowInterface() => ShowCanvas();
-    public void HideInterface() => HideCanvas();
+    public void ShowInterface(Planet planet)
+    {
+        currentSelectedPlanet = planet;
+        if (currentSelectedPlanet != null)
+        {
+            planetStatsDisplay.SetPlanet(currentSelectedPlanet);
+        }
+
+        canvas.enabled = true;
+        ToggleResourcePanel(); // default to resource
+    }
+
+    public void HideInterface()
+    {
+        currentSelectedPlanet = null;
+        canvas.enabled = false;
+    }
 }
