@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 754dd15257f361e42a93b7801d4e435d, type: 3}
-  m_Name: PlanetColor1
-  m_EditorClassIdentifier: Assembly-CSharp::PlanetColorSettingsSO
-  PlanetColor: {r: 0.08166963, g: 0.16981131, b: 0.064880736, a: 0}
+  m_Script: {fileID: 11500000, guid: 8369c59064ec62048a9c57780eed1936, type: 3}
+  m_Name: PlanetShape1
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetShapeSettingsSO
+  PlanetRadius: 1.01

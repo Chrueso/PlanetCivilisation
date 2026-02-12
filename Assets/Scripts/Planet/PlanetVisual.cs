@@ -5,21 +5,21 @@ public class PlanetVisual : MonoBehaviour
     [Range(2, 256)] // 256^2 is max amount vertices a mesh can have in unity
     public int Resolution = 10;
 
+    public bool AutoUpdate = true;  
+
     public PlanetShapeSettingsSO ShapeSettings;
     public PlanetColorSettingsSO ColorSettings;
+
+    // For inspector
+    [HideInInspector]
+    public bool ShapeSettingsFoldout;   
+    public bool ColorSettingsFoldout;
 
     private PlanetShapeGenerator shapeGenerator;
 
     [SerializeField, HideInInspector]
     private MeshFilter[] meshFilters;
     private TerrainFace[] terrainFaces;
-
-    private void OnValidate()
-    {
-        GeneratePlanetVisual();
-        Init();
-        GenerateMesh();
-    }
 
     private void Init()
     {
@@ -70,12 +70,14 @@ public class PlanetVisual : MonoBehaviour
 
     public void OnShapeSettingsUpdated()
     {
+        if (!AutoUpdate) return;
         Init();
         GenerateMesh();
     }   
 
     public void OnColorSettingsUpdated()
     {
+        if (!AutoUpdate) return;
         Init();
         GenerateColors();
     }
