@@ -11,18 +11,6 @@ public class GameManager : Singleton<GameManager>
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
 
     [SerializeField] private List<Planet> allPlanets = new List<Planet>();
-    public List<Planet> PlanetsWithFactions { get; private set; } = new List<Planet>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        if (TurnManager.Instance == null)
-        {
-            GameObject tmObj = new GameObject("TurnManager");
-            tmObj.AddComponent<TurnManager>();
-        }
-    }
 
     private void Start()
     {
@@ -32,7 +20,7 @@ public class GameManager : Singleton<GameManager>
 
         // Then using the galaxy seed to generate seeds for the things in game ask me if need clarity -Zen
         PlanetRNG = new System.Random(SeedInt);
-        // MoonNameRNG etc...
+        // MoonRNG etc...
         // Basically anything that needs a seed for generation in game should use this pattern
 
         // Then generate the galaxy
@@ -41,7 +29,6 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"Generated Galaxy Name: {CurrentGalaxy.GalaxyName} with Seed: {SeedInt}");
 
         allPlanets = CurrentGalaxy.Planets;
-        PlanetsWithFactions = allPlanets.FindAll(planet => planet.FactionType != FactionType.Nothing);
 
         Debug.Log("Planets in Galaxy:");
         foreach (var planet in CurrentGalaxy.Planets)

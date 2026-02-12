@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Planet //Should be planet data cause u generate a base planet prefab and then assign data to it
 {

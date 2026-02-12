@@ -49,21 +49,4 @@ public static class GalaxyGenerator
 
         return new Galaxy(galaxyName, planets);
     }
-
-
-
-    //// Debug
-    //[ContextMenu("Generate galaxy name")]
-    //private void PrintGeneratedGalaxyName()
-    //{
-    //    string planetName = GenerateGalaxyName();
-    //    Debug.Log(planetName);
-    //}
-
-    //[ContextMenu("Generate planet name")]
-    //private void PrintGeneratedPlanetName()
-    //{
-    //    string planetName = GeneratePlanetName();   
-    //    Debug.Log(planetName);
-    //}
 }
