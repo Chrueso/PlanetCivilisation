@@ -4,4 +4,5 @@ using UnityEngine;
 public class PlanetShapeSettingsSO : ScriptableObject
 {
     public float PlanetRadius = 1f;
+    public PlanetNoiseSettings NoiseSettings;
 }

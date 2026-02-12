@@ -8,7 +8,7 @@ public class PlanetShapeGenerator
     public PlanetShapeGenerator(PlanetShapeSettingsSO settings)
     {
         this.settings = settings;
-        noiseFilter = new NoiseFilter();
+        noiseFilter = new NoiseFilter(settings.NoiseSettings);
     }
 
     public Vector3 CalculatePointOnPlanet(Vector3 pointOnUnitSphere)
