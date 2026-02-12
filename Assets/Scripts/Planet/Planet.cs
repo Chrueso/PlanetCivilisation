@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class Planet //Should be planet data cause u generate a base planet prefab and then assign data to it
+public class PlanetData //Should be planet data cause u generate a base planet prefab and then assign data to it
 {
     public string PlanetName { get; private set; }  
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
@@ -8,7 +8,7 @@ public class Planet //Should be planet data cause u generate a base planet prefa
     public FactionType FactionType { get; private set; }
 
     // Constructor
-    public Planet(string planetName, List<ResourceType> additionalResources, FactionType factionType)
+    public PlanetData(string planetName, List<ResourceType> additionalResources, FactionType factionType)
     {
         PlanetName = planetName;
 
@@ -33,12 +33,14 @@ public class Planet //Should be planet data cause u generate a base planet prefa
                 Resources[resource] += 1;
             }
         }
+    }
+
     private string name;
     private int population;
     private List<Resource> resources;
     private Structure structure;
 
-    public Planet(string name, List<Resource> resources, Structure structure)
+    public PlanetData(string name, List<Resource> resources, Structure structure)
     {
         this.name = name;
         this.resources = resources;

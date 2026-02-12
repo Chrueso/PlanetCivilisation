@@ -65,7 +65,7 @@ public static class PlanetGenerator
         return (FactionType)values.GetValue(index);
     }
 
-    public static Planet GeneratePlanet(System.Random rng)
+    public static PlanetData GeneratePlanet(System.Random rng)
     {
         string planetName = GeneratePlanetName(rng);
 
@@ -73,6 +73,6 @@ public static class PlanetGenerator
 
         FactionType factionType = PickFactionType(rng);
 
-        return new Planet(planetName, additionalResources, factionType);
+        return new PlanetData(planetName, additionalResources, factionType);
     }
 }

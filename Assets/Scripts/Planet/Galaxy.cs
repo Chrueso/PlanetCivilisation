@@ -4,10 +4,10 @@ using UnityEngine;
 public class Galaxy
 {
     public string GalaxyName { get; private set; }
-    public List<Planet> Planets = new List<Planet>();
+    public List<PlanetData> Planets = new List<PlanetData>();
 
     // Constructor
-    public Galaxy(string galaxyName, List<Planet> planets)
+    public Galaxy(string galaxyName, List<PlanetData> planets)
     {
         GalaxyName = galaxyName;
         Planets = planets;

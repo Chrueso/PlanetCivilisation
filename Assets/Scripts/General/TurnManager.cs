@@ -41,6 +41,7 @@ public class TurnManager : Singleton<TurnManager>
     // does all the other world/ Ai faction actions here
     public void ResolveWorldTurn()
     {
+        /* PlanetsWithFactions is missing in the newest GameManager class version, so ill comment this out first
         foreach (var factionPlanet in GameManager.Instance.PlanetsWithFactions)
         {
             //do ai stuff
@@ -48,6 +49,6 @@ public class TurnManager : Singleton<TurnManager>
             Debug.Log($"Planet {factionPlanet.PlanetName} of {factionPlanet.FactionType} is doing stuff");
 
             //faction.StartWorldTurn();
-        }   
+        }   */ 
     }
 }

@@ -39,11 +39,11 @@ public static class GalaxyGenerator
 
     public static Galaxy GenerateGalaxy(string galaxyName, int planetAmount, System.Random rng)
     {
-        List<Planet> planets = new List<Planet>();
+        List<PlanetData> planets = new List<PlanetData>();
 
         for (int i = 0; i < planetAmount; i++)
         {
-            Planet planet = PlanetGenerator.GeneratePlanet(rng);
+            PlanetData planet = PlanetGenerator.GeneratePlanet(rng);
             planets.Add(planet);
         }
 

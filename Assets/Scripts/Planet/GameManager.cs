@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>
 
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
 
-    [SerializeField] private List<Planet> allPlanets = new List<Planet>();
+    [SerializeField] private List<PlanetData> allPlanets = new List<PlanetData>();
 
     private void Start()
     {

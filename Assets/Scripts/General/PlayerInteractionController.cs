@@ -23,7 +23,7 @@ public class PlayerInteractionController : MonoBehaviour
             print(hit.collider.gameObject.name);
 
             // i changed so it detect isit planet instead of check name of object (eexuan
-            Planet planet = hit.collider.GetComponent<Planet>();
+            PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
             if (planet != null)
             {
@@ -57,7 +57,7 @@ public class PlayerInteractionController : MonoBehaviour
         return PlanetMasterScript.main.Planets.ContainsKey(planetName);
     }
 
-    private Planet GetPlanet(string planetName)
+    private PlanetData GetPlanet(string planetName)
     {
         PlanetMasterScript.main.Planets.TryGetValue(planetName, out var result);
         return result;

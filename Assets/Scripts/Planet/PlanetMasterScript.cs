@@ -4,8 +4,8 @@ public class PlanetMasterScript : MonoBehaviour
 {
     private static PlanetMasterScript instance;
     public static PlanetMasterScript main => instance;
-    private Dictionary<string, Planet> planetDict;
-    public Dictionary<string, Planet> Planets => planetDict;
+    private Dictionary<string, PlanetData> planetDict;
+    public Dictionary<string, PlanetData> Planets => planetDict;
 
     [SerializeField] private GameObject planetPrefab;
     [SerializeField] private float radius = 1.2f;
@@ -16,7 +16,7 @@ public class PlanetMasterScript : MonoBehaviour
 
     private void Awake()
     {
-        planetDict = new Dictionary<string, Planet>();
+        planetDict = new Dictionary<string, PlanetData>();
         if (instance == null)
         {
             instance = this;
@@ -42,7 +42,7 @@ public class PlanetMasterScript : MonoBehaviour
             Vector3 halfPos = pos * 0.5f;
             GameObject planetObject = Instantiate(planetPrefab, pos, Quaternion.identity);
             planetObject.name = $"Planet{iter}";
-            Planet planetInfo = new(name: planetObject.name, resources: new List<Resource>(), structure: Structure.Factory);
+            PlanetData planetInfo = new(name: planetObject.name, resources: new List<Resource>(), structure: Structure.Factory);
             planetDict.Add(planetObject.name, planetInfo);
             iter++;
             if (iter >= maxBalls) break;
