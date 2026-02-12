@@ -12,4 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8369c59064ec62048a9c57780eed1936, type: 3}
   m_Name: PlanetShape1
   m_EditorClassIdentifier: Assembly-CSharp::PlanetShapeSettingsSO
-  PlanetRadius: 1.01
+  PlanetRadius: 0.3
+  NoiseLayers:
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 0
+    NoiseSettings:
+      Strength: 0.12
+      Layers: 4
+      Persistence: 0.5
+      BaseRoughness: 0.83
+      Roughness: 1.6
+      Center: {x: 0, y: 0, z: 0}
+      MinValue: 1.05
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 1
+    NoiseSettings:
+      Strength: 3
+      Layers: 5
+      Persistence: 0.54
+      BaseRoughness: 1
+      Roughness: 2.3
+      Center: {x: 0, y: 0, z: 0}
+      MinValue: 1.17
