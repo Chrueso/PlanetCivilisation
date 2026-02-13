@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] private bool orthographicPanning = false;
     private static CameraController instance;
     public static CameraController main => instance;
 
@@ -12,6 +14,7 @@ public class CameraController : MonoBehaviour
     private bool waitForReset = false;
     private Camera cameraInstance;
     private Vector3 startingPos = Vector2.zero;
+    private float z = 0f;
 
     private void Awake()
     {
@@ -28,16 +31,80 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         cameraInstance = Camera.main;
-        TouchscreenHandler.main.FingerDownCallback += PlayerFingerDown;
-        TouchscreenHandler.main.FingerMoveCallback += PlayerFingerMove;
-        TouchscreenHandler.main.FingerUpCallback += PlayerFingerRelease;
+        #region ORTHO EVENTS
+        // 90 degree orthographic implementation
+        if (orthographicPanning)
+        {
+            TouchscreenHandler.main.FingerDownCallback += PlayerFingerDown;
+            TouchscreenHandler.main.FingerMoveCallback += PlayerFingerMove;
+            TouchscreenHandler.main.FingerUpCallback += PlayerFingerRelease;
+            return;
+        }
+        #endregion
+
+        TouchscreenHandler.main.FingerDownCallback += OnPlayerFingerDown;
+        TouchscreenHandler.main.FingerMoveCallback += OnPlayerFingerMove;
+        TouchscreenHandler.main.FingerUpCallback += OnPlayerFingerRelease;
+
+
     }
+
+    
 
     private void OnDisable()
     {
-        TouchscreenHandler.main.FingerDownCallback -= PlayerFingerDown;
-        TouchscreenHandler.main.FingerMoveCallback -= PlayerFingerMove;
-        TouchscreenHandler.main.FingerUpCallback -= PlayerFingerRelease;
+        #region ORTHO EVENTS
+        if (orthographicPanning)
+        {
+            TouchscreenHandler.main.FingerDownCallback -= PlayerFingerDown;
+            TouchscreenHandler.main.FingerMoveCallback -= PlayerFingerMove;
+            TouchscreenHandler.main.FingerUpCallback -= PlayerFingerRelease;
+            return;
+        }
+        #endregion
+
+        TouchscreenHandler.main.FingerDownCallback -= OnPlayerFingerDown;
+        TouchscreenHandler.main.FingerMoveCallback -= OnPlayerFingerMove;
+        TouchscreenHandler.main.FingerUpCallback -= OnPlayerFingerRelease;
+
+    }
+
+    private void OnPlayerFingerRelease(object sender, TouchInfo e)
+    {
+        if (e.Index != 0) return;
+        if (!eventsEnabled) return;
+        startingPos = GetWorldPos(z, e.Pos);
+
+    }
+
+    private void OnPlayerFingerMove(object sender, TouchInfo e)
+    {
+        if (e.Index != 0) return;
+        if (!eventsEnabled) return;
+        if (waitForReset) return;
+
+        Vector3 direction = startingPos - GetWorldPos(z, e.Pos);
+        direction.y = 0f;
+        cameraInstance.transform.position += direction;
+        
+    }
+
+    private Vector3 GetWorldPos(float z, Vector3 pos)
+    {
+        Ray fingerPos = cameraInstance.ScreenPointToRay(pos);
+        Plane plane = new Plane(cameraInstance.transform.forward, new Vector3(0,0,z));
+        float distance;
+        plane.Raycast(fingerPos, out distance);
+        return fingerPos.GetPoint(distance);
+
+    }
+
+    private void OnPlayerFingerDown(object sender, TouchInfo e)
+    {
+        if (e.Index != 0) return;
+        if (!eventsEnabled) return;
+        startingPos = GetWorldPos(z, e.Pos);
+        if (waitForReset) waitForReset = false;
     }
 
     private void DisableMovement()
@@ -54,7 +121,10 @@ public class CameraController : MonoBehaviour
         eventsEnabled = true;
     }
 
+    
 
+
+    #region ORTHO CAM
     private void PlayerFingerDown(object sender, TouchInfo e)
     {
         if (e.Index != 0) return;
@@ -84,6 +154,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = cameraInstance.ScreenToWorldPoint(e.Pos);
     }
+    #endregion
 
     public void Disable() => DisableMovement();
     public void Enable() => EnableMovement();

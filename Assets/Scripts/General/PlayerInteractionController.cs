@@ -23,11 +23,11 @@ public class PlayerInteractionController : MonoBehaviour
             print(hit.collider.gameObject.name);
 
             // i changed so it detect isit planet instead of check name of object (eexuan
-            PlanetData planet = hit.collider.GetComponent<PlanetData>();
+            //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            if (planet != null)
+            if (GetPlanet(name) != null)
             {
-                PlanetManagementInterface.main.ShowInterface(planet);
+                PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
                 CameraController.main.Disable();
                 cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 2f);
                 inPlanet = true;
