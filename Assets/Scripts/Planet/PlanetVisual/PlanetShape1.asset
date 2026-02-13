@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8369c59064ec62048a9c57780eed1936, type: 3}
+  m_Name: PlanetShape1
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetShapeSettingsSO
+  PlanetRadius: 0.3
+  NoiseLayers:
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 0
+    NoiseSettings:
+      FilterType: 0
+      SimpleNoiseSettings:
+        Strength: 0.04
+        Layers: 4
+        Persistence: 0.5
+        BaseRoughness: 1.99
+        Roughness: 0.69
+        Center: {x: -3.48, y: 2.15, z: 0}
+        MinValue: 0.27
+      RigidNoiseSettings:
+        Strength: 1
+        Layers: 1
+        Persistence: 0.5
+        BaseRoughness: 1
+        Roughness: 2
+        Center: {x: 0, y: 0, z: 0}
+        MinValue: 0
+        WeightMultiplier: 0.8
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 1
+    NoiseSettings:
+      FilterType: 1
+      SimpleNoiseSettings:
+        Strength: 1
+        Layers: 1
+        Persistence: 0.5
+        BaseRoughness: 1
+        Roughness: 2
+        Center: {x: 0, y: 0, z: 0}
+        MinValue: 0
+      RigidNoiseSettings:
+        Strength: 1
+        Layers: 5
+        Persistence: 0.75
+        BaseRoughness: 1.3
+        Roughness: 5.08
+        Center: {x: 0, y: 0, z: 0}
+        MinValue: 0
+        WeightMultiplier: 2.19
