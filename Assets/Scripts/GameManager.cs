@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private int planetAmount = 50;
+    [SerializeField] private Galaxy galaxyPrefab;
 
     public Galaxy CurrentGalaxy { get; private set; }
     public int SeedInt { get; private set; }
 
+    public System.Random GalaxyRNG { get; private set; }
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
-
-    [SerializeField] private List<PlanetData> allPlanets = new List<PlanetData>();
 
     private void Start()
     {
@@ -19,19 +18,19 @@ public class GameManager : Singleton<GameManager>
         SeedInt = SeedUtil.StringToHashCode(galaxyName);
 
         // Then using the galaxy seed to generate seeds for the things in game ask me if need clarity -Zen
-        PlanetRNG = new System.Random(SeedInt);
         // MoonRNG etc...
         // Basically anything that needs a seed for generation in game should use this pattern
+        GalaxyRNG = new System.Random(SeedInt);
+        PlanetRNG = new System.Random(SeedInt + 1000);
 
-        // Then generate the galaxy
-        CurrentGalaxy = GalaxyGenerator.GenerateGalaxy(galaxyName, planetAmount, PlanetRNG);
+
+        CurrentGalaxy = Instantiate(galaxyPrefab);
+        CurrentGalaxy.Init(galaxyName, GalaxyRNG);
 
         Debug.Log($"Generated Galaxy Name: {CurrentGalaxy.GalaxyName} with Seed: {SeedInt}");
 
-        allPlanets = CurrentGalaxy.Planets;
-
         Debug.Log("Planets in Galaxy:");
-        foreach (var planet in CurrentGalaxy.Planets)
+        foreach (var planet in CurrentGalaxy.AllPlanets)
         {
             // Join all resources with comma
             string resources = string.Join(", ", planet.Resources.Keys);

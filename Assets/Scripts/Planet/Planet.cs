@@ -1,28 +1,48 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class PlanetData //Should be planet data cause u generate a base planet prefab and then assign data to it
+public class Planet : MonoBehaviour
 {
-    public string PlanetName { get; private set; }  
+    public string PlanetName { get; private set; }
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
-    public int Structures { get; private set; }
     public FactionType FactionType { get; private set; }
+    public int Structures { get; private set; }
+    public int Population { get; private set; }
+    [SerializeField] private PlanetVisual planetVisual;
 
-    // Constructor
-    public PlanetData(string planetName, List<ResourceType> additionalResources, FactionType factionType)
+    public void Init(PlanetData data)
     {
-        PlanetName = planetName;
+        PlanetName = data.Name;
 
         // Assign initial resources
         Resources.Add(ResourceType.Rock, 0); // every planet has rock by default
 
         // Assign the randomly generated resource type
-        foreach (var resource in additionalResources)
+        foreach (var resource in data.ResourceTypes)
         {
             Resources.Add(resource, 0);
         }
 
-        FactionType = factionType;
+        FactionType = data.FactionType;
+
+        planetVisual.GeneratePlanetVisual(data.ShapeSettings, data.ColorSettings);
     }
+
+    //public Planet(string planetName, List<ResourceType> additionalResources, FactionType factionType)
+    //{
+    //    PlanetName = planetName;
+
+    //    // Assign initial resources
+    //    Resources.Add(ResourceType.Rock, 0); // every planet has rock by default
+
+    //    // Assign the randomly generated resource type
+    //    foreach (var resource in additionalResources)
+    //    {
+    //        Resources.Add(resource, 0);
+    //    }
+
+    //    FactionType = factionType;
+    //}
 
     private void IncreaseResource()
     {
@@ -35,17 +55,12 @@ public class PlanetData //Should be planet data cause u generate a base planet p
         }
     }
 
-    private string name;
-    private int population;
-    private List<Resource> resources;
-    private Structure structure;
-
-    public PlanetData(string name, List<Resource> resources, Structure structure)
-    {
-        this.name = name;
-        this.resources = resources;
-        this.structure = structure;
-    }
+    //public Planet(string name, List<Resource> resources, Structure structure)
+    //{
+    //    this.name = name;
+    //    this.resources = resources;
+    //    this.structure = structure;
+    //}
 
     public void GainResourcePerTurn() 
     {

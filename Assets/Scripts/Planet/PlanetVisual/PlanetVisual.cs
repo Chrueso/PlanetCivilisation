@@ -3,12 +3,12 @@ using UnityEngine;
 public class PlanetVisual : MonoBehaviour
 {
     [Range(2, 256)] // 256^2 is max amount vertices a mesh can have in unity
-    public int Resolution = 10;
+    public int Resolution = 30;
 
-    public bool AutoUpdate = true;  
+    public bool AutoUpdate = false;
 
-    public PlanetShapeSettingsSO ShapeSettings;
-    public PlanetColorSettingsSO ColorSettings;
+    public PlanetShapeSettings ShapeSettings;
+    public PlanetColorSettings ColorSettings;
 
     // For inspector
     [HideInInspector]
@@ -22,7 +22,50 @@ public class PlanetVisual : MonoBehaviour
     private MeshFilter[] meshFilters;
     private TerrainFace[] terrainFaces;
 
-    private void Init()
+    private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    {
+        shapeGenerator.UpdateSettings(shapeSettings);
+        colorGenerator.UpdateSettings(colorSettings);
+
+        // To create the planet sphere we create 6 faces of a cube and then project them onto a sphere
+        // Refer to TerrainFace.cs as to how the mesh is generated for each face
+
+        // Only initialize mesh filters if they are null
+        if (meshFilters == null || meshFilters.Length == 0)
+        {
+            meshFilters = new MeshFilter[6];
+        }
+
+        terrainFaces = new TerrainFace[6];
+
+        Vector3[] directions = {
+            Vector3.up,
+            Vector3.down,
+            Vector3.left,
+            Vector3.right,
+            Vector3.forward,
+            Vector3.back
+        };
+
+        for (int i = 0; i < 6; i++)
+        {
+            if (meshFilters[i] == null) // Only create new mesh filter if it doesnt already exist
+            {
+                GameObject meshObj = new GameObject("Mesh");
+                meshObj.transform.SetParent(this.transform, false);
+
+                meshObj.AddComponent<MeshRenderer>();
+                meshFilters[i] = meshObj.AddComponent<MeshFilter>();
+                meshFilters[i].sharedMesh = new Mesh();
+                meshObj.hideFlags = HideFlags.NotEditable;
+            }
+            meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = ColorSettings.Material;
+
+            terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, Resolution, directions[i]);
+        }
+    }
+
+    public void UpdatePlanetVisual()
     {
         shapeGenerator.UpdateSettings(ShapeSettings);
         colorGenerator.UpdateSettings(ColorSettings);
@@ -52,11 +95,12 @@ public class PlanetVisual : MonoBehaviour
             if (meshFilters[i] == null) // Only create new mesh filter if it doesnt already exist
             {
                 GameObject meshObj = new GameObject("Mesh");
-                meshObj.transform.parent = this.transform;
+                meshObj.transform.SetParent(this.transform, false);
 
                 meshObj.AddComponent<MeshRenderer>();
                 meshFilters[i] = meshObj.AddComponent<MeshFilter>();
                 meshFilters[i].sharedMesh = new Mesh();
+                meshObj.hideFlags = HideFlags.NotEditable;
             }
             meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = ColorSettings.Material;
 
@@ -64,9 +108,9 @@ public class PlanetVisual : MonoBehaviour
         }
     }
 
-    public void GeneratePlanetVisual()
+    public void GeneratePlanetVisual(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        Init();
+        Init(shapeSettings, colorSettings);
         GenerateMesh();
         GenerateColors();
     }
@@ -74,14 +118,14 @@ public class PlanetVisual : MonoBehaviour
     public void OnShapeSettingsUpdated()
     {
         if (!AutoUpdate) return;
-        Init();
+        UpdatePlanetVisual();
         GenerateMesh();
-    }   
+    }
 
     public void OnColorSettingsUpdated()
     {
         if (!AutoUpdate) return;
-        Init();
+        UpdatePlanetVisual();
         GenerateColors();
     }
 

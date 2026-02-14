@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using UnityEngine;
 
-public static class GalaxyGenerator 
+public static class GalaxyGenerator
 {
     static readonly string[] galaxyBaseNames =
     {
@@ -35,18 +35,5 @@ public static class GalaxyGenerator
         for (int i = 0; i < suffix.Length; i++)
             suffix[i] = SuffixChar[rng.Next(SuffixChar.Length)];
         return baseName + "-" + new string(suffix);
-    }
-
-    public static Galaxy GenerateGalaxy(string galaxyName, int planetAmount, System.Random rng)
-    {
-        List<PlanetData> planets = new List<PlanetData>();
-
-        for (int i = 0; i < planetAmount; i++)
-        {
-            PlanetData planet = PlanetGenerator.GeneratePlanet(rng);
-            planets.Add(planet);
-        }
-
-        return new Galaxy(galaxyName, planets);
     }
 }

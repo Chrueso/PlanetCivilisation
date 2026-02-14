@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlanetShapeGenerator 
 {
-    private PlanetShapeSettingsSO settings;
+    private PlanetShapeSettings settings;
     private INoiseFilter[] noiseFilters;
-    public MinMax ElevationMinMax;
+    public MinMaxf ElevationMinMax;
 
-    public void UpdateSettings(PlanetShapeSettingsSO settings)
+    public void UpdateSettings(PlanetShapeSettings settings)
     {
         this.settings = settings;
         noiseFilters = new INoiseFilter[settings.NoiseLayers.Length];
@@ -14,7 +14,7 @@ public class PlanetShapeGenerator
         for(int i = 0; i < noiseFilters.Length; i++)
         {
             noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(settings.NoiseLayers[i].NoiseSettings);
-            ElevationMinMax = new MinMax();
+            ElevationMinMax = new MinMaxf();
         }
     }
 

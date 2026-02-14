@@ -21,7 +21,7 @@ public class PlanetManagementInterface : MonoBehaviour
     [Header("Planet Stats Display")]
     [SerializeField] private PlanetStatsDisplay planetStatsDisplay; // Check Manager object if reference missing
 
-    private PlanetData currentSelectedPlanet;
+    private Planet currentSelectedPlanet;
 
     private void Awake()
     {
@@ -69,7 +69,7 @@ public class PlanetManagementInterface : MonoBehaviour
         populationPanel.gameObject.SetActive(false);
     }
 
-    public void ShowInterface(PlanetData planet)
+    public void ShowInterface(Planet planet)
     {
         currentSelectedPlanet = planet;
         if (currentSelectedPlanet != null)

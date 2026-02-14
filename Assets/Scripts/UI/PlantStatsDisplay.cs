@@ -18,7 +18,7 @@ public class PlanetStatsDisplay : MonoBehaviour
     [Header("Stats Update Settings")]
     // idk will be used later maybe
     [SerializeField] private float updateInterval = 0.1f;
-    private PlanetData currentPlanet;
+    private Planet currentPlanet;
     private float updateTimer;
 
     private void Update()
@@ -34,7 +34,7 @@ public class PlanetStatsDisplay : MonoBehaviour
         }
     }
 
-    public void SetPlanet(PlanetData planet)
+    public void SetPlanet(Planet planet)
     {
         currentPlanet = planet;
         UpdateDisplay();

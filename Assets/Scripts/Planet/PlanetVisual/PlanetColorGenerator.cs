@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlanetColorGenerator 
 {
-    private PlanetColorSettingsSO settings;
+    private PlanetColorSettings settings;
     private Texture2D texture;
     private const int textureResolution = 50;
 
-    public void UpdateSettings(PlanetColorSettingsSO settings)
+    public void UpdateSettings(PlanetColorSettings settings)
     {
         this.settings = settings;
 
@@ -16,7 +16,7 @@ public class PlanetColorGenerator
         }
     }
 
-    public void UpdateElevation(MinMax elevationMinMax)
+    public void UpdateElevation(MinMaxf elevationMinMax)
     {
         settings.Material.SetVector("_elevationMinMax", new Vector4(elevationMinMax.Min, elevationMinMax.Max));
     }
