@@ -33,4 +33,5 @@ public class PlanetColorGenerator
         texture.Apply();
         settings.Material.SetTexture("_planetTexture", texture);
     }
+
 }

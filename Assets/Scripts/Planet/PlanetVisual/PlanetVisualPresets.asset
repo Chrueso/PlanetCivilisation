@@ -22,23 +22,23 @@ MonoBehaviour:
       FilterType: 0
       SimpleNoiseSettingsPreset:
         Strength:
-          Min: 0.04
-          Max: 0.06
+          Min: 0.06
+          Max: 0.04
         Layers:
           Min: 4
-          Max: 5
+          Max: 4
         Persistence:
-          Min: 0.45
-          Max: 0.55
+          Min: 0.52
+          Max: 0.48
         BaseRoughness:
-          Min: 1.5
-          Max: 2.5
+          Min: 1
+          Max: 1.1
         Roughness:
           Min: 2.5
-          Max: 3.5
+          Max: 2
         MinValue:
-          Min: 0.25
-          Max: 0.3
+          Min: 0.9
+          Max: 1
       RigidNoiseSettingsPreset:
         Strength:
           Min: 0
@@ -86,26 +86,26 @@ MonoBehaviour:
           Max: 0
       RigidNoiseSettingsPreset:
         Strength:
-          Min: 3
-          Max: 3.5
+          Min: 1.4
+          Max: 2
         Layers:
           Min: 5
-          Max: 6
+          Max: 5
         Persistence:
           Min: 0.5
-          Max: 0.75
+          Max: 0.5
         BaseRoughness:
           Min: 1
-          Max: 3
+          Max: 2
         Roughness:
-          Min: 2.5
+          Min: 3
           Max: 3.5
         MinValue:
           Min: 0
           Max: 0
         WeightMultiplier:
           Min: 0
-          Max: 0.5
+          Max: 0
   Gradient:
     serializedVersion: 2
     key0: {r: 0, g: 0.29292607, b: 1, a: 1}

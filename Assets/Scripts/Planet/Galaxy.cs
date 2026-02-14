@@ -14,10 +14,11 @@ public class Galaxy : Singleton<Galaxy>
 
         for (int i = 0; i < planetAmount; i++)
         {
-            float xz = RandomUtil.NextRangef(rng, -250, 250);
-            float y = RandomUtil.NextRangef(rng, -50, 50);
+            float x = RandomUtil.NextRangef(rng, -30, 30);
+            float z = RandomUtil.NextRangef(rng, -30, 30); 
+            float y = RandomUtil.NextRangef(rng, -10, 10);
 
-            Vector3 position = new Vector3(xz, y, xz);
+            Vector3 position = new Vector3(x, y, z);
             Planet planet = PlanetGenerator.Instance.InstantiatePlanet(rng, position, this.transform);
             planets.Add(planet);
         }
