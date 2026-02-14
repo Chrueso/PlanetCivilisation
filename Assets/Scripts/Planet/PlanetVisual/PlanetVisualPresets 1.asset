@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e58077dc2bb8694ca41534046d8bb62, type: 3}
+  m_Name: PlanetVisualPresets 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetVisualPresets
+  PlanetRadius:
+    Min: 1
+    Max: 2
+  NoiseLayersPresets:
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 0
+    NoiseSettingsPreset:
+      FilterType: 0
+      SimpleNoiseSettingsPreset:
+        Strength:
+          Min: 0.06
+          Max: 0.04
+        Layers:
+          Min: 4
+          Max: 4
+        Persistence:
+          Min: 0.52
+          Max: 0.48
+        BaseRoughness:
+          Min: 1
+          Max: 1.1
+        Roughness:
+          Min: 2.5
+          Max: 2
+        MinValue:
+          Min: 0.9
+          Max: 1
+      RigidNoiseSettingsPreset:
+        Strength:
+          Min: 0
+          Max: 0
+        Layers:
+          Min: 0
+          Max: 0
+        Persistence:
+          Min: 0
+          Max: 0
+        BaseRoughness:
+          Min: 0
+          Max: 0
+        Roughness:
+          Min: 0
+          Max: 0
+        MinValue:
+          Min: 0
+          Max: 0
+        WeightMultiplier:
+          Min: 0
+          Max: 0
+  - IsEnabled: 1
+    UseFirstLayerAsMask: 1
+    NoiseSettingsPreset:
+      FilterType: 1
+      SimpleNoiseSettingsPreset:
+        Strength:
+          Min: 0
+          Max: 0
+        Layers:
+          Min: 0
+          Max: 0
+        Persistence:
+          Min: 0
+          Max: 0
+        BaseRoughness:
+          Min: 0
+          Max: 0
+        Roughness:
+          Min: 0
+          Max: 0
+        MinValue:
+          Min: 0
+          Max: 0
+      RigidNoiseSettingsPreset:
+        Strength:
+          Min: 1.4
+          Max: 2
+        Layers:
+          Min: 5
+          Max: 5
+        Persistence:
+          Min: 0.5
+          Max: 0.5
+        BaseRoughness:
+          Min: 1
+          Max: 2
+        Roughness:
+          Min: 3
+          Max: 3.5
+        MinValue:
+          Min: 0
+          Max: 0
+        WeightMultiplier:
+          Min: 0
+          Max: 0
+  Gradient:
+    serializedVersion: 2
+    key0: {r: 0, g: 0.29292607, b: 1, a: 1}
+    key1: {r: 0.63765574, g: 0.59021974, b: 0.24553406, a: 1}
+    key2: {r: 0.49870324, g: 0.8962264, b: 0.18178178, a: 0}
+    key3: {r: 0.6320754, g: 0.5257002, b: 0.30113026, a: 0}
+    key4: {r: 1, g: 1, b: 1, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 13493
+    ctime2: 17926
+    ctime3: 53006
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
+  Material: {fileID: -876546973899608171, guid: 3058cc6951e6b5a45a2c96451427f320, type: 3}

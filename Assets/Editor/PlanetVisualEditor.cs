@@ -12,10 +12,10 @@
 //    {
 //        using (var check = new EditorGUI.ChangeCheckScope())
 //        {
-//            //base.OnInspectorGUI();
+//            base.OnInspectorGUI();
 
 //            if (check.changed)
-//            {   
+//            {
 //                planetVisual.GeneratePlanetVisual();
 //            }
 //        }
@@ -60,72 +60,3 @@
 //    }
 //}
 
-//using UnityEditor;
-//using UnityEngine;
-
-//[CustomEditor(typeof(PlanetVisual))]
-//public class PlanetVisualEditor : Editor
-//{
-//    private SerializedProperty resolutionProp;
-//    private SerializedProperty autoUpdateProp;
-//    private SerializedProperty shapeSettingsProp;
-//    private SerializedProperty colorSettingsProp;
-
-//    private void OnEnable()
-//    {
-//        resolutionProp = serializedObject.FindProperty("Resolution");
-//        autoUpdateProp = serializedObject.FindProperty("AutoUpdate");
-//        shapeSettingsProp = serializedObject.FindProperty("ShapeSettings");
-//        colorSettingsProp = serializedObject.FindProperty("ColorSettings");
-//    }
-
-//    public override void OnInspectorGUI()
-//    {
-//        serializedObject.Update();
-
-//        EditorGUILayout.PropertyField(resolutionProp);
-//        EditorGUILayout.PropertyField(autoUpdateProp);
-
-//        EditorGUILayout.Space();
-
-//        bool shapeSettingsChanged = false;
-//        bool colorSettingsChanged = false;
-
-//        EditorGUI.BeginChangeCheck();
-//        EditorGUILayout.PropertyField(shapeSettingsProp, true);
-//        if (EditorGUI.EndChangeCheck())
-//        {
-//            shapeSettingsChanged = true;
-//        }
-
-//        EditorGUI.BeginChangeCheck();
-//        EditorGUILayout.PropertyField(colorSettingsProp, true);
-//        if (EditorGUI.EndChangeCheck())
-//        {
-//            colorSettingsChanged = true;
-//        }
-
-//        EditorGUILayout.Space();
-
-//        if (GUILayout.Button("Generate Planet"))
-//        {
-//            ((PlanetVisual)target).GeneratePlanetVisual();
-//        }
-
-//        serializedObject.ApplyModifiedProperties();
-
-//        // Handle auto-update based on which settings changed
-//        if (autoUpdateProp.boolValue)
-//        {
-//            if (shapeSettingsChanged)
-//            {
-//                ((PlanetVisual)target).OnShapeSettingsUpdated();
-//            }
-
-//            if (colorSettingsChanged)
-//            {
-//                ((PlanetVisual)target).OnColorSettingsUpdated();
-//            }
-//        }
-//    }
-//}
