@@ -142,8 +142,36 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
 
     private PlanetColorSettings GeneratePlanetColorSettings(System.Random rng)
     {
-        Gradient gradient = preset.Gradient;
+        //Make like base color for each graddient key then a min max for randomize hue sat 
         Material material = preset.Material;
+
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            preset.Gradient.colorKeys,
+            preset.Gradient.alphaKeys
+        );
+
+        GradientColorKey[] colorKeys = gradient.colorKeys;
+        GradientAlphaKey[] alphaKeys = gradient.alphaKeys;
+
+        for (int i = 0; i < colorKeys.Length; i++)
+        {
+            Color.RGBToHSV(colorKeys[i].color, out float h, out float s, out float v);
+
+            h += RandomUtil.NextRangef(rng, -0.1f, 0.1f);
+            s *= RandomUtil.NextRangef(rng, 0.9f, 1.1f);
+            v *= RandomUtil.NextRangef(rng, 0.9f, 1.1f);
+
+            h = h % 1f;       // wraps above 1
+            if (h < 0f) h += 1f; // wraps negative values
+
+            s = Mathf.Clamp01(s);
+            v = Mathf.Clamp01(v);
+
+            colorKeys[i].color = Color.HSVToRGB(h, s, v);
+        }
+
+        gradient.SetKeys(colorKeys, alphaKeys);
 
         return new PlanetColorSettings(gradient, material);
     }

@@ -7,6 +7,8 @@ public class PlanetVisual : MonoBehaviour
 
     public bool AutoUpdate = false;
 
+    //[SerializeField] private PlanetPreset;
+
     public PlanetShapeSettings ShapeSettings;
     public PlanetColorSettings ColorSettings;
 

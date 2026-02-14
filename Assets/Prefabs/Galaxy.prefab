@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3303ac3a56d4ca4d9a8b0c7f2ca576c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Galaxy
-  planetAmount: 5
+  planetAmount: 100
   AllPlanets: []
