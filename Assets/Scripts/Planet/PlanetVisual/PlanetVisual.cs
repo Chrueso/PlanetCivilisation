@@ -7,7 +7,7 @@ public class PlanetVisual : MonoBehaviour
 
     public bool AutoUpdate = false;
 
-    //[SerializeField] private PlanetPreset;
+    //public PlanetVisualPresets Preset;
 
     public PlanetShapeSettings ShapeSettings;
     public PlanetColorSettings ColorSettings;
@@ -33,30 +33,22 @@ public class PlanetVisual : MonoBehaviour
     // Property block for per-planet properties
     private MaterialPropertyBlock propertyBlock;
 
-    private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    private void InitMeshComponents(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
 
-        UpdatePlanetVisual();
-    }
-
-    public void UpdatePlanetVisual()
-    {
         shapeGenerator.UpdateSettings(ShapeSettings);
         colorGenerator.UpdateSettings(ColorSettings);
 
         // To create the planet sphere we create 6 faces of a cube and then project them onto a sphere
         // Refer to TerrainFace.cs as to how the mesh is generated for each face
 
-        // Only initialize mesh filters if they are null
-        if (meshFilters == null || meshFilters.Length == 0)
-        {
-            meshFilters = new MeshFilter[6];
-        }
+        if (meshFilters == null || meshFilters.Length == 0) meshFilters = new MeshFilter[6];
 
         terrainFaces = new TerrainFace[6];
-        renderers = new Renderer[6];
+
+        if (renderers == null || renderers.Length == 0) renderers = new Renderer[6];
 
         Vector3[] directions = {
             Vector3.up,
@@ -92,24 +84,36 @@ public class PlanetVisual : MonoBehaviour
 
     public void GeneratePlanetVisual(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        Init(shapeSettings, colorSettings);
+        InitMeshComponents(shapeSettings, colorSettings);
         GenerateMesh();
         GenerateColors();
     }
 
-    public void OnShapeSettingsUpdated()
+    public void UpdatePlanetVisual()
     {
-        if (!AutoUpdate) return;
-        UpdatePlanetVisual();
+        GeneratePlanetVisual(ShapeSettings, ColorSettings);
         GenerateMesh();
-    }
-
-    public void OnColorSettingsUpdated()
-    {
-        if (!AutoUpdate) return;
-        UpdatePlanetVisual();
         GenerateColors();
     }
+
+    public void OnPresetUpdated()
+    {
+        if (!AutoUpdate) return;
+        GeneratePlanetVisual(ShapeSettings, ColorSettings);
+        GenerateMesh();
+        GenerateColors();
+    }
+
+    //private void UpdateShapeSettingsUsingPreset()
+    //{
+    //    ShapeSettings.PlanetRadius = Preset.PlanetRadius.Average();
+    //    ShapeSettings.NoiseLayers = Preset.NoiseLayersPresets;
+    //}
+
+    //private void UpdateColorSettingsUsingPreset()
+    //{
+
+    //}
 
     private void GenerateMesh()
     {

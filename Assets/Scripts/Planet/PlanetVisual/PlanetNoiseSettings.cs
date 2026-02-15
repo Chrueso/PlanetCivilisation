@@ -6,10 +6,7 @@ public class PlanetNoiseSettings
     public enum NoiseFilterType { Simple, Rigid };
     public NoiseFilterType FilterType;
 
-    [ConditionalHide("FilterType", 0)]
     public PlanetSimpleNoiseSettings SimpleNoiseSettings;
-
-    [ConditionalHide("FilterType", 1)]
     public PlanetRigidNoiseSettings RigidNoiseSettings;
 
     [System.Serializable]
@@ -45,8 +42,6 @@ public class PlanetNoiseSettings
             MinValue = minValue;
         }
 
-        // Unity needs a parameterless constructor
-        public PlanetSimpleNoiseSettings() { }
     }
 
     [System.Serializable]
@@ -54,10 +49,7 @@ public class PlanetNoiseSettings
     {
         public float WeightMultiplier = 0.8f;
 
-        public PlanetRigidNoiseSettings() { }
-
         // Constructor
-
         public PlanetRigidNoiseSettings(
             float strength,
             int layers,

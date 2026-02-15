@@ -1,21 +1,18 @@
 using UnityEngine;
 
-//[CreateAssetMenu(fileName = "New Planet Shape Settings", menuName = "Planet Settings/Planet Shape Settings")]
-
-[System.Serializable]
 public class PlanetShapeSettings 
 {
     public float PlanetRadius = 1f;
-    public NoiseLayer[] NoiseLayers;
+    public PlanetNoiseLayer[] NoiseLayers;
 
     [System.Serializable]
-    public class NoiseLayer
+    public class PlanetNoiseLayer
     {
         public bool IsEnabled = true;
         public bool UseFirstLayerAsMask;
         public PlanetNoiseSettings NoiseSettings;
 
-        public NoiseLayer(bool isEnabled, bool useFirstLayerAsMask, PlanetNoiseSettings noiseSettings)
+        public PlanetNoiseLayer(bool isEnabled, bool useFirstLayerAsMask, PlanetNoiseSettings noiseSettings)
         {
             IsEnabled = isEnabled;
             UseFirstLayerAsMask = useFirstLayerAsMask;
@@ -23,7 +20,7 @@ public class PlanetShapeSettings
         }
     }
 
-    public PlanetShapeSettings(float planetRadius, NoiseLayer[] noiseLayers)
+    public PlanetShapeSettings(float planetRadius, PlanetNoiseLayer[] noiseLayers)
     {
         PlanetRadius = planetRadius;
         NoiseLayers = noiseLayers;

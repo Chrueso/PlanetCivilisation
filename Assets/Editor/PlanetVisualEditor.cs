@@ -5,8 +5,7 @@
 //public class PlanetVisualEditor : Editor
 //{
 //    private PlanetVisual planetVisual;
-//    private Editor shapeEditor;
-//    private Editor colorEditor;
+//    private Editor presetEditor;
 
 //    public override void OnInspectorGUI()
 //    {
@@ -25,8 +24,7 @@
 //            planetVisual.GeneratePlanetVisual();
 //        }
 
-//        DrawSettingsEditor(planetVisual.ShapeSettings, planetVisual.OnShapeSettingsUpdated, ref planetVisual.ShapeSettingsFoldout, ref shapeEditor);
-//        DrawSettingsEditor(planetVisual.ColorSettings, planetVisual.OnColorSettingsUpdated, ref planetVisual.ColorSettingsFoldout, ref colorEditor);
+//        DrawSettingsEditor(planetVisual.ShapeSettings, planetVisual.OnPresetUpdated, ref planetVisual.ShapeSettingsFoldout, ref presetEditor);
 //    }
 
 

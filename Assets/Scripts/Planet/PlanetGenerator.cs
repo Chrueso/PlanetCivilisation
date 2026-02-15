@@ -31,7 +31,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return baseName + "-" + new string(suffix);
     }
 
-    private List<ResourceType> GenerateAdditionalResource(System.Random rng) // should use the plannet name as seed
+    private List<ResourceType> GenerateResourceTypes(System.Random rng) // should use the plannet name as seed
     {
         int count = rng.Next(0, 2); // Each planet has 0 to 2 additional resources
         List<ResourceType> types = new List<ResourceType>();
@@ -68,73 +68,72 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return (FactionType)values.GetValue(index);
     }
 
-    [SerializeField] PlanetVisualPresets preset;
+    [SerializeField] PlanetVisualProcederalPresetSO preset;
+
+    private PlanetNoiseSettings GenerateNoiseSettings(System.Random rng, PlanetNoiseSettingsPreset presetNoiseSettings)
+    {
+        PlanetNoiseSettings noiseSettings = new PlanetNoiseSettings();
+        noiseSettings.FilterType = presetNoiseSettings.FilterType;
+
+        var s = presetNoiseSettings.SimpleNoiseSettingsPreset;
+
+        float strength = RandomUtil.NextRangef(rng, s.Strength.Min, s.Strength.Max);
+        int layers = rng.Next(s.Layers.Min, s.Layers.Max + 1);
+        float persistence = RandomUtil.NextRangef(rng, s.Persistence.Min, s.Persistence.Max);
+        float baseRoughness = RandomUtil.NextRangef(rng, s.BaseRoughness.Min, s.BaseRoughness.Max);
+        float roughness = RandomUtil.NextRangef(rng, s.Roughness.Min, s.Roughness.Max);
+        Vector3 center = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+        float minValue = RandomUtil.NextRangef(rng, s.MinValue.Min, s.MinValue.Max);
+
+        switch (presetNoiseSettings.FilterType)
+        {
+            case PlanetNoiseSettings.NoiseFilterType.Simple:
+                noiseSettings.SimpleNoiseSettings =
+                new PlanetNoiseSettings.PlanetSimpleNoiseSettings(
+                    strength,
+                    layers,
+                    persistence,
+                    baseRoughness,
+                    roughness,
+                    center,
+                    minValue
+                );
+                break;
+
+            case PlanetNoiseSettings.NoiseFilterType.Rigid:
+                var r = presetNoiseSettings.RigidNoiseSettingsPreset;
+                float weightMultiplier = RandomUtil.NextRangef(rng, r.WeightMultiplier.Min, r.WeightMultiplier.Max);
+
+                noiseSettings.RigidNoiseSettings =
+                new PlanetNoiseSettings.PlanetRigidNoiseSettings(
+                    strength,
+                    layers,
+                    persistence,
+                    baseRoughness,
+                    roughness,
+                    center,
+                    minValue,
+                    weightMultiplier
+                );
+                break;
+        }
+
+        return noiseSettings;
+}
 
     private PlanetShapeSettings GeneratePlanetShapeSettings(System.Random rng)
     {
         float planetRadius = RandomUtil.NextRangef(rng, preset.PlanetRadius.Min, preset.PlanetRadius.Max);
 
-        NoiseLayerPreset[] noiseLayerPresets = preset.NoiseLayersPresets;
-        NoiseLayer[] noiseLayers = new NoiseLayer[preset.NoiseLayersPresets.Length];
+        PlanetNoiseLayerPreset[] noiseLayerPresets = preset.NoiseLayersPresets;
+        PlanetNoiseLayer[] noiseLayers = new PlanetNoiseLayer[preset.NoiseLayersPresets.Length];
 
         for (int i = 0; i < noiseLayers.Length; i++)
         {
-            var presetLayer = noiseLayerPresets[i];
-            var presetSettings = presetLayer.NoiseSettingsPreset;
+            PlanetNoiseLayerPreset noiseLayerPreset = noiseLayerPresets[i];
+            PlanetNoiseSettings noiseSettings = GenerateNoiseSettings(rng, noiseLayerPreset.NoiseSettingsPreset);
 
-            PlanetNoiseSettings finalSettings = new PlanetNoiseSettings();
-            finalSettings.FilterType = presetSettings.FilterType;
-
-            if (presetSettings.FilterType == PlanetNoiseSettings.NoiseFilterType.Simple)
-            {
-                var p = presetSettings.SimpleNoiseSettingsPreset;
-
-                float strength = RandomUtil.NextRangef(rng, p.Strength.Min, p.Strength.Max);
-                int layers = rng.Next(p.Layers.Min, p.Layers.Max + 1);
-                float persistence = RandomUtil.NextRangef(rng, p.Persistence.Min, p.Persistence.Max);
-                float baseRoughness = RandomUtil.NextRangef(rng, p.BaseRoughness.Min, p.BaseRoughness.Max);
-                float roughness = RandomUtil.NextRangef(rng, p.Roughness.Min, p.Roughness.Max);
-                Vector3 center = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
-                float minValue = RandomUtil.NextRangef(rng, p.MinValue.Min, p.MinValue.Max);
-
-                finalSettings.SimpleNoiseSettings =
-                    new PlanetNoiseSettings.PlanetSimpleNoiseSettings(
-                        strength,
-                        layers,
-                        persistence,
-                        baseRoughness,
-                        roughness,
-                        center,
-                        minValue
-                    );
-            }
-            else if (presetSettings.FilterType == PlanetNoiseSettings.NoiseFilterType.Rigid)
-            {
-                var p = presetSettings.RigidNoiseSettingsPreset;
-
-                float strength = RandomUtil.NextRangef(rng, p.Strength.Min, p.Strength.Max);
-                int layers = rng.Next(p.Layers.Min, p.Layers.Max + 1);
-                float persistence = RandomUtil.NextRangef(rng, p.Persistence.Min, p.Persistence.Max);
-                float baseRoughness = RandomUtil.NextRangef(rng, p.BaseRoughness.Min, p.BaseRoughness.Max);
-                float roughness = RandomUtil.NextRangef(rng, p.Roughness.Min, p.Roughness.Max);
-                Vector3 center = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
-                float minValue = RandomUtil.NextRangef(rng, p.MinValue.Min, p.MinValue.Max);
-                float weightMultiplier = RandomUtil.NextRangef(rng, p.WeightMultiplier.Min, p.WeightMultiplier.Max);
-
-                finalSettings.RigidNoiseSettings =
-                    new PlanetNoiseSettings.PlanetRigidNoiseSettings(
-                        strength,
-                        layers,
-                        persistence,
-                        baseRoughness,
-                        roughness,
-                        center,
-                        minValue,
-                        weightMultiplier
-                    );
-            }
-
-            noiseLayers[i] = new NoiseLayer(presetLayer.IsEnabled, presetLayer.UseFirstLayerAsMask, finalSettings);
+            noiseLayers[i] = new PlanetNoiseLayer(noiseLayerPreset.IsEnabled, noiseLayerPreset.UseFirstLayerAsMask, noiseSettings);
         }
 
         return new PlanetShapeSettings(planetRadius, noiseLayers);
@@ -180,7 +179,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
     {
         string planetName = GeneratePlanetName(rng);
 
-        List<ResourceType> additionalResources = GenerateAdditionalResource(rng);
+        List<ResourceType> additionalResources = GenerateResourceTypes(rng);
 
         FactionType factionType = PickFactionType(rng);
 

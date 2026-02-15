@@ -1,26 +1,25 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlanetVisualPresets", menuName = "Scriptable Objects/PlanetVisualPresets")]
-public class PlanetVisualPresets : ScriptableObject
+public class PlanetVisualProcederalPresetSO : ScriptableObject
 {
     public MinMaxf PlanetRadius;
-
-    public NoiseLayerPreset[] NoiseLayersPresets;
+    public PlanetNoiseLayerPreset[] NoiseLayersPresets;
 
     public Gradient Gradient;
     public Material Material;
 }
 
 [System.Serializable]
-public class NoiseLayerPreset
+public class PlanetNoiseLayerPreset
 {
     public bool IsEnabled = true;
     public bool UseFirstLayerAsMask;
-    public PlanetPresetNoiseSettings NoiseSettingsPreset;
+    public PlanetNoiseSettingsPreset NoiseSettingsPreset;
 }
 
 [System.Serializable]
-public class PlanetPresetNoiseSettings
+public class PlanetNoiseSettingsPreset
 {
     public PlanetNoiseSettings.NoiseFilterType FilterType;
 
