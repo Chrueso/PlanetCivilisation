@@ -7,37 +7,30 @@ public class PlanetVisual : MonoBehaviour
 
     public bool AutoUpdate = false;
 
-    //public PlanetVisualPresets Preset;
-
     public PlanetShapeSettings ShapeSettings;
     public PlanetColorSettings ColorSettings;
-
-    // For inspector
-    [HideInInspector]
-    public bool ShapeSettingsFoldout;   
-    public bool ColorSettingsFoldout;
 
     private PlanetShapeGenerator shapeGenerator = new PlanetShapeGenerator();
     private PlanetColorGenerator colorGenerator = new PlanetColorGenerator();
 
     [SerializeField, HideInInspector]
     private MeshFilter[] meshFilters;
+
     private TerrainFace[] terrainFaces;
-
-    // Store renderers for property blocks
     private Renderer[] renderers;
-
-    // Each planet needs its own texture
     private Texture2D planetTexture;
-
-    // Property block for per-planet properties
     private MaterialPropertyBlock propertyBlock;
 
-    private void InitMeshComponents(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
 
+        GenerateMeshComponents();
+    }
+
+    public void GenerateMeshComponents()
+    {
         shapeGenerator.UpdateSettings(ShapeSettings);
         colorGenerator.UpdateSettings(ColorSettings);
 
@@ -84,36 +77,18 @@ public class PlanetVisual : MonoBehaviour
 
     public void GeneratePlanetVisual(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        InitMeshComponents(shapeSettings, colorSettings);
+        Init(shapeSettings, colorSettings);
+        GenerateMeshComponents();
         GenerateMesh();
         GenerateColors();
     }
 
     public void UpdatePlanetVisual()
     {
-        GeneratePlanetVisual(ShapeSettings, ColorSettings);
+        GenerateMeshComponents();
         GenerateMesh();
         GenerateColors();
     }
-
-    public void OnPresetUpdated()
-    {
-        if (!AutoUpdate) return;
-        GeneratePlanetVisual(ShapeSettings, ColorSettings);
-        GenerateMesh();
-        GenerateColors();
-    }
-
-    //private void UpdateShapeSettingsUsingPreset()
-    //{
-    //    ShapeSettings.PlanetRadius = Preset.PlanetRadius.Average();
-    //    ShapeSettings.NoiseLayers = Preset.NoiseLayersPresets;
-    //}
-
-    //private void UpdateColorSettingsUsingPreset()
-    //{
-
-    //}
 
     private void GenerateMesh()
     {
@@ -176,9 +151,4 @@ public class PlanetVisual : MonoBehaviour
         }
     }
 }
-
-    //private void GenerateColors()
-    //{
-    //   colorGenerator.UpdateColors();
-    //}
 

@@ -4,6 +4,7 @@ using static PlanetShapeSettings;
 
 public class PlanetGenerator : Singleton<PlanetGenerator>
 {
+    [SerializeField] List<PlanetVisualTypesSO> presets;
     [SerializeField] private Planet planetPrefab;
     static readonly string[] planetBaseNames =
     {
@@ -68,8 +69,6 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return (FactionType)values.GetValue(index);
     }
 
-    [SerializeField] PlanetVisualProcederalPresetSO preset;
-
     private PlanetNoiseSettings GenerateNoiseSettings(System.Random rng, PlanetNoiseSettingsPreset presetNoiseSettings)
     {
         PlanetNoiseSettings noiseSettings = new PlanetNoiseSettings();
@@ -121,7 +120,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return noiseSettings;
 }
 
-    private PlanetShapeSettings GeneratePlanetShapeSettings(System.Random rng)
+    private PlanetShapeSettings GeneratePlanetShapeSettings(System.Random rng, PlanetVisualTypesSO preset)
     {
         float planetRadius = RandomUtil.NextRangef(rng, preset.PlanetRadius.Min, preset.PlanetRadius.Max);
 
@@ -139,7 +138,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return new PlanetShapeSettings(planetRadius, noiseLayers);
     }
 
-    private PlanetColorSettings GeneratePlanetColorSettings(System.Random rng)
+    private PlanetColorSettings GeneratePlanetColorSettings(System.Random rng, PlanetVisualTypesSO preset)
     {
         //Make like base color for each graddient key then a min max for randomize hue sat 
         Material material = preset.Material;
@@ -175,17 +174,28 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return new PlanetColorSettings(gradient, material);
     }
 
+    private PlanetVisualTypesSO ChooseVisualPreset(System.Random rng)
+    {
+        int num = rng.Next(presets.Count);
+
+        return presets[num];
+    }
+
     private PlanetData GeneratePlanetData(System.Random rng)
     {
         string planetName = GeneratePlanetName(rng);
+        int planetSeed = SeedUtil.StringToHashCode(planetName);
+        System.Random planetRNG = new System.Random(planetSeed);
 
-        List<ResourceType> additionalResources = GenerateResourceTypes(rng);
+        List<ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
 
-        FactionType factionType = PickFactionType(rng);
+        FactionType factionType = PickFactionType(planetRNG);
 
-        PlanetShapeSettings shapeSettings = GeneratePlanetShapeSettings(rng);
+        PlanetVisualTypesSO preset = ChooseVisualPreset(planetRNG);   
 
-        PlanetColorSettings colorSettings = GeneratePlanetColorSettings(rng);
+        PlanetShapeSettings shapeSettings = GeneratePlanetShapeSettings(planetRNG, preset);
+
+        PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
         return new PlanetData(planetName, additionalResources, factionType, shapeSettings, colorSettings);
 

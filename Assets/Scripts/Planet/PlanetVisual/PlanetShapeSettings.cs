@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 public class PlanetShapeSettings 
 {
     public float PlanetRadius = 1f;
@@ -19,6 +20,8 @@ public class PlanetShapeSettings
             NoiseSettings = noiseSettings;
         }
     }
+
+    public PlanetShapeSettings() { }
 
     public PlanetShapeSettings(float planetRadius, PlanetNoiseLayer[] noiseLayers)
     {

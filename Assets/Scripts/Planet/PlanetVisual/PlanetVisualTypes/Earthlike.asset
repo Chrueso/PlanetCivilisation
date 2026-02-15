@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e58077dc2bb8694ca41534046d8bb62, type: 3}
-  m_Name: PlanetVisualPresets
+  m_Name: Earthlike
   m_EditorClassIdentifier: Assembly-CSharp::PlanetVisualPresets
   PlanetRadius:
     Min: 1
@@ -22,8 +22,8 @@ MonoBehaviour:
       FilterType: 0
       SimpleNoiseSettingsPreset:
         Strength:
-          Min: 0.06
-          Max: 0.04
+          Min: 0.04
+          Max: 0.06
         Layers:
           Min: 4
           Max: 4

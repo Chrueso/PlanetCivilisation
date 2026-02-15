@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlanetVisualPresets", menuName = "Scriptable Objects/PlanetVisualPresets")]
-public class PlanetVisualProcederalPresetSO : ScriptableObject
+public class PlanetVisualTypesSO : ScriptableObject
 {
     public MinMaxf PlanetRadius;
     public PlanetNoiseLayerPreset[] NoiseLayersPresets;

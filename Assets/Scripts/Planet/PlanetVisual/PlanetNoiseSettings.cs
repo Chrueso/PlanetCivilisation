@@ -1,4 +1,5 @@
 using UnityEngine;
+using static PlanetNoiseSettings;
 
 [System.Serializable]
 public class PlanetNoiseSettings
@@ -6,7 +7,9 @@ public class PlanetNoiseSettings
     public enum NoiseFilterType { Simple, Rigid };
     public NoiseFilterType FilterType;
 
+    [ConditionalHide("FilterType", 0)]
     public PlanetSimpleNoiseSettings SimpleNoiseSettings;
+    [ConditionalHide("FilterType", 1)]
     public PlanetRigidNoiseSettings RigidNoiseSettings;
 
     [System.Serializable]
