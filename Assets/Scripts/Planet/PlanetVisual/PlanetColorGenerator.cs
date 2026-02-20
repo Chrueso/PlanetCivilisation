@@ -5,6 +5,7 @@ public class PlanetColorGenerator
     private PlanetColorSettings settings;
     private Texture2D texture;
     private const int textureResolution = 50;
+    private MaterialPropertyBlock propertyBlock;
 
     public void UpdateSettings(PlanetColorSettings settings)
     {
@@ -14,14 +15,14 @@ public class PlanetColorGenerator
         {
             texture = new Texture2D(textureResolution, 1);
         }
+
+        if (propertyBlock == null)
+        {
+            propertyBlock = new MaterialPropertyBlock();
+        }
     }
 
-    public void UpdateElevation(MinMaxf elevationMinMax)
-    {
-        settings.Material.SetVector("_elevationMinMax", new Vector4(elevationMinMax.Min, elevationMinMax.Max));
-    }
-
-    public void UpdateColors()
+    public void UpdateColors(Renderer[] renderers, MinMaxf elevationMinMax)
     {
         Color[] colors = new Color[textureResolution];
         for (int i = 0; i < textureResolution; i++)
@@ -31,7 +32,29 @@ public class PlanetColorGenerator
 
         texture.SetPixels(colors);
         texture.Apply();
-        settings.Material.SetTexture("_planetTexture", texture);
+
+        propertyBlock.Clear();
+        propertyBlock.SetTexture("_planetTexture", texture);
+        propertyBlock.SetVector("_elevationMinMax",
+            new Vector4(elevationMinMax.Min, elevationMinMax.Max));
+
+        foreach (var renderer in renderers)
+        {
+            if (renderer != null)
+            {
+                renderer.SetPropertyBlock(propertyBlock);
+            }
+        }
     }
 
+    public void Cleanup()
+    {
+        if (texture != null)
+        {
+            if (Application.isPlaying)
+                Object.Destroy(texture);
+            else
+                Object.DestroyImmediate(texture); //for editor
+        }
+    }
 }

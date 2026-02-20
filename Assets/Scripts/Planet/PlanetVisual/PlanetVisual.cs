@@ -18,8 +18,6 @@ public class PlanetVisual : MonoBehaviour
 
     private TerrainFace[] terrainFaces;
     private Renderer[] renderers;
-    private Texture2D planetTexture;
-    private MaterialPropertyBlock propertyBlock;
 
     private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
@@ -67,11 +65,6 @@ public class PlanetVisual : MonoBehaviour
             meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = ColorSettings.Material;
             renderers[i] = meshFilters[i].GetComponent<MeshRenderer>();
             terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, Resolution, directions[i]);
-
-            if (propertyBlock == null)
-            {
-                propertyBlock = new MaterialPropertyBlock();
-            }
         }
     }
 
@@ -96,59 +89,16 @@ public class PlanetVisual : MonoBehaviour
         {
             face.ConstructMesh();
         }
-
-        colorGenerator.UpdateElevation(shapeGenerator.ElevationMinMax);
     }
 
     private void GenerateColors()
     {
-        if (renderers == null || renderers.Length == 0) return;
-
-        // Create texture if needed
-        if (planetTexture == null)
-        {
-            planetTexture = new Texture2D(50, 1);
-        }
-
-        // Fill texture with gradient colors
-        Color[] colors = new Color[50];
-        for (int i = 0; i < 50; i++)
-        {
-            float t = i / 49f;
-            colors[i] = ColorSettings.Gradient.Evaluate(t);
-        }
-        planetTexture.SetPixels(colors);
-        planetTexture.Apply();
-
-        // Set per-planet properties using property block
-        propertyBlock.Clear();
-        propertyBlock.SetTexture("_planetTexture", planetTexture);
-        propertyBlock.SetVector("_elevationMinMax",
-            new Vector4(shapeGenerator.ElevationMinMax.Min,
-                       shapeGenerator.ElevationMinMax.Max));
-
-        // Apply to all 6 faces of THIS planet only
-        foreach (var renderer in renderers)
-        {
-            if (renderer != null)
-            {
-                renderer.SetPropertyBlock(propertyBlock);
-            }
-        }
-
-        Debug.Log($"Updated colors for {gameObject.name} with texture ID: {planetTexture.GetInstanceID()}");
+        colorGenerator.UpdateColors(renderers, shapeGenerator.ElevationMinMax);
     }
 
-    // Clean up texture when planet is destroyed
     private void OnDestroy()
     {
-        if (planetTexture != null)
-        {
-            if (Application.isPlaying)
-                Destroy(planetTexture);
-            else
-                DestroyImmediate(planetTexture);
-        }
+        colorGenerator.Cleanup();
     }
 }
 
