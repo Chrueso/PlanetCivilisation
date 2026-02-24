@@ -5,6 +5,7 @@ public class PlayerInteractionController : MonoBehaviour
 {
     private Camera cameraInstance;
     private bool inPlanet = false;
+    private float offset = 2f;
     private void Start()
     {
         cameraInstance = Camera.main;
@@ -23,21 +24,22 @@ public class PlayerInteractionController : MonoBehaviour
             print(hit.collider.gameObject.name);
 
             // i changed so it detect isit planet instead of check name of object (eexuan
-            Planet planet = hit.collider.GetComponent<Planet>();
+            //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            if (planet != null)
+            if (GetPlanet(name) != null)
             {
-                PlanetManagementInterface.main.ShowInterface(planet);
+                //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
                 CameraController.main.Disable();
-                cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 2f);
+                cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 4f) - new Vector3(0,offset,0);
                 inPlanet = true;
                 
             } else
             {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
-                    PlanetManagementInterface.main.HideInterface();
+                    //PlanetManagementInterface.main.HideInterface();
                     CameraController.main.Enable();
+                    cameraInstance.transform.position = CameraController.main.CurrPos;
                     inPlanet = false;
                 }
             }
@@ -45,8 +47,9 @@ public class PlayerInteractionController : MonoBehaviour
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
-                PlanetManagementInterface.main.HideInterface();
+                //PlanetManagementInterface.main.HideInterface();
                 CameraController.main.Enable();
+                cameraInstance.transform.position = CameraController.main.CurrPos;
                 inPlanet = false;
             }
         }
