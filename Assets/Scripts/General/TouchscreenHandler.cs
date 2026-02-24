@@ -37,7 +37,7 @@ public class TouchscreenHandler : MonoBehaviour
         EnhancedTouchSupport.Disable();
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         var activeTouches = Touch.activeTouches;
         foreach (Touch touch in activeTouches) 
