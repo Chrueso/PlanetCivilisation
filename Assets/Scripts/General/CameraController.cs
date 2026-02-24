@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
     private bool waitForReset = false;
     private Camera cameraInstance;
     private Vector3 startingPos = Vector2.zero;
+    public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
     private void Awake()
@@ -31,6 +32,7 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         cameraInstance = Camera.main;
+        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
         #region ORTHO EVENTS
         // 90 degree orthographic implementation
         if (orthographicPanning)
@@ -74,6 +76,7 @@ public class CameraController : MonoBehaviour
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         startingPos = GetWorldPos(z, e.Pos);
+        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
 
     }
 
@@ -93,8 +96,7 @@ public class CameraController : MonoBehaviour
     {
         Ray fingerPos = cameraInstance.ScreenPointToRay(pos);
         Plane plane = new Plane(cameraInstance.transform.forward, new Vector3(0,0,z));
-        float distance;
-        plane.Raycast(fingerPos, out distance);
+        plane.Raycast(fingerPos, out float distance);
         return fingerPos.GetPoint(distance);
 
     }

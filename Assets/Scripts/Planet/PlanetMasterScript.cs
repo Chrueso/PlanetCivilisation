@@ -38,7 +38,7 @@ public class PlanetMasterScript : MonoBehaviour
         foreach (Vector2 sample in pds.Samples())
         {
             Vector2 spawnPos = sample - halfSpawnRegion;
-            Vector3 pos = new Vector3(spawnPos.x, 0, spawnPos.y);
+            Vector3 pos = new Vector3(spawnPos.x, 20, spawnPos.y);
             Vector3 halfPos = pos * 0.5f;
             GameObject planetObject = Instantiate(planetPrefab, pos, Quaternion.identity);
             planetObject.name = $"Planet{iter}";
