@@ -28,7 +28,25 @@ public class PlanetMasterScript : MonoBehaviour
     }
     private void Start()
     {
-        //GeneratePlanet();
+        GeneratePlanet();
+    }
+    private void GeneratePlanet()
+    {
+        PoissonDiscSampler pds = new(spawnRegion.x, spawnRegion.y, radius);
+        Vector2 halfSpawnRegion = spawnRegion * 0.5f;
+        int iter = 0;
+        foreach (Vector2 sample in pds.Samples())
+        {
+            Vector2 spawnPos = sample - halfSpawnRegion;
+            Vector3 pos = new Vector3(spawnPos.x, 20, spawnPos.y);
+            Vector3 halfPos = pos * 0.5f;
+            GameObject planetObject = Instantiate(planetPrefab, pos, Quaternion.identity);
+            planetObject.name = $"Planet{iter}";
+            PlanetData planetInfo = new(name: planetObject.name, resources: new List<Resource>(), structure: Structure.Factory);
+            planetDict.Add(planetObject.name, planetInfo);
+            iter++;
+            if (iter >= maxBalls) break;
+        }
     }
     //private void GeneratePlanet()
     //{
