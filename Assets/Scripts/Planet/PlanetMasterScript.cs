@@ -42,8 +42,8 @@ public class PlanetMasterScript : MonoBehaviour
             Vector3 halfPos = pos * 0.5f;
             GameObject planetObject = Instantiate(planetPrefab, pos, Quaternion.identity);
             planetObject.name = $"Planet{iter}";
-            PlanetData planetInfo = new(name: planetObject.name, resources: new List<Resource>(), structure: Structure.Factory);
-            planetDict.Add(planetObject.name, planetInfo);
+            //PlanetData planetInfo = new(planetName: planetObject.name, resourceTypes: new List<Resource>(), structure: Structure.Factory);
+            //planetDict.Add(planetObject.name, planetInfo);
             iter++;
             if (iter >= maxBalls) break;
         }

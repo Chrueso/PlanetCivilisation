@@ -5,14 +5,23 @@ public class Planet : MonoBehaviour
 {
     public string PlanetName { get; private set; }
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
+
+    public Dictionary<ShipType, int> StationedShips { get; private set; } = new Dictionary<ShipType, int>();  //added by ysaac
+
     public FactionType FactionType { get; private set; }
     public int Structures { get; private set; }
-    public int Population { get; private set; }
+    public int Population { get; private set; } // might be obsolete now
     [SerializeField] private PlanetVisual planetVisual;
 
     public void Init(PlanetData data)
     {
         PlanetName = data.Name;
+
+        //create initial stationed ship entries for each ship type (added by ysaac)
+        foreach (var type in ShipTypes.AllTypes)
+        {
+            StationedShips.Add(type, 0);
+        }
 
         // Assign initial resources
         Resources.Add(ResourceType.Rock, 0); // every planet has rock by default
@@ -62,7 +71,7 @@ public class Planet : MonoBehaviour
     //    this.structure = structure;
     //}
 
-    public void GainResourcePerTurn() 
+    public void GainResourcePerTurn()
     {
         // Add resource to player data
     }
@@ -70,6 +79,16 @@ public class Planet : MonoBehaviour
     public void GainStructureBenefit()
     {
         // Based on structure call functions to stuff
+    }
+
+    private void AddShip(ShipType type, int shipCount)
+    {
+        StationedShips[type] += shipCount;
+    }
+
+    private void RemoveShip(ShipType type, int shipCount)
+    {
+        StationedShips[type] = Mathf.Max(StationedShips[type] - shipCount, 0);
     }
 
     private void IncreasePopulation()
