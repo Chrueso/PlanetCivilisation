@@ -5,7 +5,6 @@ public class PlanetManager : Singleton<PlanetManager>
 {
     public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
 
-    [SerializeField] private GameObject planetPrefab;
     [SerializeField] private float radiusBetweenPlanets = 1.2f;
     [SerializeField] private int maxPlanets = 20;
     [SerializeField] private Vector2 spawnRegion = new Vector3(8, 4);

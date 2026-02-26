@@ -54,12 +54,12 @@ public class PoissonDiscSampler
     public IEnumerable<Vector2> Samples()
     {
         // First sample is choosen randomly
-        yield return AddSample(new Vector2(rng.Next() * rect.width, rng.Next() * rect.height));
+        yield return AddSample(new Vector2((float)rng.NextDouble() * rect.width, (float)rng.NextDouble() * rect.height));
 
         while (activeSamples.Count > 0)
         {
             // Pick a random active sample
-            int i = rng.Next() * activeSamples.Count;
+            int i = rng.Next(activeSamples.Count);
             Vector2 sample = activeSamples[i];
 
             // Try `k` random candidates between [radius, 2 * radius] from that sample.
