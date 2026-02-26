@@ -17,6 +17,8 @@ public class PlayerInteractionController : MonoBehaviour
         if (e.Index != 0) return;
         Ray fingerRay = cameraInstance.ScreenPointToRay(e.Pos);
         RaycastHit hit;
+        
+        //When tap
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
             string name = hit.collider.gameObject.name;
@@ -57,12 +59,12 @@ public class PlayerInteractionController : MonoBehaviour
 
     private bool CheckPlanet(string planetName)
     {
-        return PlanetMasterScript.main.Planets.ContainsKey(planetName);
+        return PlanetManager.main.Planets.ContainsKey(planetName);
     }
 
-    private Planet GetPlanet(string planetName)
+    private PlanetData GetPlanet(string planetName)
     {
-        PlanetMasterScript.main.Planets.TryGetValue(planetName, out var result);
+        PlanetManager.main.Planets.TryGetValue(planetName, out var result);
         return result;
     }
 

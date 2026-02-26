@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static PlanetShapeSettings;
 
 public class PlanetGenerator : Singleton<PlanetGenerator>
 {
     [SerializeField] List<PlanetVisualTypesSO> presets;
-    [SerializeField] private Planet planetPrefab;
+    [SerializeField] private GameObject planetPrefab;
     static readonly string[] planetBaseNames =
     {
         "Aurelia",
@@ -181,7 +182,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         return presets[num];
     }
 
-    private PlanetData GeneratePlanetData(System.Random rng)
+    public (GameObject, PlanetData) GeneratePlanet(System.Random rng, Vector3 position, Quaternion rotation, Transform parent)
     {
         string planetName = GeneratePlanetName(rng);
         int planetSeed = SeedUtil.StringToHashCode(planetName);
@@ -197,19 +198,13 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
 
         PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
-        return new PlanetData(planetName, additionalResources, factionType, shapeSettings, colorSettings);
+        PlanetData data = new PlanetData(planetName, additionalResources, factionType);
 
+        GameObject planetObj = Instantiate(planetPrefab, position, rotation, parent);
+
+        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
+        planetVisual.GeneratePlanetVisual(shapeSettings, colorSettings);
+
+        return (planetObj, data);
     }
-
-    public Planet InstantiatePlanet(System.Random rng, Vector3 position, Transform parent)
-    {
-        Planet planet = Instantiate(planetPrefab, position, Quaternion.identity, parent);
-        PlanetData data = GeneratePlanetData(rng);
-
-        planet.Init(data);
-
-        return planet;
-
-    }
-
 }

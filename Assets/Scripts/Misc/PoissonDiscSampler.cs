@@ -17,6 +17,10 @@ using System.Collections.Generic;
 ///
 /// Author: Gregory Schlomoff (gregory.schlomoff@gmail.com)
 /// Released in the public domain
+/// 
+/// modified by Zen 2/26/26
+///   - Replaced UnityEngine.Random.value with System.Random and Next/NextDouble for deterministic RNG
+///   - Constructor now accepts a System.Random parameter
 public class PoissonDiscSampler
 {
     private const int k = 30;  // Maximum number of attempts before marking a sample as inactive.
@@ -26,19 +30,23 @@ public class PoissonDiscSampler
     private readonly float cellSize;
     private Vector2[,] grid;
     private List<Vector2> activeSamples = new List<Vector2>();
+    System.Random rng;
 
     /// Create a sampler with the following parameters:
     ///
     /// width:  each sample's x coordinate will be between [0, width]
     /// height: each sample's y coordinate will be between [0, height]
     /// radius: each sample will be at least `radius` units away from any other sample, and at most 2 * `radius`.
-    public PoissonDiscSampler(float width, float height, float radius)
+    public PoissonDiscSampler(float width, float height, float radius, System.Random rng = null)
     {
         rect = new Rect(0, 0, width, height);
         radius2 = radius * radius;
         cellSize = radius / Mathf.Sqrt(2);
         grid = new Vector2[Mathf.CeilToInt(width / cellSize),
                            Mathf.CeilToInt(height / cellSize)];
+
+        // If no RNG provided, create a new one
+        this.rng = rng ?? new System.Random();
     }
 
     /// Return a lazy sequence of samples. You typically want to call this in a foreach loop, like so:
@@ -46,20 +54,20 @@ public class PoissonDiscSampler
     public IEnumerable<Vector2> Samples()
     {
         // First sample is choosen randomly
-        yield return AddSample(new Vector2(Random.value * rect.width, Random.value * rect.height));
+        yield return AddSample(new Vector2(rng.Next() * rect.width, rng.Next() * rect.height));
 
         while (activeSamples.Count > 0)
         {
             // Pick a random active sample
-            int i = (int)Random.value * activeSamples.Count;
+            int i = rng.Next() * activeSamples.Count;
             Vector2 sample = activeSamples[i];
 
             // Try `k` random candidates between [radius, 2 * radius] from that sample.
             bool found = false;
             for (int j = 0; j < k; ++j)
             {
-                float angle = 2 * Mathf.PI * Random.value;
-                float r = Mathf.Sqrt(Random.value * 3 * radius2 + radius2); // See: http://stackoverflow.com/questions/9048095/create-random-number-within-an-annulus/9048443#9048443
+                float angle = 2 * Mathf.PI * (float)rng.NextDouble();
+                float r = Mathf.Sqrt((float)rng.NextDouble() * 3 * radius2 + radius2); // See: http://stackoverflow.com/questions/9048095/create-random-number-within-an-annulus/9048443#9048443
                 Vector2 candidate = sample + r * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
                 // Accept candidates if it's inside the rect and farther than 2 * radius to any existing sample.

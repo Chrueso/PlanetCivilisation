@@ -81,8 +81,6 @@ MonoBehaviour:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     Material: {fileID: 0}
-  ShapeSettingsFoldout: 0
-  ColorSettingsFoldout: 0
   meshFilters: []
 --- !u!1 &6899894045299733055
 GameObject:
@@ -93,7 +91,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 146926478449784230}
-  - component: {fileID: 6468836987795017850}
   m_Layer: 0
   m_Name: Planet2
   m_TagString: Untagged
@@ -117,16 +114,3 @@ Transform:
   - {fileID: 8208247785028042328}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6468836987795017850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6899894045299733055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eecc1b7dae2cc04c86c37778a33ec83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Planet
-  planetVisual: {fileID: 3062634855898377556}
