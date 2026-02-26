@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlanetManager : MonoBehaviour 
+public class PlanetManager : Singleton<PlanetManager>
 {
-    private Dictionary<string, PlanetData> planetDic;
+    public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
 
     [SerializeField] private GameObject planetPrefab;
     [SerializeField] private float radiusBetweenPlanets = 1.2f;
@@ -26,7 +26,7 @@ public class PlanetManager : MonoBehaviour
 
             planetObject.name = $"Planet{iter}";
 
-            planetDic.Add(planetObject.name, planetData);
+            PlanetDict.Add(planetObject.name, planetData);
             iter++;
             if (iter >= maxPlanets) break;
         }

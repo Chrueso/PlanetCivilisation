@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 using static PlanetShapeSettings;
 
 public class PlanetGenerator : Singleton<PlanetGenerator>

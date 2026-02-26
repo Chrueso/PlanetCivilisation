@@ -59,12 +59,12 @@ public class PlayerInteractionController : MonoBehaviour
 
     private bool CheckPlanet(string planetName)
     {
-        return PlanetManager.main.Planets.ContainsKey(planetName);
+        return PlanetManager.Instance.PlanetDict.ContainsKey(planetName);
     }
 
     private PlanetData GetPlanet(string planetName)
     {
-        PlanetManager.main.Planets.TryGetValue(planetName, out var result);
+        PlanetManager.Instance.PlanetDict.TryGetValue(planetName, out var result);
         return result;
     }
 

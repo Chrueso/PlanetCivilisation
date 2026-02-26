@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private PlanetManager planetManager;
-
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
 
@@ -13,7 +11,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         GenerateSeed();
-        planetManager.GeneratePlanets(PlanetRNG);
+        PlanetManager.Instance.GeneratePlanets(PlanetRNG);
     }
 
     private void GenerateSeed()
