@@ -28,9 +28,14 @@ public class PlayerInteractionController : MonoBehaviour
             // i changed so it detect isit planet instead of check name of object (eexuan
             //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            if (GetPlanet(name) != null)
+            Planet planet = GetPlanet(name);
+            if (planet != null)
             {
                 //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
+                if (planet.FactionType == FactionType.Human)
+                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
+                else
+                    UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
                 CameraController.main.Disable();
                 cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 4f) - new Vector3(0,offset,0);
                 inPlanet = true;
@@ -40,6 +45,7 @@ public class PlayerInteractionController : MonoBehaviour
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
                     //PlanetManagementInterface.main.HideInterface();
+                    UINavigationManager.Instance.DismissAllSheets();
                     CameraController.main.Enable();
                     cameraInstance.transform.position = CameraController.main.CurrPos;
                     inPlanet = false;
