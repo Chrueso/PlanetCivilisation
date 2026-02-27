@@ -33,7 +33,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
     private UIState parentSheet;
-    private Planet currentPlanet;
+    private PlanetData currentPlanet;
     private bool scienceBuilt;
     private bool attackBuilt;
 
@@ -129,13 +129,13 @@ public class UINavigationManager : Singleton<UINavigationManager>
         }
     }
 
-    public void ShowFriendlyPlanetSheet(Planet planet)
+    public void ShowFriendlyPlanetSheet(PlanetData planet)
     {
         currentPlanet = planet;
         SetState(UIState.FriendlySheet);
     }
 
-    public void ShowEnemyPlanetSheet(Planet planet)
+    public void ShowEnemyPlanetSheet(PlanetData planet)
     {
         currentPlanet = planet;
         SetState(UIState.EnemySheet);

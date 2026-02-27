@@ -33,7 +33,7 @@ public class SafeAreaAdapter : MonoBehaviour
             Refresh();
         }
     }
-
+      
     private void Refresh()
     {
         Rect safeArea = Screen.safeArea;

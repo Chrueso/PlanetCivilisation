@@ -28,7 +28,7 @@ public class PlayerInteractionController : MonoBehaviour
             // i changed so it detect isit planet instead of check name of object (eexuan
             //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            Planet planet = GetPlanet(name);
+            PlanetData planet = GetPlanet(name);
             if (planet != null)
             {
                 //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
