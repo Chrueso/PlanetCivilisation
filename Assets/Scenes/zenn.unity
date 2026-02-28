@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5805633844693602110, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: orthographicPanning
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5817399068131565331, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: m_Name
@@ -491,7 +491,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 15
   m_Depth: -1
   m_CullingMask:
