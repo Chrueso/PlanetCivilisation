@@ -1007,6 +1007,8 @@ GameObject:
   - component: {fileID: 2031901390}
   - component: {fileID: 2031901389}
   - component: {fileID: 2031901391}
+  - component: {fileID: 2031901392}
+  - component: {fileID: 2031901393}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1053,10 +1055,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc13b26df440b0f488cfcfa2503b38eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetMasterScript
+  radiusBetweenPlanets: 1.2
+  maxPlanets: 100
+  spawnRegion: {x: 128, y: 128}
+--- !u!114 &2031901392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031901388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9bfee93bc57d8428416d31de348ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+--- !u!114 &2031901393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031901388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22421298dcb30fe4d8d37b65351ecaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetGenerator
+  presets: []
   planetPrefab: {fileID: 6543573944910321850, guid: ec6b81f390b8c43468930e180662f266, type: 3}
-  radius: 2.5
-  maxBalls: 30
-  spawnRegion: {x: 32, y: 32}
 --- !u!1001 &151819395678268233
 PrefabInstance:
   m_ObjectHideFlags: 0

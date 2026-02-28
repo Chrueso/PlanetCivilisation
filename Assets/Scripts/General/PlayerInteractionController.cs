@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInteractionController : MonoBehaviour
@@ -22,22 +23,23 @@ public class PlayerInteractionController : MonoBehaviour
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
             string name = hit.collider.gameObject.name;
-            if (CheckPlanet(name))
+            if (true)
             print(hit.collider.gameObject.name);
 
             // i changed so it detect isit planet instead of check name of object (eexuan
             //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            PlanetData planet = GetPlanet(name);
-            if (planet != null)
+            //PlanetData planet = GetPlanet(name);
+            if (true)
             {
                 //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
-                if (planet.FactionType == FactionType.Human)
-                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
+                if (true)
+                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(new PlanetData("F", new List<ResourceType>(), FactionType.DemiHuman));
                 else
-                    UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
+                    UINavigationManager.Instance.ShowEnemyPlanetSheet(new PlanetData("F", new List<ResourceType>(), FactionType.DemiHuman));
                 CameraController.main.Disable();
-                cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 4f) - new Vector3(0,offset,0);
+                Vector3 planetPos = hit.collider.gameObject.transform.position;
+                cameraInstance.transform.position = new Vector3(planetPos.x, 30, planetPos.z);
                 inPlanet = true;
                 
             } else

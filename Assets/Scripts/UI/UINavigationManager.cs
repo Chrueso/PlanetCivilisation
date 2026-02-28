@@ -83,7 +83,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     private void AdjustBaseUIForSafeArea()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         Canvas.ForceUpdateCanvases();
@@ -186,7 +186,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         bool showBase = newState == UIState.BaseUI;
         if (bottomPanel) bottomPanel.SetActive(showBase);
         if (topResourceBar) topResourceBar.SetActive(true);
-        if (minimap) minimap.SetActive(showBase);
+        //if (minimap) minimap.SetActive(showBase);
         if (nextTurnButton) nextTurnButton.gameObject.SetActive(showBase);
 
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);
@@ -199,6 +199,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         // Build content on first open (panel must be active first)
         if (newState == UIState.SciencePanel && !scienceBuilt)
         {
+            return;
             scienceBuilt = true;
             // Force layout to settle after SafeArea anchors applied
             Canvas.ForceUpdateCanvases();
@@ -207,6 +208,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         }
         if (newState == UIState.AttackPanel && !attackBuilt)
         {
+            return;
             attackBuilt = true;
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(attackPanel.GetComponent<RectTransform>());

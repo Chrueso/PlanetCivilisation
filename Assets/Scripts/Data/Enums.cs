@@ -7,10 +7,11 @@ public static class Enums
 
 public enum Resource
 {
-    Rock, Iron, Copper
+    Rock, Iron, Copper,
+    Metals, Rations, Energy_Source
 }
 
 public enum Structure
 {
-    City, Mixer, Factory
+    Extractor, Shipyard
 }
