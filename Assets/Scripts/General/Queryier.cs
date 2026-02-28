@@ -6,7 +6,7 @@ public class Queryier : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void OnEnable()
     {
-        print(TouchscreenHandler.main);
+        print(TouchscreenHandler.Instance);
     }
     void Start()
     {
@@ -17,7 +17,7 @@ public class Queryier : MonoBehaviour
     {
         while (true)
         {
-            print(TouchscreenHandler.main);
+            print(TouchscreenHandler.Instance);
             yield return new WaitForSeconds(2);
         }
     }
