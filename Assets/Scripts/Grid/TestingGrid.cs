@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class TestingGrid : MonoBehaviour
 {
-    private int width = 3;
-    private int height = 3;
-    private float cellSize = 10f;
+    private int width = 10;
+    private int height = 10;
+    private float cellSize = 5f;
 
     private Camera cameraInstance;
     private float fingerRayMaxDistance = 1000f;
@@ -29,22 +29,35 @@ public class TestingGrid : MonoBehaviour
                 Vector3 worldPos = HexGridXZ<GridHex>.GetWorldPosition(x, z, cellSize, transform.position);
                 return new GridHex(cellSize, gridPos, worldPos);
             }
+
+            
         );
 
-        col = GetComponent<BoxCollider>();
-        col.size = new Vector3(grid.TotalWidth, 0f, grid.TotalHeight);
-        col.center = new Vector3(grid.TotalWidth, 0f, grid.TotalHeight) * 0.5f + grid.OriginPosition;
+        BoxCollider col = GetComponent<BoxCollider>();
+
+        float colWidth = grid.TotalWidth + grid.CellSize * 0.5f;
+        float colHeight = (grid.TotalHeight * 0.75f) + (grid.CellSize * 0.25f);
+        col.size = new Vector3(colWidth, 0f, colHeight);
+
+        float colCenterX = (grid.TotalWidth * 0.5f) - (grid.CellSize * 0.25f);
+        float colCenterZ = (grid.TotalHeight * 0.5f) - (grid.CellSize * 0.75f);
+
+        col.center = new Vector3(colCenterX, 0f, colCenterZ) + grid.OriginPosition;
+
         col.isTrigger = true;
+
 
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
+                GridHex hex = grid.GetGridObject(x, z);
                 GameObject obj = Instantiate(hexPrefab, grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
                 obj.name = ("Hex " + x + ", " + z);
 
                 GridHexVisual hexVisual = obj.GetComponent<GridHexVisual>();
-                hexVisual.Init(grid.GetGridObject(x, z));
+                hexVisual.Init(hex);
+                hex.GridHexVisual = hexVisual;
             }
         }
     }
@@ -58,8 +71,11 @@ public class TestingGrid : MonoBehaviour
         if (Physics.Raycast(fingerRay, out hit, fingerRayMaxDistance))
         {
             Debug.Log(hit.point);
-            Vector3Int gridPos = grid.GetPositionOnGrid(hit.point);
-            Debug.Log(gridPos);
+            GridHex hex = grid.GetGridObject(hit.point);
+            Debug.Log(hex.WorldPosition);
+            Debug.Log(hex.GridPosition);
+            hex.GridHexVisual.OnSelected();
+
         }
     }
 }

@@ -8,10 +8,14 @@ public class GridHexVisual : MonoBehaviour
 {
     private GridHex gridHex;
     private MeshFilter meshFilter;
-    private MeshRenderer meshRenderer;  
-
+    private MeshRenderer meshRenderer;
+  
     [SerializeField] private Material material;
     private MaterialPropertyBlock propertyBlock;
+
+    private bool isSelected = false;
+    private Color defaultColor = Color.cyan;
+    private Color selectedColor = Color.green;
 
     public void Init(GridHex gridHex)
     {
@@ -31,13 +35,16 @@ public class GridHexVisual : MonoBehaviour
 
         // Create vertices
         Vector3[] vertices = new Vector3[6];
+        float scaleX = 2f / Mathf.Sqrt(3f);
+        float radius = gridHex.CellSize * 0.5f; //makes width equal height
+
         for (int i = 0; i < 6; i++)
         {
             float angle = (90f + 60f * i) * Mathf.Deg2Rad; //+90 start at 90deg cause tip needs to be up
             vertices[i] = new Vector3(
-                Mathf.Cos(angle) * gridHex.CellSize,
+                Mathf.Cos(angle) * radius * scaleX,
                 0,
-                Mathf.Sin(angle) * gridHex.CellSize
+                Mathf.Sin(angle) * radius
             );
         }
 
@@ -62,9 +69,16 @@ public class GridHexVisual : MonoBehaviour
 
     public void UpdateMaterial() 
     {
-        meshRenderer.GetPropertyBlock(propertyBlock);   
-        propertyBlock.SetColor("_Color", Color.cyan);        
+        meshRenderer.GetPropertyBlock(propertyBlock);
+        Color currentColor = isSelected ? selectedColor : defaultColor;
+        propertyBlock.SetColor("_BaseColor", currentColor);        
         meshRenderer.SetPropertyBlock(propertyBlock);   
+    }
+
+    public void OnSelected()
+    {
+        isSelected = !isSelected;
+        UpdateMaterial();
     }
 
 
