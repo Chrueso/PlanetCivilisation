@@ -173,7 +173,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         //parentSheet = CurrentState;
         SetState(UIState.AttackPanel);
-        BattleManager.Instance.SimulateBattle();
+        //BattleManager.Instance.SimulateBattle();
         Vector3 pos = Camera.main.WorldToScreenPoint(PlayerInteractionController.Instance.PlanetObject.transform.position);
         stateText.position = pos + new Vector3(0f, -500f, 0f);
         stateText.GetComponent<TextMeshProUGUI>().text = "ATTACKING";

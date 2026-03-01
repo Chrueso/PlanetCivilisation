@@ -43,7 +43,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                     UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
                 else
                     UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
-                CameraController.main.Disable();
+                CameraController.Instance.Disable();
                 Vector3 planetPos = hit.collider.gameObject.transform.position;
                 cameraInstance.transform.position = new Vector3(planetPos.x, 30, planetPos.z - offset);
                 inPlanet = true;
@@ -68,8 +68,8 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 PlanetObject = null;
                 CurrentPlanet = null;
                 UINavigationManager.Instance.DismissAllSheets();
-                CameraController.main.Enable();
-                cameraInstance.transform.position = CameraController.main.CurrPos;
+                CameraController.Instance.Enable();
+                cameraInstance.transform.position = CameraController.Instance.CurrPos;
                 inPlanet = false;
             }
         }
