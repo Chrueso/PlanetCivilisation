@@ -8,6 +8,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
     private bool inPlanet = false;
     private float offset = 2f;
     public PlanetData CurrentPlanet { get; private set; }
+    public GameObject PlanetObject { get; private set; }
 
     // hardcode
     private FactionType playerFaction = FactionType.Human;
@@ -36,6 +37,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
             PlanetData planet = GetPlanet(name);
             if (planet != null)
             {
+                PlanetObject = hit.collider.gameObject;
                 CurrentPlanet = planet;
                 if (planet.FactionType == playerFaction)
                     UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
@@ -51,6 +53,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
             {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
+                    PlanetObject = null;
                     CurrentPlanet = planet;
                     UINavigationManager.Instance.DismissAllSheets();
                     CameraController.main.Enable();
@@ -62,6 +65,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
+                PlanetObject = null;
                 CurrentPlanet = null;
                 UINavigationManager.Instance.DismissAllSheets();
                 CameraController.main.Enable();
