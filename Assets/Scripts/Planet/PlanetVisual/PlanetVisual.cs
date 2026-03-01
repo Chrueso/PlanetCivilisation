@@ -17,17 +17,17 @@ public class PlanetVisual : MonoBehaviour
     private MeshFilter[] meshFilters;
 
     private TerrainFace[] terrainFaces;
-    private Renderer[] renderers;
+    private MeshRenderer[] renderers;
 
     private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
 
-        GenerateMeshComponents();
+        InitMeshComponents();
     }
 
-    public void GenerateMeshComponents()
+    public void InitMeshComponents()
     {
         shapeGenerator.UpdateSettings(ShapeSettings);
         colorGenerator.UpdateSettings(ColorSettings);
@@ -39,7 +39,7 @@ public class PlanetVisual : MonoBehaviour
 
         terrainFaces = new TerrainFace[6];
 
-        if (renderers == null || renderers.Length == 0) renderers = new Renderer[6];
+        if (renderers == null || renderers.Length == 0) renderers = new MeshRenderer[6];
 
         Vector3[] directions = {
             Vector3.up,
@@ -71,14 +71,14 @@ public class PlanetVisual : MonoBehaviour
     public void GeneratePlanetVisual(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
         Init(shapeSettings, colorSettings);
-        GenerateMeshComponents();
+        InitMeshComponents();
         GenerateMesh();
         GenerateColors();
     }
 
     public void UpdatePlanetVisual()
     {
-        GenerateMeshComponents();
+        InitMeshComponents();
         GenerateMesh();
         GenerateColors();
     }

@@ -4,11 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraController : MonoBehaviour
+public class CameraController : Singleton<CameraController> 
 {
     [SerializeField] private bool orthographicPanning = false;
-    private static CameraController instance;
-    public static CameraController main => instance;
 
     private bool eventsEnabled = true;
     private bool waitForReset = false;
@@ -16,18 +14,6 @@ public class CameraController : MonoBehaviour
     private Vector3 startingPos = Vector2.zero;
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
-
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(instance.gameObject);
-            instance = this;
-        } else
-        {
-            instance = this;
-        }
-    }
 
     private void Start()
     {
@@ -37,16 +23,16 @@ public class CameraController : MonoBehaviour
         // 90 degree orthographic implementation
         if (orthographicPanning)
         {
-            TouchscreenHandler.main.FingerDownCallback += PlayerFingerDown;
-            TouchscreenHandler.main.FingerMoveCallback += PlayerFingerMove;
-            TouchscreenHandler.main.FingerUpCallback += PlayerFingerRelease;
+            TouchscreenHandler.Instance.FingerDownCallback += PlayerFingerDown;
+            TouchscreenHandler.Instance.FingerMoveCallback += PlayerFingerMove;
+            TouchscreenHandler.Instance.FingerUpCallback += PlayerFingerRelease;
             return;
         }
         #endregion
 
-        TouchscreenHandler.main.FingerDownCallback += OnPlayerFingerDown;
-        TouchscreenHandler.main.FingerMoveCallback += OnPlayerFingerMove;
-        TouchscreenHandler.main.FingerUpCallback += OnPlayerFingerRelease;
+        TouchscreenHandler.Instance.FingerDownCallback += OnPlayerFingerDown;
+        TouchscreenHandler.Instance.FingerMoveCallback += OnPlayerFingerMove;
+        TouchscreenHandler.Instance.FingerUpCallback += OnPlayerFingerRelease;
 
 
     }
@@ -58,16 +44,16 @@ public class CameraController : MonoBehaviour
         #region ORTHO EVENTS
         if (orthographicPanning)
         {
-            TouchscreenHandler.main.FingerDownCallback -= PlayerFingerDown;
-            TouchscreenHandler.main.FingerMoveCallback -= PlayerFingerMove;
-            TouchscreenHandler.main.FingerUpCallback -= PlayerFingerRelease;
+            TouchscreenHandler.Instance.FingerDownCallback -= PlayerFingerDown;
+            TouchscreenHandler.Instance.FingerMoveCallback -= PlayerFingerMove;
+            TouchscreenHandler.Instance.FingerUpCallback -= PlayerFingerRelease;
             return;
         }
         #endregion
 
-        TouchscreenHandler.main.FingerDownCallback -= OnPlayerFingerDown;
-        TouchscreenHandler.main.FingerMoveCallback -= OnPlayerFingerMove;
-        TouchscreenHandler.main.FingerUpCallback -= OnPlayerFingerRelease;
+        TouchscreenHandler.Instance.FingerDownCallback -= OnPlayerFingerDown;
+        TouchscreenHandler.Instance.FingerMoveCallback -= OnPlayerFingerMove;
+        TouchscreenHandler.Instance.FingerUpCallback -= OnPlayerFingerRelease;
 
     }
 
@@ -75,7 +61,7 @@ public class CameraController : MonoBehaviour
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = GetWorldPos(z, e.Pos);
+        startingPos = GetWorldPos(z, e.ScreenPos);
         CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
 
     }
@@ -86,7 +72,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         if (waitForReset) return;
 
-        Vector3 direction = startingPos - GetWorldPos(z, e.Pos);
+        Vector3 direction = startingPos - GetWorldPos(z, e.ScreenPos);
         direction.y = 0f;
         cameraInstance.transform.position += direction;
         
@@ -105,7 +91,7 @@ public class CameraController : MonoBehaviour
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = GetWorldPos(z, e.Pos);
+        startingPos = GetWorldPos(z, e.ScreenPos);
         if (waitForReset) waitForReset = false;
     }
 
@@ -131,7 +117,7 @@ public class CameraController : MonoBehaviour
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.Pos);
+        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (waitForReset) waitForReset = false;
     }
 
@@ -140,9 +126,9 @@ public class CameraController : MonoBehaviour
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         if (waitForReset) return;
-        Vector3 diff = cameraInstance.ScreenToWorldPoint(e.Pos) - cameraInstance.transform.position;
+        Vector3 diff = cameraInstance.ScreenToWorldPoint(e.ScreenPos) - cameraInstance.transform.position;
         cameraInstance.transform.position = startingPos - diff;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.Pos);
+        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
         {
             
@@ -154,7 +140,7 @@ public class CameraController : MonoBehaviour
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.Pos);
+        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
     }
     #endregion
 

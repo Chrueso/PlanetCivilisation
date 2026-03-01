@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 
 public static class SeedUtil
 {
@@ -13,10 +12,4 @@ public static class SeedUtil
             return (int)(hash & 0x7FFFFFFF);
         }
     }
-
-    //public static bool IsValidSeed(string seed)
-    //{
-    //    return Regex.IsMatch(seed, @"^[A-Za-z]{6}\d{4}$");
-
-    //}
 }

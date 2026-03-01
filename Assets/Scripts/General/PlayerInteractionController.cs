@@ -9,13 +9,13 @@ public class PlayerInteractionController : MonoBehaviour
     private void Start()
     {
         cameraInstance = Camera.main;
-        TouchscreenHandler.main.FingerDownCallback += FindPlanet;
+        TouchscreenHandler.Instance.FingerDownCallback += FindPlanet;
     }
 
-    private void FindPlanet(object sender, TouchInfo e)
+    private void FindPlanet(object sender, TouchInfo touchInfo)
     {
-        if (e.Index != 0) return;
-        Ray fingerRay = cameraInstance.ScreenPointToRay(e.Pos);
+        if (touchInfo.Index != 0) return;
+        Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
         RaycastHit hit;
         
         //When tap
@@ -36,7 +36,7 @@ public class PlayerInteractionController : MonoBehaviour
                     UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
                 else
                     UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
-                CameraController.main.Disable();
+                CameraController.Instance.Disable();
                 cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 4f) - new Vector3(0,offset,0);
                 inPlanet = true;
                 
@@ -46,8 +46,8 @@ public class PlayerInteractionController : MonoBehaviour
                 {
                     //PlanetManagementInterface.main.HideInterface();
                     UINavigationManager.Instance.DismissAllSheets();
-                    CameraController.main.Enable();
-                    cameraInstance.transform.position = CameraController.main.CurrPos;
+                    CameraController.Instance.Enable();
+                    cameraInstance.transform.position = CameraController.Instance.CurrPos;
                     inPlanet = false;
                 }
             }
@@ -56,8 +56,8 @@ public class PlayerInteractionController : MonoBehaviour
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
                 //PlanetManagementInterface.main.HideInterface();
-                CameraController.main.Enable();
-                cameraInstance.transform.position = CameraController.main.CurrPos;
+                CameraController.Instance.Enable();
+                cameraInstance.transform.position = CameraController.Instance.CurrPos;
                 inPlanet = false;
             }
         }

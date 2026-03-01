@@ -6,26 +6,12 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
-public class TouchscreenHandler : MonoBehaviour
+public class TouchscreenHandler : Singleton<TouchscreenHandler>
 {
-    private static TouchscreenHandler instance;
-    public static TouchscreenHandler main => instance;
 
     public EventHandler<TouchInfo> FingerDownCallback;
     public EventHandler<TouchInfo> FingerMoveCallback;
     public EventHandler<TouchInfo> FingerUpCallback;
-
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-        } else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
 
     private void OnEnable()
     {
@@ -42,7 +28,13 @@ public class TouchscreenHandler : MonoBehaviour
         var activeTouches = Touch.activeTouches;
         foreach (Touch touch in activeTouches) 
         {
-            TouchInfo touchInfo = new(currentTouch: touch, touchIndex: touch.displayIndex, lastTouch: touch, screenPos: touch.screenPosition, touch.phase);
+            TouchInfo touchInfo = new(
+                currentTouch: touch, 
+                touchIndex: touch.displayIndex, 
+                lastTouch: touch, 
+                screenPos: touch.screenPosition, 
+                touch.phase);
+
             switch (touch.phase)
             {
                 case TouchPhase.Began: FingerDownCallback.Invoke(this, touchInfo); break;

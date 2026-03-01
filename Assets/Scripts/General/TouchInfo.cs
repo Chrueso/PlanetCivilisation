@@ -12,7 +12,7 @@ public class TouchInfo
     public Touch Current => curr;
     public Touch Last => last;
     public int Index => index;
-    public Vector3 Pos => screenPosition;
+    public Vector3 ScreenPos => screenPosition;
     public TouchPhase Phase => phase;
 
     public TouchInfo(Touch currentTouch, int touchIndex, Touch lastTouch, Vector2 screenPos, TouchPhase phase)
