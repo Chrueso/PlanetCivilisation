@@ -10,6 +10,7 @@ public static class DebugUtil
         string text,
         Transform parent = null,
         Vector3 localPosition = default,
+        Quaternion localRotation = default,
         int fontSize = 36,
         Color? color = null,
         TextAlignmentOptions alignment = TextAlignmentOptions.TopLeft,
@@ -17,7 +18,7 @@ public static class DebugUtil
     {
         if (color == null) color = Color.white;
 
-        return CreateWorldText(parent, text, localPosition, fontSize,
+        return CreateWorldText(parent, text, localPosition, localRotation, fontSize,
             (Color)color, alignment, sortingOrder);
     }
 
@@ -26,6 +27,7 @@ public static class DebugUtil
         Transform parent,
         string text,
         Vector3 localPosition,
+        Quaternion localRotation,
         int fontSize,
         Color color,
         TextAlignmentOptions alignment,
@@ -36,6 +38,7 @@ public static class DebugUtil
 
         transform.SetParent(parent, false);
         transform.localPosition = localPosition;
+        transform.localRotation = localRotation;
 
         TextMeshPro textMeshPro = gameObject.GetComponent<TextMeshPro>();
         textMeshPro.text = text;
