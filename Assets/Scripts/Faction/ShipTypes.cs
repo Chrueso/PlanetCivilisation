@@ -1,30 +1,34 @@
-//public enum Shiptype
-//{
-//    Scout,
-//    Assault,
-//    Worker
-//}
-
-//new shipType class 
-public class ShipType
+using System;
+using UnityEngine;
+public enum ShipActionType
 {
-    public string name { get; private set; }
-    public int attackPower { get; private set; }
-    public bool canAttack { get; private set; }
-
-    public ShipType(string name, int attackPower, bool canAttack)
-    {
-        this.name = name;
-        this.attackPower = attackPower;
-        this.canAttack = canAttack;
-    }
+    Combat,      // Can engage in battles
+    Scout,       // Can reveal fog of war / discover planets
+    Resource,    // Can gather/transport resources
+    Construction // Can build structures
 }
 
-public static class ShipTypes
+[CreateAssetMenu(fileName = "New Ship Type", menuName = "Ships/Ship Type")]
+public class ShipTypeSO : ScriptableObject
 {
-    public static ShipType Scout = new ShipType("Scout", 1, false);
-    public static ShipType Assault = new ShipType("Assault", 3, true);
-    public static ShipType Worker = new ShipType("Worker", 1, false);
+    [Header("Ship Main Stats")]
+    [SerializeField] private string shipName;
+    [SerializeField] private Sprite shipIcon;
+    [SerializeField] private GameObject shipPrefab;
+    [SerializeField] private ShipActionType actionType;
 
-    public static ShipType[] AllTypes = new ShipType[] { Scout, Assault, Worker };
+    [Header("Ship Build Requirements")]
+    [SerializeField] private ResourceRequirement[] requiredResources;
+    [SerializeField] private float buildTime = 5f;
+
+
+    // Public accessors (idk whatever u guys need just add)
+    // public int BuildCost => ;
+}
+
+[System.Serializable]
+public class ResourceRequirement
+{
+    public ResourceType resourceType;
+    public int amount;
 }

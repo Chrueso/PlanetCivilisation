@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class StartingShipData
 {
-    public ShipType ShipType;
+    public ShipTypeSO ShipType;
     public int Amount;
 }
 
@@ -24,5 +24,5 @@ public class FactionDataSO : ScriptableObject
     public float Money;
 
     public List<StartingShipData> startingShipDatas = new List<StartingShipData>();
-    public Dictionary<ShipType, int> shipCounts = new Dictionary<ShipType, int>();
+    public Dictionary<ShipTypeSO, int> shipCounts = new Dictionary<ShipTypeSO, int>();
 }

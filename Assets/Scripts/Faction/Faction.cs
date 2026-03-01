@@ -5,7 +5,7 @@ public class Faction
 {
     public FactionType FactionType { get; private set; }
     public float Money { get; private set; }
-    public Dictionary<ShipType, int> shipCounts = new Dictionary<ShipType, int>();
+    public Dictionary<ShipTypeSO, int> shipCounts = new Dictionary<ShipTypeSO, int>();
     public List<PlanetData> ownedPlanets = new List<PlanetData>();
 
     public Faction(FactionDataSO factionData)
