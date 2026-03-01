@@ -2,13 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
-public class Crafter : MonoBehaviour
+public class Crafter : Singleton<Crafter>
 {
     [SerializeField] private Button craftExtractor;
     [SerializeField] private Button craftShipyard;
 
     //recipes
-
     private Dictionary<Structure, Dictionary<Resource, int>> Recipe = new Dictionary<Structure, Dictionary<Resource, int>>() {
         {Structure.Extractor, new Dictionary<Resource, int>() { { Resource.Metals, 1}, { Resource.Rations, 1 }, { Resource.Energy_Source, 1 } } },
         {Structure.Shipyard, new Dictionary<Resource, int>() { { Resource.Metals, 1}, { Resource.Rations, 1 }, { Resource.Energy_Source, 0 } } },
@@ -27,12 +26,20 @@ public class Crafter : MonoBehaviour
 
     private void CraftExtractor()
     {
-        CheckPlayerInv(Structure.Extractor);
+        if (CheckPlayerInv(Structure.Extractor))
+        {
+            PlayerInteractionController.Instance.CurrentPlanet.DebugPurposes();
+            UINavigationManager.Instance.BackFromOverlay();
+        }
     }
 
     private void CraftShipyard()
     {
-        CheckPlayerInv(Structure.Shipyard);
+        if (CheckPlayerInv(Structure.Shipyard))
+        {
+            PlayerInteractionController.Instance.CurrentPlanet.DebugPurposes();
+            UINavigationManager.Instance.BackFromOverlay();
+        }
     }
 
     private bool CheckPlayerInv(Structure structure)

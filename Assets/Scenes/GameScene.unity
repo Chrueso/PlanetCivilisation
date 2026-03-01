@@ -3828,12 +3828,12 @@ GameObject:
   - component: {fileID: 337440967}
   - component: {fileID: 337440966}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: DebugPlanet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!135 &337440966
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -13823,6 +13823,7 @@ MonoBehaviour:
   topResourceBar: {fileID: 182493804}
   minimap: {fileID: 1768111705}
   nextTurnButton: {fileID: 884844403}
+  buildStructButton: {fileID: 1706689012}
 --- !u!4 &1444938817
 Transform:
   m_ObjectHideFlags: 0

@@ -44,5 +44,7 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
         {
             print("MEH GO AWAY");
         }
+
+        UINavigationManager.Instance.BackFromOverlay();
     }
 }

@@ -29,6 +29,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     [Header("Other")]
     [SerializeField] private Button nextTurnButton;
+    [SerializeField] private GameObject buildStructButton;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -131,6 +132,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     public void ShowFriendlyPlanetSheet(PlanetData planet)
     {
+        buildStructButton.SetActive(true);
         currentPlanet = planet;
         SetState(UIState.FriendlySheet);
     }
@@ -188,6 +190,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
         if (topResourceBar) topResourceBar.SetActive(true);
         //if (minimap) minimap.SetActive(showBase);
         if (nextTurnButton) nextTurnButton.gameObject.SetActive(showBase);
+        buildStructButton.SetActive(true);
+        if (currentPlanet != null && currentPlanet.Structures > 0) buildStructButton.SetActive(false);
+        
 
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);
         if (enemyPlanetSheet) enemyPlanetSheet.SetActive(newState == UIState.EnemySheet);

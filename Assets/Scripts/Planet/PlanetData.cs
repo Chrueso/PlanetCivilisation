@@ -23,6 +23,11 @@ public class PlanetData
         FactionType = factionType;
     }
 
+    public void DebugPurposes()
+    {
+        Structures++;
+    }
+
     //Idk what is this for yet so i comment -Zen
     //private void IncreaseResource()
     //{

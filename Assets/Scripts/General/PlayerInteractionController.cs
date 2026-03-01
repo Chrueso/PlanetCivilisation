@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInteractionController : MonoBehaviour
+public class PlayerInteractionController : Singleton<PlayerInteractionController>
 {
     private Camera cameraInstance;
     private bool inPlanet = false;
     private float offset = 2f;
+    public PlanetData CurrentPlanet { get; private set; }
 
     // hardcode
+    private FactionType playerFaction = FactionType.Human;
     private void Start()
     {
         cameraInstance = Camera.main;
@@ -34,19 +36,22 @@ public class PlayerInteractionController : MonoBehaviour
             PlanetData planet = GetPlanet(name);
             if (planet != null)
             {
-                if (true)
-                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(new PlanetData("F", new List<ResourceType>(), FactionType.DemiHuman));
+                CurrentPlanet = planet;
+                if (planet.FactionType == playerFaction)
+                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
                 else
-                    UINavigationManager.Instance.ShowEnemyPlanetSheet(new PlanetData("F", new List<ResourceType>(), FactionType.DemiHuman));
+                    UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
                 CameraController.main.Disable();
                 Vector3 planetPos = hit.collider.gameObject.transform.position;
-                cameraInstance.transform.position = new Vector3(planetPos.x, 30, planetPos.z);
+                cameraInstance.transform.position = new Vector3(planetPos.x, 30, planetPos.z - offset);
                 inPlanet = true;
+                print($"Planet Name: {planet.PlanetName} | Structure: {planet.Structures} | Faction: {planet.FactionType}");
                 
             } else
             {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
+                    CurrentPlanet = planet;
                     UINavigationManager.Instance.DismissAllSheets();
                     CameraController.main.Enable();
                     cameraInstance.transform.position = CameraController.main.CurrPos;
@@ -57,6 +62,8 @@ public class PlayerInteractionController : MonoBehaviour
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
+                CurrentPlanet = null;
+                UINavigationManager.Instance.DismissAllSheets();
                 CameraController.main.Enable();
                 cameraInstance.transform.position = CameraController.main.CurrPos;
                 inPlanet = false;
