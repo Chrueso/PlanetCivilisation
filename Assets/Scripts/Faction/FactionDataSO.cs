@@ -22,6 +22,10 @@ public class FactionDataSO : ScriptableObject
 {
     public FactionType FactionType;
     public float Money;
+    public int BaseActionPoints;
+
+    //temp thing to test
+    public bool IsPlayer = false;
 
     public List<StartingShipData> startingShipDatas = new List<StartingShipData>();
     public Dictionary<ShipTypeSO, int> shipCounts = new Dictionary<ShipTypeSO, int>();

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0a83e1defc48545b7736873819aede, type: 3}
   m_Name: Intelligent Construct
   m_EditorClassIdentifier: Assembly-CSharp::FactionDataSO
-  factionName: ChatGPts
-  money: 0
+  FactionType: 3
+  Money: 0
+  BaseActionPoints: 3
   startingShipDatas: []

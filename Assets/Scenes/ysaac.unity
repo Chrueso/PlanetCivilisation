@@ -1276,6 +1276,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1928179778}
   - component: {fileID: 1928179779}
+  - component: {fileID: 1928179781}
+  - component: {fileID: 1928179780}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1307,10 +1309,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 1928179777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58f0f59fda8115e479849b36abaa934d, type: 3}
+  m_Script: {fileID: 11500000, guid: ec9bfee93bc57d8428416d31de348ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  planetAmount: 50
+--- !u!114 &1928179780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928179777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89622f8d11a45af4ba6db472331c8856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FactionManager
+  FactionData:
+  - {fileID: 11400000, guid: bc808bae3de98664b9ed24fb066f4200, type: 2}
+  - {fileID: 11400000, guid: 956a544f2d03dab4e80bc75ce1fb96b5, type: 2}
+  - {fileID: 11400000, guid: 7b33e07e0a904c246b93b725af48ce6b, type: 2}
+--- !u!114 &1928179781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928179777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31278fa21b6b42e42bd6194b11ba7271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnManager
 --- !u!1 &1992477153
 GameObject:
   m_ObjectHideFlags: 0

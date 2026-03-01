@@ -2,53 +2,59 @@ using UnityEngine;
 
 public class TurnManager : Singleton<TurnManager>
 {
-    public bool playerTurn { get; private set; } = true;
+    public bool playerTurn { get { return currentFaction.IsPlayer; } } 
+    private int currentFactionIndex = 0;
+    public Faction currentFaction { get { return FactionManager.Instance.FactionsInUse[currentFactionIndex]; } }
 
-    
 
-    
     protected override void Awake()
     {
         base.Awake();
 
-        //makes new factions fromm the faction data
-
-        /*
-        factions = new Faction[factionDatas.Length];
-        for (int i = 0; i < factionDatas.Length; i++)
-        {
-            factions[i] = new Faction(factionDatas[i]);
-        }
-        */
-        StartPlayerTurn();
+        StartTurn();
     }
-    public void EndPlayerTurn()
+
+    public void StartTurn()
     {
-        playerTurn = false;
-        Debug.Log("Player turn ended. Now it's AI's turn.");
+        currentFaction.OnTurnFinished += EndTurn;
 
-        ResolveWorldTurn();
+        if (currentFaction.ActionPoints > 0)
+        {
 
-        StartPlayerTurn();
+            Debug.Log($"Starting turn for {currentFaction.FactionType}");
+            if (!playerTurn)
+            {
+                currentFaction.StartAITurn();
+            }
+            else
+            {
+                currentFaction.StartPlayerTurn();
+                //player stuff
+            }
+        }
+    }
+
+    public void EndTurn()
+    {
+        Debug.Log($"Ending turn for {currentFaction.FactionType}");
+
+        currentFaction.OnTurnFinished -= EndTurn;
+
+        if (playerTurn)
+        {
+            //EndPlayerTurn();
+        }
+        else
+        {
+            //do Faction stuff here ig
+            
+        }
+        currentFactionIndex = (currentFactionIndex + 1) % FactionManager.Instance.FactionsInUse.Count;
+        StartTurn();
     }
 
     public void StartPlayerTurn()
     {
-        playerTurn = true;
-        Debug.Log("AI turn ended. Now it's Player's turn.");
-    }
-
-    // does all the other world/ Ai faction actions here
-    public void ResolveWorldTurn()
-    {
-        /* PlanetsWithFactions is missing in the newest GameManager class version, so ill comment this out first
-        foreach (var factionPlanet in GameManager.Instance.PlanetsWithFactions)
-        {
-            //do ai stuff
-               
-            Debug.Log($"Planet {factionPlanet.PlanetName} of {factionPlanet.FactionType} is doing stuff");
-
-            //faction.StartWorldTurn();
-        }   */ 
+        //enable UI and stuff
     }
 }
