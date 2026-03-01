@@ -26,8 +26,9 @@ public class TestingGrid : MonoBehaviour
             (x, z) =>
             {
                 Vector2Int gridPos = new Vector2Int(x, z);
+                Vector3Int gridPosCube = HexGridXZ<GridHex>.OddRToCube(x, z);
                 Vector3 worldPos = HexGridXZ<GridHex>.GetWorldPosition(x, z, cellSize, transform.position);
-                return new GridHex(cellSize, gridPos, worldPos);
+                return new GridHex(cellSize, gridPos, gridPosCube, worldPos);
             }
 
             

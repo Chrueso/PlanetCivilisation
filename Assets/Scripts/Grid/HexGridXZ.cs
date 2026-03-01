@@ -128,6 +128,55 @@ public class HexGridXZ<TGridObject>
         return default;
     }
 
+    public static Vector2Int OddRToAxial(int x, int z)
+    {
+        int parity = z % 2;
+
+        int q = x - (z - parity) / 2;
+        int r = z;
+
+        return new Vector2Int(q, r);
+    }
+
+    public static Vector2Int AxialToOddR(int q, int r)
+    {
+        int parity = r % 2;
+        int x = q + (r - parity) / 2;
+        int z = r;
+
+        return new Vector2Int(x, z);
+    }
+
+    public static Vector3Int AxialToCube(int axialq, int axialr)
+    {
+        int q = axialq;
+        int r = axialr;
+        int s = -axialq - axialr;
+
+        return new Vector3Int(q, r, s);
+    }
+
+    public static Vector2Int CubeToAxial(int cubeq, int cuber)
+    {
+        int q = cubeq;
+        int r = cuber;
+        return new Vector2Int(q, r);
+    }
+
+    public static Vector2Int CubeToOddR(int cubeq, int cube)
+    {
+        Vector2Int axial = CubeToAxial(cubeq, cube);
+
+        return AxialToOddR(axial.x, axial.y);
+    }
+
+    public static Vector3Int OddRToCube(int x, int z)
+    {
+        Vector2Int axial = OddRToAxial(x, z);
+
+        return AxialToCube(axial.x, axial.y);
+    }
+
     private void ShowDebug()
     {
         debugTextArray = new TextMeshPro[Width, Height];
