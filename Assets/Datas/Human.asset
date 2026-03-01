@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0a83e1defc48545b7736873819aede, type: 3}
   m_Name: Human
   m_EditorClassIdentifier: Assembly-CSharp::FactionDataSO
-  factionName: Humans
-  money: 0
+  FactionType: 1
+  Money: 0
+  BaseActionPoints: 2
   startingShipDatas: []
