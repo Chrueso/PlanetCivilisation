@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class TestingGrid : MonoBehaviour
 {
-    private int width = 10;
-    private int height = 10;
+    private int width = 45;
+    private int height = 27;
     private float cellSize = 5f;
 
     private Camera cameraInstance;
@@ -33,14 +33,14 @@ public class TestingGrid : MonoBehaviour
             
         );
 
-        BoxCollider col = GetComponent<BoxCollider>();
+        col = GetComponent<BoxCollider>();
 
         float colWidth = grid.TotalWidth + grid.CellSize * 0.5f;
         float colHeight = (grid.TotalHeight * 0.75f) + (grid.CellSize * 0.25f);
         col.size = new Vector3(colWidth, 0f, colHeight);
 
         float colCenterX = (grid.TotalWidth * 0.5f) - (grid.CellSize * 0.25f);
-        float colCenterZ = (grid.TotalHeight * 0.5f) - (grid.CellSize * 0.75f);
+        float colCenterZ = (colHeight * 0.5f) - (grid.CellSize * 0.5f);
 
         col.center = new Vector3(colCenterX, 0f, colCenterZ) + grid.OriginPosition;
 
@@ -72,6 +72,9 @@ public class TestingGrid : MonoBehaviour
         {
             Debug.Log(hit.point);
             GridHex hex = grid.GetGridObject(hit.point);
+
+            if (hex == null) return;
+
             Debug.Log(hex.WorldPosition);
             Debug.Log(hex.GridPosition);
             hex.GridHexVisual.OnSelected();

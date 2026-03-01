@@ -34,9 +34,9 @@ public class HexGridXZ<TGridObject>
 
         gridArray = new TGridObject[width, height];
 
-        for (int z = 0; z < width; z++)
+        for (int z = 0; z < height; z++)
         {
-            for (int x = 0; x < height; x++)
+            for (int x = 0; x < width; x++)
             {
                 gridArray[x, z] = createGridObj(x, z);
             }
@@ -132,9 +132,9 @@ public class HexGridXZ<TGridObject>
     {
         debugTextArray = new TextMeshPro[Width, Height];
 
-        for (int z = 0; z < Width; z++)
+        for (int z = 0; z < Height; z++)
         {
-            for (int x = 0; x < Height; x++)
+            for (int x = 0; x < Width; x++)
             {
                 debugTextArray[x, z] = DebugUtil.CreateWorldText(gridArray[x, z].ToString(), null, GetWorldPosition(x, z), Quaternion.Euler(90f, 0f, 0f),
                     10, Color.white, TextAlignmentOptions.Center);
