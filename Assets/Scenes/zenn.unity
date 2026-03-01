@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 817503740}
   - component: {fileID: 817503742}
   m_Layer: 0
-  m_Name: HexGrid
+  m_Name: MapGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

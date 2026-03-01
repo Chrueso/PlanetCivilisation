@@ -128,6 +128,42 @@ public class HexGridXZ<TGridObject>
         return default;
     }
 
+    public List<TGridObject> GetGridObjectsInRadius(Vector3Int cube, int radius)
+    {
+        List<TGridObject> results = new List<TGridObject>();
+
+        int centerQ = cube.x;
+        int centerR = cube.y;
+        int centerS = cube.z;
+
+        for (int q = -radius; q <= radius; q++)
+        {
+            int rMin = Math.Max(-radius, -q - radius);
+            int rMax = Math.Min(radius, -q + radius);
+
+            for (int r = rMin; r <= rMax; r++)
+            {
+                int s = -q - r;
+
+                Vector3Int neighborCube = new Vector3Int(
+                    centerQ + q,
+                    centerR + r,
+                    centerS + s
+                );
+
+                Vector2Int neighborOddR = CubeToOddR(neighborCube.x, neighborCube.y);
+                TGridObject gridObject = GetGridObject(neighborOddR.x, neighborCube.y);
+
+                if (gridObject != null)
+                {
+                    results.Add(gridObject);
+                }
+            }
+        }
+
+        return results;
+    }
+
     public static Vector2Int OddRToAxial(int x, int z)
     {
         int parity = z % 2;
@@ -163,9 +199,9 @@ public class HexGridXZ<TGridObject>
         return new Vector2Int(q, r);
     }
 
-    public static Vector2Int CubeToOddR(int cubeq, int cube)
+    public static Vector2Int CubeToOddR(int cubeq, int cuber)
     {
-        Vector2Int axial = CubeToAxial(cubeq, cube);
+        Vector2Int axial = CubeToAxial(cubeq, cuber);
 
         return AxialToOddR(axial.x, axial.y);
     }

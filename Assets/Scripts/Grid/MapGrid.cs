@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class TestingGrid : MonoBehaviour
+public class MapGrid : MonoBehaviour
 {
     private int width = 45;
     private int height = 27;
@@ -78,8 +79,12 @@ public class TestingGrid : MonoBehaviour
 
             Debug.Log(hex.WorldPosition);
             Debug.Log(hex.GridPosition);
-            hex.GridHexVisual.OnSelected();
 
+            List<GridHex> hexesinRadius = grid.GetGridObjectsInRadius(hex.GridPositionCube, 3);
+            foreach (var h in hexesinRadius)
+            {
+                h.GridHexVisual.OnSelected();
+            }
         }
     }
 }
