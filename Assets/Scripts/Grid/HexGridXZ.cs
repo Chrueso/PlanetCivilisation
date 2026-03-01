@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System;
 using TMPro;
 using UnityEngine;
 
 public class HexGridXZ<TGridObject>
 {
-    private static readonly float HEX_VERTICAL_OFFSET_MULT = 0.75f;
+    public static readonly float HEX_VERTICAL_OFFSET_MULT = 0.75f;
     public int Width { get; private set; }
     public int Height { get; private set; }
     public float CellSize { get; private set; }
@@ -50,7 +51,7 @@ public class HexGridXZ<TGridObject>
         return
             new Vector3(x, 0f, 0f) * cellSize +
             new Vector3(0, 0, z) * cellSize * HEX_VERTICAL_OFFSET_MULT + // Offset z by 75%
-            ((z & 2) == 1 ? new Vector3(1, 0, 0) * cellSize * 0.5f : Vector3.zero) + // If odd row we want an offset
+            ((z % 2) == 1 ? new Vector3(1, 0, 0) * cellSize * 0.5f : Vector3.zero) + // If odd row we want an offset
             originPos;
     }
 
@@ -59,21 +60,46 @@ public class HexGridXZ<TGridObject>
         return 
             new Vector3(x, 0f, 0f) * CellSize +
             new Vector3(0, 0, z) * CellSize * HEX_VERTICAL_OFFSET_MULT + // Offset z by 75%
-            ((z & 2) == 1 ? new Vector3(1, 0 ,0) * CellSize * 0.5f : Vector3.zero) + // If odd row we want an offset
+            ((z % 2) == 1 ? new Vector3(1, 0 ,0) * CellSize * 0.5f : Vector3.zero) + // If odd row we want an offset
             OriginPosition;
-    }
-
-    public Vector3 GetWorldPositionCenter(int x, int z)
-    {
-        return (new Vector3(x, 0f, z) * CellSize) + (new Vector3(CellSize, 0f, CellSize) * 0.5f) + OriginPosition;
     }
 
     public Vector3Int GetPositionOnGrid(Vector3 worldPos)
     {
         Vector3Int gridPos = Vector3Int.zero;
 
-        gridPos.x = Mathf.FloorToInt((worldPos - OriginPosition).x / CellSize);
-        gridPos.z = Mathf.FloorToInt((worldPos - OriginPosition).z / CellSize);
+        int roughX = Mathf.RoundToInt((worldPos - OriginPosition).x / CellSize);
+        int roughZ = Mathf.RoundToInt((worldPos - OriginPosition).z / CellSize / HEX_VERTICAL_OFFSET_MULT);
+
+        Vector3Int roughXZ = new Vector3Int(roughX, 0, roughZ);
+
+        bool oddRow = roughZ % 2 == 1;
+
+        List<Vector3Int> neighbourXZList = new List<Vector3Int>
+        {
+            roughXZ + new Vector3Int(-1, 0, 0),
+            roughXZ + new Vector3Int(+1, 0, 0),
+
+            roughXZ + new Vector3Int(oddRow ? +1 : -1, 0, +1),
+            roughXZ + new Vector3Int(0, 0, +1),
+
+            roughXZ + new Vector3Int(oddRow ? +1 : -1, 0, -1),
+            roughXZ + new Vector3Int(0, 0, -1),
+        };
+
+        Vector3Int closestXZ = roughXZ;
+
+        foreach(Vector3Int neighbourXZ in neighbourXZList)
+        {
+            if (Vector3.Distance(worldPos, GetWorldPosition(neighbourXZ.x, neighbourXZ.z)) <
+                Vector3.Distance(worldPos, GetWorldPosition(closestXZ.x, closestXZ.z)))
+            {
+                closestXZ = neighbourXZ;
+            }
+        }
+
+        gridPos.x = closestXZ.x;
+        gridPos.z = closestXZ.z;
 
         return gridPos;
     }
@@ -110,16 +136,12 @@ public class HexGridXZ<TGridObject>
         {
             for (int x = 0; x < Height; x++)
             {
-                debugTextArray[x, z] = DebugUtil.CreateWorldText(gridArray[x, z].ToString(), null, GetWorldPositionCenter(x, z), Quaternion.Euler(90f, 0f, 0f),
+                debugTextArray[x, z] = DebugUtil.CreateWorldText(gridArray[x, z].ToString(), null, GetWorldPosition(x, z), Quaternion.Euler(90f, 0f, 0f),
                     10, Color.white, TextAlignmentOptions.Center);
-
-                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.white, 100f);
             }
         }
 
-        Debug.DrawLine(GetWorldPosition(0, Height), GetWorldPosition(Width, Height), Color.white, 100f);
-        Debug.DrawLine(GetWorldPosition(Width, 0), GetWorldPosition(Width, Height), Color.white, 100f);
+ 
     }
 
 }
