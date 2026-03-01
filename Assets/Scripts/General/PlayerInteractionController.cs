@@ -7,6 +7,8 @@ public class PlayerInteractionController : MonoBehaviour
     private Camera cameraInstance;
     private bool inPlanet = false;
     private float offset = 2f;
+
+    // hardcode
     private void Start()
     {
         cameraInstance = Camera.main;
@@ -23,16 +25,15 @@ public class PlayerInteractionController : MonoBehaviour
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
             string name = hit.collider.gameObject.name;
-            if (true)
+            if (CheckPlanet(name))
             print(hit.collider.gameObject.name);
 
             // i changed so it detect isit planet instead of check name of object (eexuan
             //PlanetData planet = hit.collider.GetComponent<PlanetData>();
 
-            //PlanetData planet = GetPlanet(name);
-            if (true)
+            PlanetData planet = GetPlanet(name);
+            if (planet != null)
             {
-                //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
                 if (true)
                     UINavigationManager.Instance.ShowFriendlyPlanetSheet(new PlanetData("F", new List<ResourceType>(), FactionType.DemiHuman));
                 else
@@ -46,7 +47,6 @@ public class PlayerInteractionController : MonoBehaviour
             {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
-                    //PlanetManagementInterface.main.HideInterface();
                     UINavigationManager.Instance.DismissAllSheets();
                     CameraController.main.Enable();
                     cameraInstance.transform.position = CameraController.main.CurrPos;
@@ -57,7 +57,6 @@ public class PlayerInteractionController : MonoBehaviour
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
-                //PlanetManagementInterface.main.HideInterface();
                 CameraController.main.Enable();
                 cameraInstance.transform.position = CameraController.main.CurrPos;
                 inPlanet = false;
