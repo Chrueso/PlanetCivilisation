@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     [Header("Other")]
     [SerializeField] private Button nextTurnButton;
+    [SerializeField] private GameObject buildStructButton;
+    [SerializeField] private RectTransform stateText;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -83,7 +86,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     private void AdjustBaseUIForSafeArea()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         Canvas.ForceUpdateCanvases();
@@ -131,6 +134,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     public void ShowFriendlyPlanetSheet(PlanetData planet)
     {
+        buildStructButton.SetActive(true);
         currentPlanet = planet;
         SetState(UIState.FriendlySheet);
     }
@@ -167,8 +171,12 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     public void OpenAttackPanel()
     {
-        parentSheet = CurrentState;
+        //parentSheet = CurrentState;
         SetState(UIState.AttackPanel);
+        BattleManager.Instance.SimulateBattle();
+        Vector3 pos = Camera.main.WorldToScreenPoint(PlayerInteractionController.Instance.PlanetObject.transform.position);
+        stateText.position = pos + new Vector3(0f, -500f, 0f);
+        stateText.GetComponent<TextMeshProUGUI>().text = "ATTACKING";
     }
 
     public void BackFromOverlay()
@@ -183,22 +191,26 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         CurrentState = newState;
 
-        bool showBase = newState == UIState.BaseUI;
+        bool showBase = newState == UIState.BaseUI || newState == UIState.AttackPanel;
         if (bottomPanel) bottomPanel.SetActive(showBase);
         if (topResourceBar) topResourceBar.SetActive(true);
-        if (minimap) minimap.SetActive(showBase);
+        //if (minimap) minimap.SetActive(showBase);
         if (nextTurnButton) nextTurnButton.gameObject.SetActive(showBase);
+        buildStructButton.SetActive(true);
+        if (currentPlanet != null && currentPlanet.Structures > 0) buildStructButton.SetActive(false);
+        
 
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);
-        if (enemyPlanetSheet) enemyPlanetSheet.SetActive(newState == UIState.EnemySheet);
+        if (enemyPlanetSheet) enemyPlanetSheet.SetActive(newState == UIState.EnemySheet || newState == UIState.AttackPanel);
         if (techPanel) techPanel.SetActive(newState == UIState.TechPanel);
         if (sciencePanel) sciencePanel.SetActive(newState == UIState.SciencePanel);
         if (diplomacyPanel) diplomacyPanel.SetActive(newState == UIState.DiplomacyPanel);
-        if (attackPanel) attackPanel.SetActive(newState == UIState.AttackPanel);
+        if (attackPanel) stateText.gameObject.SetActive(newState == UIState.AttackPanel);
 
         // Build content on first open (panel must be active first)
         if (newState == UIState.SciencePanel && !scienceBuilt)
         {
+            return;
             scienceBuilt = true;
             // Force layout to settle after SafeArea anchors applied
             Canvas.ForceUpdateCanvases();
@@ -207,6 +219,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         }
         if (newState == UIState.AttackPanel && !attackBuilt)
         {
+            return;
             attackBuilt = true;
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(attackPanel.GetComponent<RectTransform>());

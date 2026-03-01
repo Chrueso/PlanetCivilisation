@@ -29,5 +29,12 @@ public class PlanetManager : Singleton<PlanetManager>
             iter++;
             if (iter >= maxPlanets) break;
         }
+        DebugPlanet();
+    }
+
+    private void DebugPlanet()
+    {
+        PlanetData pd = new("DebugPlanet", new List<ResourceType>(), FactionType.Human);
+        PlanetDict.Add(pd.PlanetName, pd);
     }
 }
