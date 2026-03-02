@@ -8,10 +8,14 @@ public class GameManager : Singleton<GameManager>
     public System.Random GalaxyRNG { get; private set; }
     public System.Random PlanetRNG { get; private set; } // Maybe il change to data struct which combines all rng needed later -Zen
 
+    [SerializeField] private MapGrid mapGrid;
+    [SerializeField] private PlanetManager planetManager;
+
     private void Start()
     {
         GenerateSeed();
-        PlanetManager.Instance.GeneratePlanets(PlanetRNG);
+        mapGrid.GenerateGrid();
+        planetManager.GeneratePlanets(mapGrid, PlanetRNG);
     }
 
     private void GenerateSeed()
