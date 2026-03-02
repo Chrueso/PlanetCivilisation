@@ -14,8 +14,3 @@ public enum Structure
 {
     Shipyard, Extractor
 }
-
-public enum ShipType
-{
-    fish
-} 

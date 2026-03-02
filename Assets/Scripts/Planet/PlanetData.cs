@@ -1,67 +1,59 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlanetData 
 {
     public string PlanetName { get; private set; }
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public FactionType FactionType { get; private set; }
-    public int Structures { get; private set; }
-
-    public PlanetData(string planetName, List<ResourceType> resourceTypes, FactionType factionType)
+    public List<Structure> Structures { get; private set; }
+    public Dictionary<ShipTypeSO, int> StationedShips { get; private set; }
+    public int Affection {  get; private set; }
+    public PlanetData(string planetName, FactionType faction)
     {
-        PlanetName = planetName;
+        this.PlanetName = planetName;
+        this.Resources = new Dictionary<ResourceType, int>();
+        this.FactionType = faction;
+        this.Structures = new List<Structure>();
+        this.StationedShips = new Dictionary<ShipTypeSO, int>();
+    }
 
-        // Assign initial resources
-        Resources.Add(ResourceType.Rock, 0); // every planet has rock by default not sure if still the case?
+    public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<Structure> structure)
+    {
+        this.PlanetName = planetName;
 
-        // Assign the randomly generated resource type
-        foreach (var resource in resourceTypes)
+        foreach (KeyValuePair<ResourceType, int> kvp in resourceTypes)
         {
-            Resources.Add(resource, 0);
+            this.Resources[kvp.Key] = kvp.Value;
         }
 
-        FactionType = factionType;
+        this.FactionType = factionType;
+        this.Structures = structure.ToList();
+        this.StationedShips = new Dictionary<ShipTypeSO, int>();
     }
 
-    public void DebugPurposes()
+    public void RaiseAffection(int affection)
     {
-        Structures++;
+        this.Affection = Math.Clamp(this.Affection + affection, 0, 100);
     }
 
-    //Idk what is this for yet so i comment -Zen
-    //private void IncreaseResource()
-    //{
-    //    if (Resources.Count > 0)
-    //    {
-    //        foreach (var resource in Resources.Keys)
-    //        {
-    //            Resources[resource] += 1;
-    //        }
-    //    }
-    //}
+    public void BuildStructure(Structure structure)
+    {
+        if (this.Structures.Contains(structure)) return;
+        this.Structures.Add(structure);
+    }
 
-    //public void GainResourcePerTurn() 
-    //{
-    //    // Add resource to player data
-    //}
-
-    //public void GainStructureBenefit()
-    //{
-    //    // Based on structure call functions to stuff
-    //}
-
-    //private void IncreasePopulation()
-    //{
-
-    //}
-
-    //private void GetRarerOre()
-    //{
-
-    //}
-
-    //private void CreateShip()
-    //{
-
-    //}
+    public void StationShips(Dictionary<ShipTypeSO, int> stationShips)
+    {
+        foreach (KeyValuePair<ShipTypeSO, int> kvp in stationShips)
+        {
+            if (this.StationedShips.ContainsKey(kvp.Key))
+            {
+                this.StationedShips[kvp.Key] += kvp.Value;
+                continue;
+            }
+            this.StationedShips[kvp.Key] = kvp.Value;
+        }
+    }
 }

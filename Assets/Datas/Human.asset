@@ -15,4 +15,5 @@ MonoBehaviour:
   FactionType: 1
   Money: 0
   BaseActionPoints: 2
+  IsPlayer: 1
   startingShipDatas: []

@@ -198,7 +198,7 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
 
         PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
-        PlanetData data = new PlanetData(planetName, additionalResources, factionType);
+        PlanetData data = new PlanetData(planetName, factionType); // Check out PlanetData.cs
 
         GameObject planetObj = Instantiate(planetPrefab, position, rotation, parent);
 

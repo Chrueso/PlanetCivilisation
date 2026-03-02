@@ -541,9 +541,8 @@ GameObject:
   - component: {fileID: 20806185}
   - component: {fileID: 20806187}
   - component: {fileID: 20806186}
-  - component: {fileID: 20806188}
   m_Layer: 5
-  m_Name: NumRows
+  m_Name: WNumRows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,23 +610,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20806184}
   m_CullTransparentMesh: 1
---- !u!114 &20806188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20806184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634e34ce96b6b1c468289958fcc2a2a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StationShips
-  DisplayText: {fileID: 562589689}
-  IncreaseBtn: {fileID: 1419325964}
-  MaxBtn: {fileID: 313934972}
-  DecreaseBtn: {fileID: 1983737069}
-  MinBtn: {fileID: 1688875620}
 --- !u!1 &26905680
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,9 +758,8 @@ GameObject:
   - component: {fileID: 27606780}
   - component: {fileID: 27606782}
   - component: {fileID: 27606781}
-  - component: {fileID: 27606783}
   m_Layer: 5
-  m_Name: NumRows
+  m_Name: ANumRows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -846,23 +827,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27606779}
   m_CullTransparentMesh: 1
---- !u!114 &27606783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27606779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634e34ce96b6b1c468289958fcc2a2a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StationShips
-  DisplayText: {fileID: 1347236404}
-  IncreaseBtn: {fileID: 2067835221}
-  MaxBtn: {fileID: 1669748721}
-  DecreaseBtn: {fileID: 2106232962}
-  MinBtn: {fileID: 445489525}
 --- !u!1 &53626796
 GameObject:
   m_ObjectHideFlags: 0
@@ -5758,12 +5722,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f224f1ec7570bb4fb3d85db98740981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
-  attackerFleet:
-  - shipTypeEnum: 1
-    count: 10
-  defenderFleet:
-  - shipTypeEnum: 1
-    count: 10
 --- !u!1 &538832338
 GameObject:
   m_ObjectHideFlags: 0
@@ -13950,6 +13908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444938817}
   - component: {fileID: 1444938816}
+  - component: {fileID: 1444938818}
   m_Layer: 0
   m_Name: UINavigationManager
   m_TagString: Untagged
@@ -13996,6 +13955,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1444938818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444938815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634e34ce96b6b1c468289958fcc2a2a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationShips
+  buttonRows:
+  - {fileID: 20806186}
+  - {fileID: 27606781}
+  - {fileID: 1592450142}
+  stationShipsButton: {fileID: 1427193335}
 --- !u!1 &1461486739
 GameObject:
   m_ObjectHideFlags: 0
@@ -15360,9 +15336,8 @@ GameObject:
   - component: {fileID: 1592450141}
   - component: {fileID: 1592450143}
   - component: {fileID: 1592450142}
-  - component: {fileID: 1592450144}
   m_Layer: 5
-  m_Name: NumRows
+  m_Name: SNumRows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15430,23 +15405,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592450140}
   m_CullTransparentMesh: 1
---- !u!114 &1592450144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592450140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634e34ce96b6b1c468289958fcc2a2a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StationShips
-  DisplayText: {fileID: 1526565927}
-  IncreaseBtn: {fileID: 1794288363}
-  MaxBtn: {fileID: 634661120}
-  DecreaseBtn: {fileID: 1278403859}
-  MinBtn: {fileID: 1314180847}
 --- !u!1 &1601576608
 GameObject:
   m_ObjectHideFlags: 0
