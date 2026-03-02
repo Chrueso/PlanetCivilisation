@@ -1,25 +1,19 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MapGrid : MonoBehaviour
 {
-    private int width = 45;
-    private int height = 27;
-    private float cellSize = 5f;
+    [SerializeField] private int width = 15;
+    [SerializeField] private int height = 17;
+    [SerializeField] private float cellSize = 6f;
 
-    private Camera cameraInstance;
-    private float fingerRayMaxDistance = 1000f;
-    HexGridXZ<GridHex> grid;
-    BoxCollider col;
+    public HexGridXZ<GridHex> Grid { get; private set; }
+    public BoxCollider Col { get; private set; }
 
-    [SerializeField] GameObject hexPrefab;
+    [SerializeField] private GameObject hexPrefab;
 
-    private void Start()
+    public void GenerateGrid()
     {
-        cameraInstance = Camera.main;
-        TouchscreenHandler.Instance.FingerDownCallback += OnTouch;
-
-        grid = new HexGridXZ<GridHex>(
+        Grid = new HexGridXZ<GridHex>(
             width,
             height,
             cellSize,
@@ -32,29 +26,26 @@ public class MapGrid : MonoBehaviour
                 return new GridHex(cellSize, gridPos, gridPosCube, worldPos);
             }
 
-            
         );
 
-        col = GetComponent<BoxCollider>();
+        Col = GetComponent<BoxCollider>();
 
-        float colWidth = grid.TotalWidth + grid.CellSize * 0.5f;
-        float colHeight = (grid.TotalHeight * 0.75f) + (grid.CellSize * 0.25f);
-        col.size = new Vector3(colWidth, 0f, colHeight);
+        Col.size = new Vector3(Grid.TotalWorldWidth, 0f, Grid.TotalWorldHeight);
 
-        float colCenterX = (grid.TotalWidth * 0.5f) - (grid.CellSize * 0.25f);
-        float colCenterZ = (colHeight * 0.5f) - (grid.CellSize * 0.5f);
+        float colCenterX = (Grid.TotalWorldWidth * 0.5f) - Grid.HexRadius;
+        float colCenterZ = (Grid.TotalWorldHeight * 0.5f) - Grid.HexRadius;
 
-        col.center = new Vector3(colCenterX, 0f, colCenterZ) + grid.OriginPosition;
+        Col.center = new Vector3(colCenterX, 0f, colCenterZ) + Grid.OriginPosition;
 
-        col.isTrigger = true;
+        Col.isTrigger = true;
 
 
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
-                GridHex hex = grid.GetGridObject(x, z);
-                GameObject obj = Instantiate(hexPrefab, grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
+                GridHex hex = Grid.GetGridObject(x, z);
+                GameObject obj = Instantiate(hexPrefab, Grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
                 obj.name = ("Hex " + x + ", " + z);
 
                 GridHexVisual hexVisual = obj.GetComponent<GridHexVisual>();
@@ -64,27 +55,28 @@ public class MapGrid : MonoBehaviour
         }
     }
 
-    void OnTouch(object sender, TouchInfo touchInfo)
-    {
-        if (touchInfo.Index != 0) return;
-        Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
-        RaycastHit hit;
+    //void OnTouch(object sender, TouchInfo touchInfo)
+    //{
+    //    if (touchInfo.Index != 0) return;
+    //    Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
+    //    RaycastHit hit;
 
-        if (Physics.Raycast(fingerRay, out hit, fingerRayMaxDistance))
-        {
-            Debug.Log(hit.point);
-            GridHex hex = grid.GetGridObject(hit.point);
+    //    if (Physics.Raycast(fingerRay, out hit, fingerRayMaxDistance))
+    //    {
+    //        Debug.Log(hit.point);
+    //        GridHex hex = grid.GetGridObject(hit.point);
 
-            if (hex == null) return;
+    //        if (hex == null) return;
 
-            Debug.Log(hex.WorldPosition);
-            Debug.Log(hex.GridPosition);
+    //        Debug.Log(hex.WorldPosition);
+    //        Debug.Log(hex.GridPosition);
 
-            List<GridHex> hexesinRadius = grid.GetGridObjectsInRadius(hex.GridPositionCube, 3);
-            foreach (var h in hexesinRadius)
-            {
-                h.GridHexVisual.OnSelected();
-            }
-        }
-    }
+    //        hex.GridHexVisual.OnSelected();
+    //        //List<GridHex> hexesinRadius = grid.GetGridObjectsInRadius(hex.GridPositionCube, 3);
+    //        //foreach (var h in hexesinRadius)
+    //        //{
+    //        //    h.GridHexVisual.OnSelected();
+    //        //}
+    //    }
+    //}
 }

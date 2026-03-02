@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class PlanetData 
+public class PlanetData : IGridHexOccupant
 {
     public string PlanetName { get; private set; }
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
