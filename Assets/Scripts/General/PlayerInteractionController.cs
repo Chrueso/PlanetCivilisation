@@ -1,11 +1,15 @@
 using System;
 using UnityEngine;
 
-public class PlayerInteractionController : MonoBehaviour
+public class PlayerInteractionController : Singleton<PlayerInteractionController>
 {
     private Camera cameraInstance;
     private bool inPlanet = false;
     private float offset = 2f;
+
+    public PlanetData CurrentPlanet { get; private set; }
+    public Vector3 currGrid;
+
     private void Start()
     {
         cameraInstance = Camera.main;
@@ -20,37 +24,32 @@ public class PlayerInteractionController : MonoBehaviour
         //When tap
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
-            string name = hit.collider.gameObject.name;
-            print(name);
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+            //UINavigationManager.Instance.SetHomeShipButton(true);
             GridHex gh = GameManager.Instance.mapGrid.Grid.GetGridObject(hit.point);
-            gh.GridHexVisual.OnSelected();
-            PlanetData data = (PlanetData)gh.Occupant;
-            print(data.PlanetName);
-            return;
-            if (CheckPlanet(name))
-                print(hit.collider.gameObject.name);
-
-            // i changed so it detect isit planet instead of check name of object (eexuan
-            //PlanetData planet = hit.collider.GetComponent<PlanetData>();
-
-            PlanetData planet = GetPlanet(name);
-            if (planet != null)
+            UINavigationManager.Instance.MoveHomeShipButton(gh.GridHexVisual.transform.position);
+            if (gh.IsOccupied && !inPlanet)
             {
-                //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
-                if (planet.FactionType == FactionType.Human)
-                    UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
-                else
-                    UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
-                CameraController.Instance.Disable();
-                cameraInstance.transform.position = hit.collider.gameObject.transform.position - (cameraInstance.transform.forward * 4f) - new Vector3(0, offset, 0);
-                inPlanet = true;
-
+                PlanetData planet = (PlanetData)gh.Occupant;
+                CurrentPlanet = planet;
+                if (planet != null)
+                {
+                    //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
+                    if (planet.FactionType == FactionType.Human)
+                        UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
+                    else
+                        UINavigationManager.Instance.ShowEnemyPlanetSheet(planet);
+                    CameraController.Instance.Disable();
+                    cameraInstance.transform.position = new Vector3(gh.GridHexVisual.gameObject.transform.position.x, 35f, gh.GridHexVisual.gameObject.transform.position.z - offset);
+                    inPlanet = true;
+                }
             }
             else
             {   // YEAH THIS IS PRETTY FUCKING SHIT :P
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
                 {
-                    //PlanetManagementInterface.main.HideInterface();
+
+                    CurrentPlanet = null;
                     UINavigationManager.Instance.DismissAllSheets();
                     CameraController.Instance.Enable();
                     cameraInstance.transform.position = CameraController.Instance.CurrPos;
@@ -62,7 +61,7 @@ public class PlayerInteractionController : MonoBehaviour
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && inPlanet)
             {
-                //PlanetManagementInterface.main.HideInterface();
+                CurrentPlanet = null;
                 CameraController.Instance.Enable();
                 cameraInstance.transform.position = CameraController.Instance.CurrPos;
                 inPlanet = false;

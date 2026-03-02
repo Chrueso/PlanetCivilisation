@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +34,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private GameObject buildStructButton;
     [SerializeField] private RectTransform stateText;
+    [SerializeField] private Button homeShipMoverButton;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -47,6 +50,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
         AutoWireButtons();
         SetState(UIState.BaseUI);
     }
+
+    
 
     private void ApplySafeArea()
     {
@@ -179,6 +184,19 @@ public class UINavigationManager : Singleton<UINavigationManager>
         //stateText.GetComponent<TextMeshProUGUI>().text = "ATTACKING";
     }
 
+    public void MoveHomeShipButton(Vector3 screenPos)
+    {
+        RectTransform buttonRect = homeShipMoverButton.GetComponent<RectTransform>();
+        buttonRect.position = screenPos + new Vector3(0f, 0f, -2f);
+    }
+    
+
+    public void SetHomeShipButton(bool active)
+    {
+        homeShipMoverButton.gameObject.SetActive(active);   
+    }
+
+
     public void BackFromOverlay()
     {
         if (parentSheet == UIState.FriendlySheet || parentSheet == UIState.EnemySheet)
@@ -195,6 +213,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         if (bottomPanel) bottomPanel.SetActive(showBase);
         if (topResourceBar) topResourceBar.SetActive(true);
         //if (minimap) minimap.SetActive(showBase);
+        if (homeShipMoverButton) homeShipMoverButton.gameObject.SetActive(showBase);
         if (nextTurnButton) nextTurnButton.gameObject.SetActive(showBase);
         buildStructButton.SetActive(true);
         if (currentPlanet != null && currentPlanet.Structures.Count > 0) buildStructButton.SetActive(false);

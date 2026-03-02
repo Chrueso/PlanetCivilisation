@@ -11,7 +11,8 @@ public class PlanetData : IGridHexOccupant
     public List<Structure> Structures { get; private set; }
     public Dictionary<ShipTypeSO, int> StationedShips { get; private set; }
     public Dictionary<FactionType, int> Affection {  get; private set; }
-    public PlanetData(string planetName, FactionType faction)
+    public GridHex HexOccupying { get; set; }
+    public PlanetData(string planetName, FactionType faction, GridHex hex = null)
     {
         this.PlanetName = planetName;
         this.Resources = new Dictionary<ResourceType, int>();
@@ -23,9 +24,10 @@ public class PlanetData : IGridHexOccupant
             {FactionType.DemiHuman, 0},
             {FactionType.IntelligentConstruct, 0 },
         };
+        this.HexOccupying = hex;
     }
 
-    public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<Structure> structure)
+    public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<Structure> structure, GridHex hex)
     {
         this.PlanetName = planetName;
 
@@ -42,6 +44,7 @@ public class PlanetData : IGridHexOccupant
             {FactionType.DemiHuman, 0},
             {FactionType.IntelligentConstruct, 0 },
         };
+        this.HexOccupying = hex;
     }
 
     /// <summary>

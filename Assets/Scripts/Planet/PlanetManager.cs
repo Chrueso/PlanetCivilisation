@@ -36,6 +36,7 @@ public class PlanetManager : Singleton<PlanetManager>
             // Spawn planet
             (var planetObject, var planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, this.transform);
             planetObject.name = $"Planet{iter}";
+            planetData.HexOccupying = hex;
             PlanetDict.Add(planetObject.name, planetData);
 
             // Assign planet to hex

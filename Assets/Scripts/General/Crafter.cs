@@ -28,7 +28,7 @@ public class Crafter : Singleton<Crafter>
     {
         if (CheckPlayerInv(Structure.Extractor))
         {
-            //PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Extractor);
+            PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Extractor);
             UINavigationManager.Instance.BackFromOverlay();
         }
     }
@@ -37,7 +37,7 @@ public class Crafter : Singleton<Crafter>
     {
         if (CheckPlayerInv(Structure.Shipyard))
         {
-            //PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Shipyard);
+            PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Shipyard);
             UINavigationManager.Instance.BackFromOverlay();
         }
     }
