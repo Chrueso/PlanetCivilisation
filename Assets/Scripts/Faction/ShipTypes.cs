@@ -23,6 +23,7 @@ public class ShipTypeSO : ScriptableObject
 
 
     // Public accessors (idk whatever u guys need just add)
+    public ShipActionType ActionType => actionType;
     // public int BuildCost => ;
 }
 
