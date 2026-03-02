@@ -9,7 +9,7 @@ public class PlanetData
     public FactionType FactionType { get; private set; }
     public List<Structure> Structures { get; private set; }
     public Dictionary<ShipTypeSO, int> StationedShips { get; private set; }
-    public int Affection {  get; private set; }
+    public Dictionary<FactionType, int> Affection {  get; private set; }
     public PlanetData(string planetName, FactionType faction)
     {
         this.PlanetName = planetName;
@@ -17,6 +17,11 @@ public class PlanetData
         this.FactionType = faction;
         this.Structures = new List<Structure>();
         this.StationedShips = new Dictionary<ShipTypeSO, int>();
+        this.Affection = new Dictionary<FactionType, int>() {
+            {FactionType.Human, 0 },
+            {FactionType.DemiHuman, 0},
+            {FactionType.IntelligentConstruct, 0 },
+        };
     }
 
     public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<Structure> structure)
@@ -31,11 +36,19 @@ public class PlanetData
         this.FactionType = factionType;
         this.Structures = structure.ToList();
         this.StationedShips = new Dictionary<ShipTypeSO, int>();
+        this.Affection = new Dictionary<FactionType, int>() {
+            {FactionType.Human, 0 },
+            {FactionType.DemiHuman, 0},
+            {FactionType.IntelligentConstruct, 0 },
+        };
     }
 
-    public void RaiseAffection(int affection)
+    public void RaiseAffection(FactionType rizzler, int affection)
     {
-        this.Affection = Math.Clamp(this.Affection + affection, 0, 100);
+        if (this.Affection.TryGetValue(rizzler, out int currAffection))
+        {
+            this.Affection[rizzler] = Math.Clamp(currAffection + affection, 0, 100);
+        }
     }
 
     public void BuildStructure(Structure structure)

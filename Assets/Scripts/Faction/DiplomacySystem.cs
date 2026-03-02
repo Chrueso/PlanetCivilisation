@@ -19,7 +19,8 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
 
     private void TryForAlliance()
     {
-        if (demihumanRelationships.TryGetValue(playerFaction, out int affinity))
+        PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
+        if (pData.Affection.TryGetValue(playerFaction, out int affinity))
         {
             if (affinity < 40)
             {
