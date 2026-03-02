@@ -8,6 +8,10 @@ public class CameraController : Singleton<CameraController>
 {
     [SerializeField] private bool orthographicPanning = false;
 
+    // can hardcode for now since map size is fixed
+    private Vector2 minBounds = Vector2.zero;
+    private Vector2 maxBounds = new Vector2(512, 512);
+
     private bool eventsEnabled = true;
     private bool waitForReset = false;
     private Camera cameraInstance;
@@ -74,8 +78,12 @@ public class CameraController : Singleton<CameraController>
 
         Vector3 direction = startingPos - GetWorldPos(z, e.ScreenPos);
         direction.y = 0f;
-        cameraInstance.transform.position += direction;
-        
+        //cameraInstance.transform.position += direction;
+        Vector3 nextPos = cameraInstance.transform.position + direction;
+        Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), nextPos.y, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
+        cameraInstance.transform.position = boundedPos;
+
+
     }
 
     private Vector3 GetWorldPos(float z, Vector3 pos)

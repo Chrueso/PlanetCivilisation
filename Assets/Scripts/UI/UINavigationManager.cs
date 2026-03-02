@@ -197,7 +197,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         //if (minimap) minimap.SetActive(showBase);
         if (nextTurnButton) nextTurnButton.gameObject.SetActive(showBase);
         buildStructButton.SetActive(true);
-        if (currentPlanet != null && currentPlanet.Structures > 0) buildStructButton.SetActive(false);
+        if (currentPlanet != null && currentPlanet.Structures.Count > 0) buildStructButton.SetActive(false);
         
 
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);

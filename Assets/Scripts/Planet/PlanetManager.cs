@@ -71,7 +71,7 @@ public class PlanetManager : MonoBehaviour
 
     private void DebugPlanet()
     {
-        PlanetData pd = new("DebugPlanet", new List<ResourceType>(), FactionType.Human);
+        PlanetData pd = new("DebugPlanet", FactionType.Human);
         PlanetDict.Add(pd.PlanetName, pd);
     }
 
