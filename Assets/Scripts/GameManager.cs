@@ -13,8 +13,14 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         GenerateSeed();
+
+        // I think maybe in future have 1 world/map gen which initialize both and pass references to all generators need
+        // PlanetManager being singleton cause alot dependency? maybe
+        // Interactions should be trygetcomponent i think better? not sure 
+       
         mapGrid.GenerateGrid();
-        PlanetManager.Instance.GeneratePlanets(mapGrid, PlanetRNG);
+
+        PlanetManager.Instance.GeneratePlanets(mapGrid, PlanetRNG, out PlanetData homePlanet);      
     }
 
     private void GenerateSeed()

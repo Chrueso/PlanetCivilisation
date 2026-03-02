@@ -629,6 +629,10 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3182221146958887679, guid: ca929070007aaca4a8081e2dfa5b4144, type: 3}
+      propertyPath: homePlanetData
+      value: 
+      objectReference: {fileID: 11400000, guid: ee73ebb0de09fec42bc84efd5d59a2f8, type: 2}
+    - target: {fileID: 3182221146958887679, guid: ca929070007aaca4a8081e2dfa5b4144, type: 3}
       propertyPath: radiusBetweenPlanets
       value: 1
       objectReference: {fileID: 0}
