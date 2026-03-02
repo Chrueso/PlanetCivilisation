@@ -107,7 +107,7 @@ public class PlanetData : IGridHexOccupant
         return total;
     }
 
-    public void DebugPurposes()
+    //public void DebugPurposes()
     public void RaiseAffection(FactionType rizzler, int affection)
     {
         if (this.Affection.TryGetValue(rizzler, out int currAffection))
