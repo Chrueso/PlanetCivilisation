@@ -1,27 +1,26 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static TMPro.Examples.ObjectSpin;
+using static UnityEngine.Rendering.DebugUI;
 public class PlanetManager : Singleton<PlanetManager> 
 {
     public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
 
     [SerializeField] private int radiusBetweenPlanets = 2;
     [SerializeField] private int maxPlanets = 20;
-
     [SerializeField] private CustomPlanetSO homePlanetData;
 
     public void GeneratePlanets(MapGrid mapGrid, System.Random rng, out PlanetData homePlanet)
     {
-        // For random index and fast deletion
-        List<GridHex> avaliableHexes = new List<GridHex>();
-        Dictionary<GridHex, int> avaliableHexesLookup = new Dictionary<GridHex, int>();
-        int index = 0;
+        // For random index and fast deletion look at AvaliablePool.cs
+        AvailablePool<GridHex> avaliableHexes = new AvailablePool<GridHex>();
+
         for (int z = 0; z < mapGrid.Grid.Height; z++)
         {
             for (int x = 0; x < mapGrid.Grid.Width; x++)
             {
                 avaliableHexes.Add(mapGrid.Grid.GridArray[x, z]);
-                avaliableHexesLookup.Add(mapGrid.Grid.GridArray[x, z], index);
-                index++;
             }
         }
 
@@ -32,9 +31,7 @@ public class PlanetManager : Singleton<PlanetManager>
         int iter = 0;
         while (iter < maxPlanets && avaliableHexes.Count > 0)
         {
-            int randomHexIndex = rng.Next(0, avaliableHexes.Count);
-
-            GridHex hex = avaliableHexes[randomHexIndex];
+            GridHex hex = avaliableHexes.GetRandom(rng);
 
             // Spawn planet
             GameObject planetObject;
@@ -63,28 +60,50 @@ public class PlanetManager : Singleton<PlanetManager>
 
             // Mark all hexes within a radius as unable to spawn
             List<GridHex> hexesToRemove = mapGrid.Grid.GetGridObjectsInRadius(hex.GridPositionCube, radiusBetweenPlanets);
+            avaliableHexes.Remove(hexesToRemove);
+            iter++;
+        }
+    }
 
-            foreach (GridHex hexToRemove in hexesToRemove)
+    public void AssignFactionToPlanets(MapGrid mapGrid, System.Random rng, PlanetData homePlanet)
+    {
+        AvailablePool<GridHex> avaliableHexes = new AvailablePool<GridHex>();
+        for (int z = 0; z < mapGrid.Grid.Height; z++)
+        {
+            for (int x = 0; x < mapGrid.Grid.Width; x++)
             {
-                if (avaliableHexesLookup.TryGetValue(hexToRemove, out int removeIndex))
+                avaliableHexes.Add(mapGrid.Grid.GridArray[x, z]);
+            }
+        }
+
+        // Choose random hex then check for planets in a radius around that hex if have planet assign faction to that planet then remove checked radius from avalible hex 
+        // delegates 1 portion of grid to that faction
+        int radiusBetweenFactions = mapGrid.Grid.Width / 2;
+        var factionTypeValues = System.Enum.GetValues(typeof(FactionType));
+
+        // Remove hexes in radius around homeplanet from avaliable hexes
+        avaliableHexes.Remove(mapGrid.Grid.GetGridObjectsInRadius(homePlanet.CurrentHex.GridPositionCube, radiusBetweenFactions));
+
+        // Set the remaining factions
+        for (int i = 0; i < factionTypeValues.Length; i++)
+        {
+            FactionType factionType = (FactionType)factionTypeValues.GetValue(i);
+            if (factionType != FactionType.Nothing && factionType != homePlanet.FactionType)
+            {
+                GridHex hex = avaliableHexes.GetRandom(rng);
+                List<GridHex> hexesToCheck = mapGrid.Grid.GetGridObjectsInRadius(hex.GridPositionCube, radiusBetweenFactions);
+
+                foreach (GridHex checkHex in hexesToCheck)
                 {
-                    int lastIndex = avaliableHexes.Count - 1;
-                    GridHex lastHex = avaliableHexes[lastIndex];
+                    // If hex has a planet
+                    if (checkHex.Occupant is PlanetData planetData)
+                    {
+                        planetData.SetFaction(factionType);
+                        Debug.Log(planetData.PlanetName);
+                    }
 
-                    // Swap the hex to remove with the last one
-                    avaliableHexes[removeIndex] = lastHex;
-
-                    // Update the dictionary for the moved hex
-                    avaliableHexesLookup[lastHex] = removeIndex;
-
-                    // Remove the last element
-                    avaliableHexes.RemoveAt(lastIndex);
-                    avaliableHexesLookup.Remove(hexToRemove);
-
-                    // Do this so u dont shift the stored incides
                 }
             }
-            iter++;
         }
     }
 
