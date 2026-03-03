@@ -14,7 +14,6 @@ public enum FactionType
     Human,
     DemiHuman,
     IntelligentConstruct,
-    Adapters
 }
 
 [CreateAssetMenu(fileName = "New Faction Data", menuName = "Faction/Faction Data")]
