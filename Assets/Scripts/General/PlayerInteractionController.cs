@@ -26,6 +26,10 @@ public class PlayerInteractionController : MonoBehaviour
             gh.GridHexVisual.OnSelected();
             PlanetData data = (PlanetData)gh.Occupant;
             print(data.PlanetName);
+
+            //just debugging the battle
+            BattleManager.Instance.SelectedPlanet = data;
+
             return;
             if (CheckPlanet(name))
                 print(hit.collider.gameObject.name);

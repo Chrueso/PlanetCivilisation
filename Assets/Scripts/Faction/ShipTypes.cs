@@ -16,6 +16,7 @@ public class ShipTypeSO : ScriptableObject
     [SerializeField] private Sprite shipIcon;
     [SerializeField] private GameObject shipPrefab;
     [SerializeField] private ShipActionType actionType;
+    [SerializeField] private int attackPower = 1;
 
     [Header("Ship Build Requirements")]
     [SerializeField] private ResourceRequirement[] requiredResources;
@@ -24,6 +25,7 @@ public class ShipTypeSO : ScriptableObject
 
     // Public accessors (idk whatever u guys need just add)
     public ShipActionType ActionType => actionType;
+    public int AttackPower => attackPower;
 
     // public int BuildCost => ;
 }

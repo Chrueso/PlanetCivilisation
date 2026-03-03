@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58db86c31f9486c4c8493ccc3e94caf2, type: 3}
   m_Name: Assault
   m_EditorClassIdentifier: Assembly-CSharp::ShipTypeSO
-  shipName: 
+  shipName: Assault
   shipIcon: {fileID: 0}
   shipPrefab: {fileID: 0}
   actionType: 0
+  attackPower: 3
   requiredResources:
   - resourceType: 0
     amount: 0

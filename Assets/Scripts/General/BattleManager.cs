@@ -1,162 +1,163 @@
-//using System.Collections.Generic;
-//using System.Linq;
-//using Unity.VisualScripting;
-//using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 
-//public class BattleResult
-//{
-//    public int AttackerShipsRemaining { get; private set; }
-//    public int DefenderShipsRemaining { get; private set; }
-//    public bool AttackerWon { get; private set; }
-    
-//    public BattleResult(int attackerShipsRemaining, int defenderShipsRemaining, bool attackerWon)
-//    {
-//        AttackerShipsRemaining = attackerShipsRemaining;
-//        DefenderShipsRemaining = defenderShipsRemaining;
-//        AttackerWon = attackerWon;
-//    }
-//}
+public class BattleResult
+{
+    public int AttackerShipsRemaining { get; private set; }
+    public int DefenderShipsRemaining { get; private set; }
+    public bool AttackerWon { get; private set; }
 
-//public class BattleManager : Singleton<BattleManager>
-//{
-//    public enum ShipTypeEnum
-//    {
-//        Scout,
-//        Assault,
-//        Worker
-//    }
+    public BattleResult(int attackerShipsRemaining, int defenderShipsRemaining, bool attackerWon)
+    {
+        AttackerShipsRemaining = attackerShipsRemaining;
+        DefenderShipsRemaining = defenderShipsRemaining;
+        AttackerWon = attackerWon;
+    }
+}
 
-//    [System.Serializable]
-//    public class ShipEntry
-//    {
-//        public ShipTypeEnum shipTypeEnum; // Choose in Inspector
-//        public int count;
+public class BattleManager : Singleton<BattleManager>
+{
+    public PlanetData SelectedPlanet;
+    public ShipTypeSO combatShipType;
+    public int AttackShipAmount; 
 
-//        public ShipType GetShipType()
-//        {
-//            return shipTypeEnum switch
-//            {
-//                ShipTypeEnum.Scout => ShipTypes.Scout,
-//                ShipTypeEnum.Assault => ShipTypes.Assault,
-//                ShipTypeEnum.Worker => ShipTypes.Worker,
-//                _ => null
-//            };
-//        }
-//    }
+    //debug/testing functions
 
-//    [SerializeField] private List<ShipEntry> attackerFleet = new();
-//    [SerializeField] private List<ShipEntry> defenderFleet = new();
+    [ContextMenu("Simulate Battle")]
+    public void SimulateBattle()
+    {
+        if (SelectedPlanet != null)
+        {
+            Dictionary<ShipTypeSO, int> attackingFleet = new Dictionary<ShipTypeSO, int>();
+            attackingFleet.Add(combatShipType, AttackShipAmount);
 
-//    [ContextMenu("Simulate Battle")]
-//    public void SimulateBattle()
-//    {
-//        Dictionary<ShipType, int> attackerDict = attackerFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-//        Dictionary<ShipType, int> defenderDict = defenderFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-//        BattleResult result = BattleManager.Instance.Battle(attackerDict, defenderDict);
-//        //Debug.Log($"Attacker Ships Remaining: {result.AttackerShipsRemaining}, Defender Ships Remaining: {result.DefenderShipsRemaining}, Attacker Won: {result.AttackerWon}");
-//    }
+            Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
+            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key.name}: {kv.Value}"));
+            Debug.Log($"Defending Fleet: {fleetInfo}");
 
-//    [ContextMenu("Simulate Brian Version")]
-//    public void SimulateBrianVersion()
-//    {
-//        Dictionary<ShipType, int> attackerDict = attackerFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-//        Dictionary<ShipType, int> defenderDict = defenderFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-//        BattleResult result = BattleManager.Instance.BattleBrianVersion(attackerDict, defenderDict);
-//        //Debug.Log($"Attacker Won: {result.AttackerWon}");
-//    }
+            BattleResult result = BattleManager.Instance.Battle(attackingFleet, SelectedPlanet.StationedShips);
+        }
+    }
 
-//    protected override void Awake()
-//    {
-//        base.Awake();
-//    }
+    [ContextMenu("Simulate Brian Version")]
+    public void SimulateBattleBrian()
+    {
+        if (SelectedPlanet != null)
+        {
+            Dictionary<ShipTypeSO, int> attackingFleet = new Dictionary<ShipTypeSO, int>();
+            attackingFleet.Add(combatShipType, AttackShipAmount);
 
-//    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
-//    {
-//        bool attackerWon = false;
-//        int maxRoll = 10; 
+            Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
+            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key.name}: {kv.Value}"));
+            Debug.Log($"Defending Fleet: {fleetInfo}");
 
-//        List<ShipType> attackers = new List<ShipType>();
-//        foreach (var kv in attackerShips)
-//        {
-//            if (kv.Key.canAttack)
-//            {
-//                for (int i = 0; i < kv.Value; i++)
-//                    attackers.Add(kv.Key);
-//            }
-//        }
+            BattleResult result = BattleManager.Instance.BattleBrianVersion(attackingFleet, SelectedPlanet.StationedShips);
+        }
+    }
 
-//        List<ShipType> defenders = new List<ShipType>();
-//        foreach (var kv in defenderShips)
-//        {
-//            for (int i = 0; i < kv.Value; i++)
-//                defenders.Add(kv.Key);
-//        }
+    //[ContextMenu("Simulate Brian Version")]
+    //public void SimulateBrianVersion()
+    //{
+    //    Dictionary<ShipType, int> attackerDict = attackerFleet.ToDictionary(e => e.GetShipType(), e => e.count);
+    //    Dictionary<ShipType, int> defenderDict = defenderFleet.ToDictionary(e => e.GetShipType(), e => e.count);
+    //    BattleResult result = BattleManager.Instance.BattleBrianVersion(attackerDict, defenderDict);
+    //    //Debug.Log($"Attacker Won: {result.AttackerWon}");
+    //}
 
-//        // Battle loop
-//        while (attackers.Count > 0 && defenders.Count > 0)
-//        {
-            
-//            List<ShipType> currentAttackers = new List<ShipType>(attackers);
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
-//            foreach (var attacker in currentAttackers)
-//            {
-//                if (defenders.Count == 0) break;
+    public BattleResult Battle(Dictionary<ShipTypeSO, int> attackerShips, Dictionary<ShipTypeSO, int> defenderShips)
+    {
+        bool attackerWon = false;
+        int maxRoll = 10;
 
-//                // Pick a random defender
-//                int defenderIndex = Random.Range(0, defenders.Count);
-//                ShipType defender = defenders[defenderIndex];
+        List<ShipTypeSO> attackers = new List<ShipTypeSO>();
+        foreach (var kv in attackerShips)
+        {
+            if (kv.Key.ActionType == ShipActionType.Combat)
+            {
+                for (int i = 0; i < kv.Value; i++)
+                    attackers.Add(kv.Key);
+            }
+        }
 
-//                // Roll
-//                int attackerRoll = Random.Range(1, maxRoll*attacker.attackPower + 1);
-//                int defenderRoll = Random.Range(1, maxRoll*defender.attackPower + 1);
+        List<ShipTypeSO> defenders = new List<ShipTypeSO>();
+        foreach (var kv in defenderShips)
+        {
+            for (int i = 0; i < kv.Value; i++)
+                defenders.Add(kv.Key);
+        }
 
-//                if (attackerRoll > defenderRoll)
-//                {   
-//                    defenders.RemoveAt(defenderIndex);
-//                }
-//                else
-//                {
-//                    attackers.Remove(attacker);
-//                }
+        // Battle loop
+        while (attackers.Count > 0 && defenders.Count > 0)
+        {
 
-//                // End battle if one side is empty
-//                if (attackers.Count == 0 || defenders.Count == 0) break;
-//            }
-//        }
+            List<ShipTypeSO> currentAttackers = new List<ShipTypeSO>(attackers);
 
-//        // Count remaining ships by type for attacker and defender
-//        int remainingAttackers = attackers.Count;
-//        int remainingDefenders = defenders.Count;
+            foreach (var attacker in currentAttackers)
+            {
+                if (defenders.Count == 0) break;
 
-//        attackerWon = remainingAttackers > 0;
+                // Pick a random defender
+                int defenderIndex = Random.Range(0, defenders.Count);
+                ShipTypeSO defender = defenders[defenderIndex];
 
-//        Debug.Log($"Battle Result: Attacker Ships Remaining: {remainingAttackers}, Defender Ships Remaining: {remainingDefenders}, Attacker Won: {attackerWon}");
-//        return new BattleResult(remainingAttackers, remainingDefenders, attackerWon);
-//    }
+                // Roll
+                int attackerRoll = Random.Range(1, maxRoll * attacker.AttackPower + 1);
+                int defenderRoll = Random.Range(1, maxRoll * defender.AttackPower + 1);
 
-//    public BattleResult BattleBrianVersion(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
-//    {
-//        int attackerShipPower = 0;
-//        int defenderShipPower = 0;
+                if (attackerRoll > defenderRoll)
+                {
+                    defenders.RemoveAt(defenderIndex);
+                }
+                else
+                {
+                    attackers.Remove(attacker);
+                }
 
-//        foreach(var ship in attackerShips)
-//        {
-//            if (ship.Key.canAttack == true)
-//            {
-//                attackerShipPower += ship.Value * ship.Key.attackPower;
-//            }
-//        }
+                // End battle if one side is empty
+                if (attackers.Count == 0 || defenders.Count == 0) break;
+            }
+        }
 
-//        foreach (var ship in defenderShips)
-//        {
-//            defenderShipPower += ship.Value * ship.Key.attackPower;
-//        }
+        // Count remaining ships by type for attacker and defender
+        int remainingAttackers = attackers.Count;
+        int remainingDefenders = defenders.Count;
 
-//        float chanceForSuccess = (float)attackerShipPower / (attackerShipPower + defenderShipPower);
+        attackerWon = remainingAttackers > 0;
 
-//        bool attackerWon = Random.value < chanceForSuccess;
+        Debug.Log($"Battle Result: Attacker Ships Remaining: {remainingAttackers}, Defender Ships Remaining: {remainingDefenders}, Attacker Won: {attackerWon}");
+        return new BattleResult(remainingAttackers, remainingDefenders, attackerWon);
+    }
 
-//        Debug.Log($"Attacker Won: {attackerWon} at {chanceForSuccess*100}%");
-//        return new BattleResult(0, 0, attackerWon);
-//    }
-//}
+    public BattleResult BattleBrianVersion(Dictionary<ShipTypeSO, int> attackerShips, Dictionary<ShipTypeSO, int> defenderShips)
+    {
+        int attackerShipPower = 0;
+        int defenderShipPower = 0;
+
+        foreach (var ship in attackerShips)
+        {
+            if (ship.Key.ActionType == ShipActionType.Combat)
+            {
+                attackerShipPower += ship.Value * ship.Key.AttackPower;
+            }
+        }
+
+        foreach (var ship in defenderShips)
+        {
+            defenderShipPower += ship.Value * ship.Key.AttackPower;
+        }
+
+        float chanceForSuccess = (float)attackerShipPower / (attackerShipPower + defenderShipPower);
+
+        bool attackerWon = Random.value < chanceForSuccess;
+
+        Debug.Log($"Attacker Won: {attackerWon} at {chanceForSuccess * 100}%");
+        return new BattleResult(0, 0, attackerWon);
+    }
+}
