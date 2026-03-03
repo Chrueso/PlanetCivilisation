@@ -99,7 +99,7 @@ public class PlanetManager : Singleton<PlanetManager>
                     if (checkHex.Occupant is PlanetData planetData)
                     {
                         planetData.SetFaction(factionType);
-                        Debug.Log($"Planet: {planetData.PlanetName}, Faction: {planetData.FactionType}");
+                        //Debug.Log($"Planet: {planetData.PlanetName}, Faction: {planetData.FactionType}");
                     }
 
                 }
