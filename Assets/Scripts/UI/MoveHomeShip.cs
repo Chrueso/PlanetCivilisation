@@ -13,5 +13,7 @@ public class MoveHomeShip : MonoBehaviour
     private void MoveHomeShipHere()
     {
         UINavigationManager.Instance.SetHomeShipButton(false);
+        GameManager.Instance.Player.MoveToHex(PlayerInteractionController.Instance.CurrentGridHex);
+        TurnManager.Instance.currentFaction.DecreaseTurn(1);
     }
 }

@@ -17,9 +17,13 @@ public class PlanetData : IGridHexOccupant
     {
         this.PlanetName = planetName;
         this.Resources = new Dictionary<ResourceType, int>();
-        this.FactionType = FactionType.Nothing;
+        this.FactionType = faction;
         this.Structures = new List<Structure>();
-        this.StationedShips = new Dictionary<ShipTypeSO, int>();
+        this.StationedShips = new Dictionary<ShipTypeSO, int>() {
+            {HardcodeReference.Instance.ScoutShip, 0},
+            {HardcodeReference.Instance.AttackShip,0 },
+            {HardcodeReference.Instance.WorkerShip,0 }
+        };
         this.Affection = new Dictionary<FactionType, int>() {
             {FactionType.Human, 0 },
             {FactionType.DemiHuman, 0},

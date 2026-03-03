@@ -43,6 +43,7 @@ public class PlanetManager : Singleton<PlanetManager>
             if (!hasSpawnedHomePlanet && homePlanetData != null)
             {
                 (planetObject, planetData) = PlanetGenerator.Instance.GenerateCustomPlanet(homePlanetData, hex.WorldPosition, Quaternion.identity, this.transform);
+                print($"name {planetData.PlanetName} faction {planetData.FactionType}");
                 planetData.CurrentHex = hex;
                 homePlanet = planetData;
                 hasSpawnedHomePlanet = true;

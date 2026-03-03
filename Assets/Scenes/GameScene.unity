@@ -3516,7 +3516,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &243446057
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3531,10 +3531,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 182493805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 687.74915, y: -90}
+  m_SizeDelta: {x: 109.491196, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243446058
 MonoBehaviour:
@@ -6425,7 +6425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &538832339
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6440,10 +6440,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 182493805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 861.78534, y: -90}
+  m_SizeDelta: {x: 218.5812, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &538832340
 MonoBehaviour:
@@ -8351,7 +8351,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GOLD
+  m_text: METALS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
   m_sharedMaterial: {fileID: -6461024866597300202, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
@@ -10162,7 +10162,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: METAL
+  m_text: ENERGY SOURCE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
   m_sharedMaterial: {fileID: -6461024866597300202, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
@@ -14428,6 +14428,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31278fa21b6b42e42bd6194b11ba7271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  endTurnButton: {fileID: 884844403}
+  turnDisplay: {fileID: 2104817839}
+  metalsDisplay: {fileID: 762242109}
+  rationsDisplay: {fileID: 1649600224}
+  energyDisplay: {fileID: 951697654}
 --- !u!114 &1399487753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15334,6 +15339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UINavigationManager
   friendlyPlanetSheet: {fileID: 1415301086}
   enemyPlanetSheet: {fileID: 79065997}
+  unknownPlanetSheet: {fileID: 95856637}
   techPanel: {fileID: 792934757}
   sciencePanel: {fileID: 1074778524}
   diplomacyPanel: {fileID: 1333000668}
@@ -15344,6 +15350,15 @@ MonoBehaviour:
   nextTurnButton: {fileID: 884844403}
   buildStructButton: {fileID: 1706689012}
   homeShipMoverButton: {fileID: 1883281358}
+  shipDisplay:
+  - {fileID: 562589689}
+  - {fileID: 1347236404}
+  - {fileID: 1526565927}
+  shipOwned:
+  - {fileID: 980921926}
+  - {fileID: 1791058951}
+  - {fileID: 1898674915}
+  exploreBtn: {fileID: 1293736405}
 --- !u!4 &1444938817
 Transform:
   m_ObjectHideFlags: 0
@@ -17878,7 +17893,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: WOOD
+  m_text: RATIONS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
   m_sharedMaterial: {fileID: -6461024866597300202, guid: ef5b4310d4db245379be61c1315c0f58, type: 2}
