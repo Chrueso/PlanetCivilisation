@@ -112,6 +112,7 @@ public class StationShips : MonoBehaviour
         //PlayerInteractionController.Instance.CurrentPlanet.AddShips(HardcodeReference.Instance.WorkerShip, shipAmount[HardcodeReference.Instance.WorkerShip]);
         //PlayerInteractionController.Instance.CurrentPlanet.AddShips(HardcodeReference.Instance.AttackShip, shipAmount[HardcodeReference.Instance.AttackShip]);
         PlayerInteractionController.Instance.CurrentPlanet.StationShips(shipAmount);
+        GameManager.Instance.Player.StationShips(shipAmount);
         shipAmount[HardcodeReference.Instance.ScoutShip] = 0;
         shipAmount[HardcodeReference.Instance.WorkerShip] = 0;
         shipAmount[HardcodeReference.Instance.AttackShip] = 0;
