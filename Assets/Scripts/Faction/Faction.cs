@@ -52,6 +52,17 @@ public class Faction
         OnTurnFinished?.Invoke();
     }
 
+    public bool DecreaseTurn(int amount)
+    {
+        if (ActionPoints < amount)
+        {
+            return false;
+        }
+        ActionPoints -= amount;
+        if (ActionPoints <= 0) OnTurnFinished?.Invoke();
+        return true;
+    }
+
     //public virtual void StartPlayerTurn()
     //{
     //    Debug.Log($"{FactionType} is beginning");

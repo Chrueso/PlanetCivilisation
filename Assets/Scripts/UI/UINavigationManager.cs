@@ -11,6 +11,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         BaseUI,
         FriendlySheet,
         EnemySheet,
+        UnknownSheet,
         TechPanel,
         SciencePanel,
         DiplomacyPanel,
@@ -20,6 +21,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [Header("Panels")]
     [SerializeField] private GameObject friendlyPlanetSheet;
     [SerializeField] private GameObject enemyPlanetSheet;
+    [SerializeField] private GameObject unknownPlanetSheet;
     [SerializeField] private GameObject techPanel;
     [SerializeField] private GameObject sciencePanel;
     [SerializeField] private GameObject diplomacyPanel;
@@ -34,6 +36,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private GameObject buildStructButton;
     [SerializeField] private RectTransform homeShipMoverButton;
+    [SerializeField] private TextMeshProUGUI[] shipDisplay;
+    [SerializeField] private TextMeshProUGUI[] shipOwned;
+    [SerializeField] private Button exploreBtn;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -48,6 +53,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         AdjustBaseUIForSafeArea();
         AutoWireButtons();
         SetState(UIState.BaseUI);
+        exploreBtn.onClick.AddListener(ExplorePlanet);
     }
 
     
@@ -110,7 +116,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void AutoWireButtons()
     {
-        GameObject[] sheets = { friendlyPlanetSheet, enemyPlanetSheet, bottomPanel };
+        GameObject[] sheets = { friendlyPlanetSheet, enemyPlanetSheet, unknownPlanetSheet, bottomPanel };
         foreach (var sheet in sheets)
         {
             if (sheet == null) continue;
@@ -149,6 +155,18 @@ public class UINavigationManager : Singleton<UINavigationManager>
         SetState(UIState.EnemySheet);
     }
 
+    public void ShowUnknownPlanetSheet(PlanetData planet)
+    {
+        currentPlanet = planet;
+        SetState(UIState.UnknownSheet);
+    }
+
+    private void ExplorePlanet()
+    {
+        GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
+        BackFromOverlay();
+    }
+
     public void DismissAllSheets()
     {
         currentPlanet = null;
@@ -159,6 +177,14 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         parentSheet = CurrentState;
         SetState(UIState.TechPanel);
+        foreach (var text in shipDisplay)
+        {
+            text.text = "0";
+        }
+        shipOwned[0].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.WorkerShip]}"; 
+        shipOwned[1].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.AttackShip]}"; 
+        shipOwned[2].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.ScoutShip]}"; 
+
     }
 
     public void OpenSciencePanel()
@@ -216,6 +242,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);
         if (enemyPlanetSheet) enemyPlanetSheet.SetActive(newState == UIState.EnemySheet || newState == UIState.AttackPanel);
+        if (unknownPlanetSheet) unknownPlanetSheet.SetActive(newState == UIState.UnknownSheet);
         if (techPanel) techPanel.SetActive(newState == UIState.TechPanel);
         if (sciencePanel) sciencePanel.SetActive(newState == UIState.SciencePanel);
         if (diplomacyPanel) diplomacyPanel.SetActive(newState == UIState.DiplomacyPanel);

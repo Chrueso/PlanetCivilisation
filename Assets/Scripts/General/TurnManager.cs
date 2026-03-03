@@ -1,9 +1,16 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class TurnManager : Singleton<TurnManager>
 {
+    [SerializeField] private Button endTurnButton;
+    [SerializeField] private TextMeshProUGUI turnDisplay;
+    [SerializeField] private TextMeshProUGUI metalsDisplay;
+    [SerializeField] private TextMeshProUGUI rationsDisplay;
+    [SerializeField] private TextMeshProUGUI energyDisplay;
     public bool playerTurn { get { return currentFaction.IsPlayer; } } 
     private int currentFactionIndex = 0;
     public Faction currentFaction { get { return FactionManager.Instance.FactionsInUse[currentFactionIndex]; } }
@@ -17,13 +24,26 @@ public class TurnManager : Singleton<TurnManager>
     private void Start()
     {
         StartTurn();
+        UpdateResourceVisuals();
+        endTurnButton.onClick.AddListener(EndPlayerTurn);
     }
 
     public void StartTurn()
     {
+        if (currentFaction.FactionType == FactionType.Human)
+        {
+            turnDisplay.text = "HUMAN";
+        }
+        else if (currentFaction.FactionType == FactionType.DemiHuman)
+        {
+            turnDisplay.text = "DEMIHUMAN";
+        } else if (currentFaction.FactionType == FactionType.IntelligentConstruct)
+        {
+            turnDisplay.text = "INTELLIGENT CONSTRUCT";
+        }
         currentFaction.BeginTurn();
         currentFaction.OnTurnFinished += EndTurn;
-
+        
         if (currentFaction.ActionPoints > 0)
         {
 
@@ -84,7 +104,20 @@ public class TurnManager : Singleton<TurnManager>
 
     public void EndPlayerTurn()
     {
-        if(playerTurn) EndTurn();
+        if (playerTurn)
+        {
+            EndTurn();
+            UINavigationManager.Instance.SetHomeShipButton(false);
+            GameManager.Instance.Player.CalculateResourceGain();
+            UpdateResourceVisuals();
+        }
+    }
+
+    private void UpdateResourceVisuals()
+    {
+        metalsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Metals]}";
+        rationsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Rations]}";
+        energyDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Energy_Source]}";
     }
 
 }
