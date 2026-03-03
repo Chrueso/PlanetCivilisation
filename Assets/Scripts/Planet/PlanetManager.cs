@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlanetManager : Singleton<PlanetManager> 
 {
     public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
 
     [SerializeField] private int radiusBetweenPlanets = 2;
     [SerializeField] private int maxPlanets = 20;
-    //[SerializeField] private Vector2 spawnRegion = new Vector3(8, 4);
 
-    public void GeneratePlanets(MapGrid mapGrid, System.Random rng)
+    [SerializeField] private CustomPlanetSO homePlanetData;
+
+    public void GeneratePlanets(MapGrid mapGrid, System.Random rng, out PlanetData homePlanet)
     {
         // For random index and fast deletion
         List<GridHex> avaliableHexes = new List<GridHex>();
@@ -25,6 +25,9 @@ public class PlanetManager : Singleton<PlanetManager>
             }
         }
 
+        bool hasSpawnedHomePlanet = false;
+        homePlanet = null;
+
         // Choose hex and spawn planet
         int iter = 0;
         while (iter < maxPlanets && avaliableHexes.Count > 0)
@@ -34,8 +37,24 @@ public class PlanetManager : Singleton<PlanetManager>
             GridHex hex = avaliableHexes[randomHexIndex];
 
             // Spawn planet
-            (var planetObject, var planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, this.transform);
-            planetObject.name = $"Planet{iter}";
+            GameObject planetObject;
+            PlanetData planetData;
+
+            if (!hasSpawnedHomePlanet && homePlanetData != null)
+            {
+                (planetObject, planetData) = PlanetGenerator.Instance.GenerateCustomPlanet(homePlanetData, hex.WorldPosition, Quaternion.identity, this.transform);
+                planetData.CurrentHex = hex;
+                homePlanet = planetData;
+                hasSpawnedHomePlanet = true;
+                
+            }
+            else
+            {
+                (planetObject, planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, this.transform);
+                planetData.CurrentHex = hex;
+            }
+
+            planetObject.name = $"Planet{iter} {planetData.PlanetName}";
             PlanetDict.Add(planetObject.name, planetData);
 
             // Assign planet to hex
@@ -44,6 +63,7 @@ public class PlanetManager : Singleton<PlanetManager>
 
             // Mark all hexes within a radius as unable to spawn
             List<GridHex> hexesToRemove = mapGrid.Grid.GetGridObjectsInRadius(hex.GridPositionCube, radiusBetweenPlanets);
+
             foreach (GridHex hexToRemove in hexesToRemove)
             {
                 if (avaliableHexesLookup.TryGetValue(hexToRemove, out int removeIndex))
@@ -66,7 +86,6 @@ public class PlanetManager : Singleton<PlanetManager>
             }
             iter++;
         }
-        DebugPlanet();
     }
 
     private void DebugPlanet()

@@ -207,4 +207,16 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
 
         return (planetObj, data);
     }
+
+    public (GameObject, PlanetData) GenerateCustomPlanet(CustomPlanetSO customPlanetData, Vector3 position, Quaternion rotation, Transform parent)
+    {
+        PlanetData data = new PlanetData(customPlanetData.PlanetName, customPlanetData.FactionType); // Check out PlanetData.cs
+
+        GameObject planetObj = Instantiate(planetPrefab, position, rotation, parent);
+
+        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
+        planetVisual.GeneratePlanetVisual(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+
+        return (planetObj, data);
+    }
 }

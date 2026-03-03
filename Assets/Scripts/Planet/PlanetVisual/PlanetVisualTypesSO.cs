@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlanetVisualPresets", menuName = "Scriptable Objects/PlanetVisualPresets")]
+[CreateAssetMenu(fileName = "New Planet Visual Preset", menuName = "Planet/Planet Visual Preset")]
 public class PlanetVisualTypesSO : ScriptableObject
 {
     public MinMaxf PlanetRadius;

@@ -11,7 +11,7 @@ public class MapGrid : MonoBehaviour
 
     [SerializeField] private GameObject hexPrefab;
 
-    public void GenerateGrid()
+    public void GenerateGrid(int width, int height, float cellSize)
     {
         Grid = new HexGridXZ<GridHex>(
             width,

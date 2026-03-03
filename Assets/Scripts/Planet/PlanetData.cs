@@ -11,11 +11,14 @@ public class PlanetData : IGridHexOccupant
     public List<Structure> Structures { get; private set; }
     public Dictionary<ShipTypeSO, int> StationedShips { get; private set; }
     public Dictionary<FactionType, int> Affection {  get; private set; }
-    public PlanetData(string planetName, FactionType faction)
+
+    public GridHex CurrentHex { get; set; }
+
+    public PlanetData(string planetName)
     {
         this.PlanetName = planetName;
         this.Resources = new Dictionary<ResourceType, int>();
-        this.FactionType = faction;
+        this.FactionType = FactionType.Nothing;
         this.Structures = new List<Structure>();
         this.StationedShips = new Dictionary<ShipTypeSO, int>();
         this.Affection = new Dictionary<FactionType, int>() {
@@ -34,7 +37,7 @@ public class PlanetData : IGridHexOccupant
             this.Resources[kvp.Key] = kvp.Value;
         }
 
-        this.FactionType = factionType;
+        //this.FactionType = factionType; // assign later since planets not owned
         this.Structures = structure.ToList();
         this.StationedShips = new Dictionary<ShipTypeSO, int>();
         this.Affection = new Dictionary<FactionType, int>() {
@@ -42,6 +45,11 @@ public class PlanetData : IGridHexOccupant
             {FactionType.DemiHuman, 0},
             {FactionType.IntelligentConstruct, 0 },
         };
+    }
+
+    public void SetFaction(FactionType factionType)
+    {
+        this.FactionType = factionType;
     }
 
     /// <summary>
