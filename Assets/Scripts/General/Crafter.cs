@@ -20,24 +20,16 @@ public class Crafter : Singleton<Crafter>
     };
     private void OnEnable()
     {
-        craftExtractor.onClick.AddListener(CraftExtractor);
-        craftShipyard.onClick.AddListener(CraftShipyard);
+        craftExtractor.onClick.AddListener(delegate { BuildStructure(Structure.Extractor); });
+        craftShipyard.onClick.AddListener(delegate { BuildStructure(Structure.Shipyard); });
     }
 
-    private void CraftExtractor()
+    private void BuildStructure(Structure structure)
     {
-        if (CheckPlayerInv(Structure.Extractor))
+        if (CheckPlayerInv(structure))
         {
-            //PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Extractor);
-            UINavigationManager.Instance.BackFromOverlay();
-        }
-    }
-
-    private void CraftShipyard()
-    {
-        if (CheckPlayerInv(Structure.Shipyard))
-        {
-            //PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(Structure.Shipyard);
+            EventsHandler.Instance.RunCraftingSimulation();
+            PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(structure);
             UINavigationManager.Instance.BackFromOverlay();
         }
     }

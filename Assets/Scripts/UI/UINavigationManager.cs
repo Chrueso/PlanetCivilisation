@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +33,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [Header("Other")]
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private GameObject buildStructButton;
-    [SerializeField] private RectTransform stateText;
+    [SerializeField] private RectTransform homeShipMoverButton;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -47,6 +49,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
         AutoWireButtons();
         SetState(UIState.BaseUI);
     }
+
+    
 
     private void ApplySafeArea()
     {
@@ -174,10 +178,20 @@ public class UINavigationManager : Singleton<UINavigationManager>
         //parentSheet = CurrentState;
         SetState(UIState.AttackPanel);
         //BattleManager.Instance.SimulateBattle();
-        //Vector3 pos = Camera.main.WorldToScreenPoint(PlayerInteractionController.Instance.PlanetObject.transform.position);
-        //stateText.position = pos + new Vector3(0f, -500f, 0f);
-        //stateText.GetComponent<TextMeshProUGUI>().text = "ATTACKING";
+        EventsHandler.Instance.RunBattleSimulation();
+        
     }
+
+    public void MoveHomeShipButton(Vector3 screenPos)
+    {
+        homeShipMoverButton.position = screenPos + new Vector3(0f, 10f, 1f);
+    }
+    
+    public void SetHomeShipButton(bool active)
+    {
+        homeShipMoverButton.gameObject.SetActive(active);   
+    }
+
 
     public void BackFromOverlay()
     {
@@ -205,7 +219,6 @@ public class UINavigationManager : Singleton<UINavigationManager>
         if (techPanel) techPanel.SetActive(newState == UIState.TechPanel);
         if (sciencePanel) sciencePanel.SetActive(newState == UIState.SciencePanel);
         if (diplomacyPanel) diplomacyPanel.SetActive(newState == UIState.DiplomacyPanel);
-        if (attackPanel) stateText.gameObject.SetActive(newState == UIState.AttackPanel);
 
         // Build content on first open (panel must be active first)
         if (newState == UIState.SciencePanel && !scienceBuilt)

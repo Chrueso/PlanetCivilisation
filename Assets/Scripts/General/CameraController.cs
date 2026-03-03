@@ -151,7 +151,8 @@ public class CameraController : Singleton<CameraController>
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
     }
     #endregion
 
