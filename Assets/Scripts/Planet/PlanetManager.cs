@@ -1,8 +1,7 @@
-using System;
+
 using System.Collections.Generic;
 using UnityEngine;
-using static TMPro.Examples.ObjectSpin;
-using static UnityEngine.Rendering.DebugUI;
+
 public class PlanetManager : Singleton<PlanetManager> 
 {
     public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
@@ -99,7 +98,7 @@ public class PlanetManager : Singleton<PlanetManager>
                     if (checkHex.Occupant is PlanetData planetData)
                     {
                         planetData.SetFaction(factionType);
-                        Debug.Log(planetData.PlanetName);
+                        Debug.Log($"Planet: {planetData.PlanetName}, Faction: {planetData.FactionType}");
                     }
 
                 }

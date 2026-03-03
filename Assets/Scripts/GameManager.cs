@@ -26,6 +26,7 @@ public class GameManager : Singleton<GameManager>
         MapGrid.GenerateGrid(50, 50, 6);
 
         PlanetManager.Instance.GeneratePlanets(MapGrid, PlanetRNG, out PlanetData homePlanet);
+        PlanetManager.Instance.AssignFactionToPlanets(MapGrid, PlanetRNG, homePlanet);
 
         Player player = Instantiate(playerPrefab);
         player.Init(homePlanet, FactionType.Human);
