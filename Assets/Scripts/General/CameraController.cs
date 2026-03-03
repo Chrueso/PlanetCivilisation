@@ -14,15 +14,21 @@ public class CameraController : Singleton<CameraController>
 
     private bool eventsEnabled = true;
     private bool waitForReset = false;
-    private Camera cameraInstance;
+    public Camera CameraInstance { get; private set; }
     private Vector3 startingPos = Vector2.zero;
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    private void Start()
+    protected override void Awake()
     {
-        cameraInstance = Camera.main;
-        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
+        base.Awake();
+        CameraInstance = Camera.main;
+        CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
+    }
+
+
+    private void OnEnable()
+    {
         #region ORTHO EVENTS
         // 90 degree orthographic implementation
         if (orthographicPanning)
@@ -37,11 +43,8 @@ public class CameraController : Singleton<CameraController>
         TouchscreenHandler.Instance.FingerDownCallback += OnPlayerFingerDown;
         TouchscreenHandler.Instance.FingerMoveCallback += OnPlayerFingerMove;
         TouchscreenHandler.Instance.FingerUpCallback += OnPlayerFingerRelease;
-
-
     }
 
-    
 
     private void OnDisable()
     {
@@ -66,7 +69,7 @@ public class CameraController : Singleton<CameraController>
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         startingPos = GetWorldPos(z, e.ScreenPos);
-        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
+        CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
 
     }
 
@@ -79,17 +82,17 @@ public class CameraController : Singleton<CameraController>
         Vector3 direction = startingPos - GetWorldPos(z, e.ScreenPos);
         direction.y = 0f;
         //cameraInstance.transform.position += direction;
-        Vector3 nextPos = cameraInstance.transform.position + direction;
+        Vector3 nextPos = CameraInstance.transform.position + direction;
         Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), nextPos.y, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
-        cameraInstance.transform.position = boundedPos;
+        CameraInstance.transform.position = boundedPos;
 
 
     }
 
     private Vector3 GetWorldPos(float z, Vector3 pos)
     {
-        Ray fingerPos = cameraInstance.ScreenPointToRay(pos);
-        Plane plane = new Plane(cameraInstance.transform.forward, new Vector3(0,0,z));
+        Ray fingerPos = CameraInstance.ScreenPointToRay(pos);
+        Plane plane = new Plane(CameraInstance.transform.forward, new Vector3(0,0,z));
         plane.Raycast(fingerPos, out float distance);
         return fingerPos.GetPoint(distance);
 
@@ -125,7 +128,7 @@ public class CameraController : Singleton<CameraController>
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (waitForReset) waitForReset = false;
     }
 
@@ -134,9 +137,9 @@ public class CameraController : Singleton<CameraController>
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         if (waitForReset) return;
-        Vector3 diff = cameraInstance.ScreenToWorldPoint(e.ScreenPos) - cameraInstance.transform.position;
-        cameraInstance.transform.position = startingPos - diff;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
+        CameraInstance.transform.position = startingPos - diff;
+        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
         {
             
@@ -148,7 +151,7 @@ public class CameraController : Singleton<CameraController>
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
     }
     #endregion
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Marslike
   m_EditorClassIdentifier: Assembly-CSharp::PlanetVisualPresets
   PlanetRadius:
-    Min: 0.8
+    Min: 1
     Max: 1.8
   NoiseLayersPresets:
   - IsEnabled: 1

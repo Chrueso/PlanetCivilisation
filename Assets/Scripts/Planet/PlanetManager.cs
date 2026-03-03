@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlanetManager : Singleton<PlanetManager> 
 {
     public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
@@ -44,6 +43,7 @@ public class PlanetManager : Singleton<PlanetManager>
             if (!hasSpawnedHomePlanet && homePlanetData != null)
             {
                 (planetObject, planetData) = PlanetGenerator.Instance.GenerateCustomPlanet(homePlanetData, hex.WorldPosition, Quaternion.identity, this.transform);
+                planetData.CurrentHex = hex;
                 homePlanet = planetData;
                 hasSpawnedHomePlanet = true;
                 
@@ -51,6 +51,7 @@ public class PlanetManager : Singleton<PlanetManager>
             else
             {
                 (planetObject, planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, this.transform);
+                planetData.CurrentHex = hex;
             }
 
             planetObject.name = $"Planet{iter} {planetData.PlanetName}";

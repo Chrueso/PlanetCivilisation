@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Earthlike
   m_EditorClassIdentifier: Assembly-CSharp::PlanetVisualPresets
   PlanetRadius:
-    Min: 1
+    Min: 1.5
     Max: 1.8
   NoiseLayersPresets:
   - IsEnabled: 1

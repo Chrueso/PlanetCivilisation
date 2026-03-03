@@ -15,7 +15,7 @@ MonoBehaviour:
   PlanetName: Earth
   FactionType: 1
   ShapeSettings:
-    PlanetRadius: 1
+    PlanetRadius: 1.5
     NoiseLayers:
     - IsEnabled: 1
       UseFirstLayerAsMask: 0

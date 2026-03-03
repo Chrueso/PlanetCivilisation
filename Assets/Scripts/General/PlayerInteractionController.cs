@@ -22,7 +22,7 @@ public class PlayerInteractionController : MonoBehaviour
         {
             string name = hit.collider.gameObject.name;
             print(name);
-            GridHex gh = GameManager.Instance.mapGrid.Grid.GetGridObject(hit.point);
+            GridHex gh = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
             gh.GridHexVisual.OnSelected();
             PlanetData data = (PlanetData)gh.Occupant;
             print(data.PlanetName);

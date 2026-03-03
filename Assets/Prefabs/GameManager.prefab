@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9bfee93bc57d8428416d31de348ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  mapGrid: {fileID: 0}
-  planetManager: {fileID: 0}
+  mapGridPrefab: {fileID: 3810308209017950696, guid: 1daf4cf6af60a43419e14182baecc4df, type: 3}
+  playerPrefab: {fileID: 107135288185769075, guid: ebc36d71807a1b04dad12658b0a1c593, type: 3}
