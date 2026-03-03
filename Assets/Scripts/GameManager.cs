@@ -12,6 +12,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Player playerPrefab;
 
     public MapGrid MapGrid { get; private set; }
+    public Player Player { get; private set; }
 
     private void Start()
     {
@@ -28,6 +29,7 @@ public class GameManager : Singleton<GameManager>
 
         Player player = Instantiate(playerPrefab);
         player.Init(homePlanet, FactionType.Human);
+        Player = player;
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
         CameraController.Instance.CameraInstance.transform.position =  new Vector3(homeplanetPos.x, CameraController.Instance.CameraInstance.transform.position.y, homeplanetPos.z);

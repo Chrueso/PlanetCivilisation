@@ -27,7 +27,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
             //UINavigationManager.Instance.SetHomeShipButton(true);
-            GridHex gh = GameManager.Instance.mapGrid.Grid.GetGridObject(hit.point);
+            GridHex gh = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
             UINavigationManager.Instance.SetHomeShipButton(true);
             UINavigationManager.Instance.MoveHomeShipButton(gh.GridHexVisual.transform.position);
             if (gh.IsOccupied && !inPlanet)

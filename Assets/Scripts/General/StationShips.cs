@@ -18,7 +18,7 @@ public class StationShips : MonoBehaviour
     // hardcode
     private int playerShip = 2;
 
-    private void OnEnable()
+    private void Start()
     {
         shipAmount[HardcodeReference.Instance.ScoutShip] = 0;
         shipAmount[HardcodeReference.Instance.AttackShip] = 0;

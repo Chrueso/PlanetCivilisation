@@ -20,6 +20,9 @@ public class Player : MonoBehaviour, IGridHexOccupant
         FactionType = factionType;
         CurrentHex = homePlanet.CurrentHex;
         transform.position = new Vector3(CurrentHex.WorldPosition.x, playerY, CurrentHex.WorldPosition.z);
+        Ships[HardcodeReference.Instance.ScoutShip] = 1;
+        Ships[HardcodeReference.Instance.AttackShip] = 1;
+        Ships[HardcodeReference.Instance.WorkerShip] = 1;
     }
 
     public void MoveToHex(GridHex hex)

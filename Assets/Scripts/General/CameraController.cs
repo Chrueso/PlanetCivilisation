@@ -27,7 +27,7 @@ public class CameraController : Singleton<CameraController>
     }
 
 
-    private void OnEnable()
+    private void Start()
     {
         #region ORTHO EVENTS
         // 90 degree orthographic implementation
@@ -151,8 +151,8 @@ public class CameraController : Singleton<CameraController>
     {
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
-        startingPos = cameraInstance.ScreenToWorldPoint(e.ScreenPos);
-        CurrPos = new Vector3(cameraInstance.transform.position.x, 55, cameraInstance.transform.position.z);
+        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
     #endregion
 

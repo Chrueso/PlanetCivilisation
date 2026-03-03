@@ -4315,15 +4315,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 640628778142886540, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 121.74822
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 640628778142886540, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 241.58522
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 640628778142886540, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -350.56064
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 640628778142886540, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6443,6 +6443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlanetManager
   radiusBetweenPlanets: 2
   maxPlanets: 50
+  homePlanetData: {fileID: 0}
 --- !u!114 &538347285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6469,7 +6470,7 @@ Transform:
   m_GameObject: {fileID: 538347283}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 569.4482, y: 1824.5729, z: -1411.2815}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6487,7 +6488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9bfee93bc57d8428416d31de348ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  mapGrid: {fileID: 1994656999}
+  mapGridPrefab: {fileID: 0}
+  playerPrefab: {fileID: 0}
 --- !u!114 &538347288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6500,6 +6502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f224f1ec7570bb4fb3d85db98740981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
+  combatShipType: {fileID: 0}
+  AttackShipAmount: 0
 --- !u!114 &538347289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11011,15 +11015,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5646831307159546881, guid: b8cc38ee039f4734ca8f2fb35d44694e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -52.24523
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5646831307159546881, guid: b8cc38ee039f4734ca8f2fb35d44694e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -41.05639
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5646831307159546881, guid: b8cc38ee039f4734ca8f2fb35d44694e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.87082
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5646831307159546881, guid: b8cc38ee039f4734ca8f2fb35d44694e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -14429,7 +14433,7 @@ Transform:
   m_GameObject: {fileID: 1399487747}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 732.8528, y: 0.00002, z: 15054.408}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15254,15 +15258,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4713126492455537045, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 121.74822
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4713126492455537045, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 241.58522
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4713126492455537045, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -350.56064
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4713126492455537045, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: m_LocalRotation.w
@@ -21263,7 +21267,7 @@ Transform:
   m_GameObject: {fileID: 1970184547}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 469.68182, y: -0.00009, z: 9431.712}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21578,17 +21582,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985305595}
   m_CullTransparentMesh: 1
---- !u!114 &1994656999 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3810308209017950696, guid: 1daf4cf6af60a43419e14182baecc4df, type: 3}
-  m_PrefabInstance: {fileID: 456317447}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f63e6a23cebaaec43a98b8f0126c0ad1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestingGrid
 --- !u!1 &2014328750
 GameObject:
   m_ObjectHideFlags: 0
