@@ -5,6 +5,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
 {
     private Camera cameraInstance;
     private bool inPlanet = false;
+    private bool homeShipOnPlanet = true;
     private float offset = 2f;
 
     public PlanetData CurrentPlanet { get; private set; }
@@ -27,6 +28,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
             //UINavigationManager.Instance.SetHomeShipButton(true);
             GridHex gh = GameManager.Instance.mapGrid.Grid.GetGridObject(hit.point);
+            UINavigationManager.Instance.SetHomeShipButton(true);
             UINavigationManager.Instance.MoveHomeShipButton(gh.GridHexVisual.transform.position);
             if (gh.IsOccupied && !inPlanet)
             {
@@ -34,7 +36,6 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 CurrentPlanet = planet;
                 if (planet != null)
                 {
-                    //PlanetManagementInterface.main.ShowInterface(GetPlanet(name));
                     if (planet.FactionType == FactionType.Human)
                         UINavigationManager.Instance.ShowFriendlyPlanetSheet(planet);
                     else

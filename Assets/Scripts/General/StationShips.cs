@@ -9,7 +9,7 @@ public class StationShips : MonoBehaviour
     [SerializeField] private Image[] buttonRows;
     [SerializeField] private Button stationShipsButton;
 
-    private Dictionary<string, int> shipAmount = new Dictionary<string, int>();
+    private Dictionary<ShipTypeSO, int> shipAmount = new Dictionary<ShipTypeSO, int>();
     private enum ButtonType
     {
         Min, Decrease, Increase, Max
@@ -20,37 +20,47 @@ public class StationShips : MonoBehaviour
 
     private void OnEnable()
     {
+        shipAmount[HardcodeReference.Instance.ScoutShip] = 0;
+        shipAmount[HardcodeReference.Instance.AttackShip] = 0;
+        shipAmount[HardcodeReference.Instance.WorkerShip] = 0;
+        ShipTypeSO currShipRef = null;
         foreach (Image row in buttonRows)
         {
-            shipAmount.Add($"{row.name}", 0);
-            foreach (Button buttons in row.GetComponentsInChildren<Button>())
+            if (row.name == "WNumRows")
             {
-                if (buttons.name.Contains("Increase"))
-                {
-                    buttons.onClick.AddListener(delegate { IncreaseShip($"{row.name}", ButtonType.Increase, row.GetComponentInChildren<TextMeshProUGUI>()); });
-                }
-                if (buttons.name.Contains("Max"))
-                {
-                    buttons.onClick.AddListener(delegate { MaxShip($"{row.name}", ButtonType.Max, row.GetComponentInChildren<TextMeshProUGUI>()); });
-                }
-                if (buttons.name.Contains("Decrease"))
-                {
-                    buttons.onClick.AddListener(delegate { DecreaseShip($"{row.name}", ButtonType.Decrease, row.GetComponentInChildren<TextMeshProUGUI>()); });
-                } 
-                if (buttons.name.Contains("Empty"))
-                {
-                    buttons.onClick.AddListener(delegate { MinShip($"{row.name}", ButtonType.Min, row.GetComponentInChildren<TextMeshProUGUI>()); });
-                }
+                currShipRef = HardcodeReference.Instance.WorkerShip;
+            } else if (row.name =="ANumRows")
+            {
+                currShipRef = HardcodeReference.Instance.AttackShip;
+            } else if (row.name == "SNumRows")
+            {
+                currShipRef = HardcodeReference.Instance.ScoutShip;
             }
+                foreach (Button buttons in row.GetComponentsInChildren<Button>())
+                {
+                    if (buttons.name.Contains("Increase"))
+                    {
+                        buttons.onClick.AddListener(delegate { IncreaseShip(currShipRef, ButtonType.Increase, row.GetComponentInChildren<TextMeshProUGUI>()); });
+                    }
+                    if (buttons.name.Contains("Max"))
+                    {
+                        buttons.onClick.AddListener(delegate { MaxShip(currShipRef, ButtonType.Max, row.GetComponentInChildren<TextMeshProUGUI>()); });
+                    }
+                    if (buttons.name.Contains("Decrease"))
+                    {
+                        buttons.onClick.AddListener(delegate { DecreaseShip(currShipRef, ButtonType.Decrease, row.GetComponentInChildren<TextMeshProUGUI>()); });
+                    }
+                    if (buttons.name.Contains("Empty"))
+                    {
+                        buttons.onClick.AddListener(delegate { MinShip(currShipRef, ButtonType.Min, row.GetComponentInChildren<TextMeshProUGUI>()); });
+                    }
+                }
             row.GetComponentInChildren<TextMeshProUGUI>().text = "0";
         }
-        foreach (var kvp in shipAmount)
-        {
-            print($"Key: {kvp.Key} | Val: {kvp.Value}");
-        }
+        stationShipsButton.onClick.AddListener(StationShipHere);
     }
 
-    private void IncreaseShip(string shipKey, ButtonType type, TextMeshProUGUI displayText)
+    private void IncreaseShip(ShipTypeSO shipKey, ButtonType type, TextMeshProUGUI displayText)
     {
         print(shipKey);
         if (shipAmount.TryGetValue(shipKey, out var amount))
@@ -61,7 +71,7 @@ public class StationShips : MonoBehaviour
         
     }
 
-    private void MaxShip(string shipKey, ButtonType type, TextMeshProUGUI displayText)
+    private void MaxShip(ShipTypeSO shipKey, ButtonType type, TextMeshProUGUI displayText)
     {
         if (shipAmount.TryGetValue(shipKey, out var amount))
         {
@@ -71,7 +81,7 @@ public class StationShips : MonoBehaviour
         
     }
 
-    private void DecreaseShip(string shipKey, ButtonType type, TextMeshProUGUI displayText)
+    private void DecreaseShip(ShipTypeSO shipKey, ButtonType type, TextMeshProUGUI displayText)
     {
         if (shipAmount.TryGetValue(shipKey, out var amount))
         {
@@ -81,12 +91,24 @@ public class StationShips : MonoBehaviour
         
     }
 
-    private void MinShip(string shipKey, ButtonType type, TextMeshProUGUI displayText)
+    private void MinShip(ShipTypeSO shipKey, ButtonType type, TextMeshProUGUI displayText)
     {
         if (shipAmount.TryGetValue(shipKey, out var amount))
         {
             shipAmount[shipKey] = 0;
             displayText.text = $"{shipAmount[shipKey]}";
         }
+    }
+
+    private void StationShipHere()
+    {
+        EventsHandler.Instance.RunStationingSimulation();
+        // add ships
+        PlayerInteractionController.Instance.CurrentPlanet.AddShips(HardcodeReference.Instance.ScoutShip, shipAmount[HardcodeReference.Instance.ScoutShip]);
+        PlayerInteractionController.Instance.CurrentPlanet.AddShips(HardcodeReference.Instance.WorkerShip, shipAmount[HardcodeReference.Instance.WorkerShip]);
+        PlayerInteractionController.Instance.CurrentPlanet.AddShips(HardcodeReference.Instance.AttackShip, shipAmount[HardcodeReference.Instance.AttackShip]);
+        shipAmount[HardcodeReference.Instance.ScoutShip] = 0;
+        shipAmount[HardcodeReference.Instance.WorkerShip] = 0;
+        shipAmount[HardcodeReference.Instance.AttackShip] = 0;
     }
 }

@@ -19,6 +19,7 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
 
     private void TryForAlliance()
     {
+        bool success = false;
         //PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
         PlanetData pData = new("D", FactionType.Human);
         if (pData.Affection.TryGetValue(playerFaction, out int affinity))
@@ -48,5 +49,6 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
         }
 
         UINavigationManager.Instance.BackFromOverlay();
+        EventsHandler.Instance.RunDiplomacySimulation();
     }
 }
