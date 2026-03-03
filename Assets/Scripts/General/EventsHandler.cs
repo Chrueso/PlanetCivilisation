@@ -6,7 +6,6 @@ public class EventsHandler : Singleton<EventsHandler>
 {
     public void RunBattleSimulation()
     {
-        // ysaac stuff here
         StartCoroutine(VisualHardcode());
         
     }
@@ -26,6 +25,17 @@ public class EventsHandler : Singleton<EventsHandler>
         StartCoroutine(VisualHardcode4());
     }
 
+    public void RunSimulationScreen(string upperText1, string lowerText1, string upperText2, string lowerText2)
+    {
+        StartCoroutine(Visualizer(upperText1, lowerText1, upperText2, lowerText2));
+    }
+    private IEnumerator Visualizer(string upperText, string lowerText, string upperText2, string lowerText2)
+    {
+        StatusPanel.Instance.ShowText(upperText, lowerText);
+        yield return new WaitForSeconds(2);
+        StatusPanel.Instance.ShowText(upperText2, lowerText2);
+        yield return new WaitForSeconds(2);
+    }
     private IEnumerator VisualHardcode4()
     {
         StatusPanel.Instance.ShowText("STATIONING HAPPENING", $"SENDING YOUR SHIPS");

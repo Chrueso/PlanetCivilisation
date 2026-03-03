@@ -139,10 +139,11 @@ public class CameraController : Singleton<CameraController>
         if (waitForReset) return;
         Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
         CameraInstance.transform.position = startingPos - diff;
-        startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
+        
         if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
         {
-            
+            startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
+
         }
 
     }

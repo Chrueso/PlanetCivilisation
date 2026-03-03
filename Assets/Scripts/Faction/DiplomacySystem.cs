@@ -20,35 +20,36 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
     private void TryForAlliance()
     {
         bool success = false;
-        //PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
-        PlanetData pData = new("D", FactionType.Human);
+        PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
         if (pData.Affection.TryGetValue(playerFaction, out int affinity))
         {
             if (affinity < 40)
             {
                 print("NO I KILL U");
+                success = false;
             } 
-            else if (affinity > 40 && affinity < 80)
-            {
-                print("HMM MAYBE");
-            } 
-            else if (affinity > 80)
+            else
             {
                 print("YES");
+                success = true;
             }
         }
 
         float attackWeightage = Mathf.Clamp01( ( (demihumanHomeShipAttackerAmt - playerHomeShipAttackerAmt) / (demihumanHomeShipAttackerAmt+playerHomeShipAttackerAmt) ) + demihumanHostility);
-        print(attackWeightage);
-        if (attackWeightage > 0.5f)
+        string words;
+        if (success)
         {
-            print("ATTACK");
-        } else
+            words = "SUCCESS";
+            pData.SetFaction(playerFaction);
+            GameManager.Instance.Player.AddOwnedPlanets(pData);
+        }
+        else
         {
-            print("MEH GO AWAY");
+            words = "FAIL";
         }
 
-        UINavigationManager.Instance.BackFromOverlay();
-        EventsHandler.Instance.RunDiplomacySimulation();
+        UINavigationManager.Instance.DismissAllSheets();
+        CameraController.Instance.Enable();
+        EventsHandler.Instance.RunSimulationScreen("DIPLOMACY HAPPENING", "YOU ARE TRYING TO DIPLOMACY THIS PLANET", "DIPLOMACY OUTCOME", $"{words}");
     }
 }

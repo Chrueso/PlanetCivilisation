@@ -8,9 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SceneForTestingStuff.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/zenn.unity
-    guid: 277f4534e6fa16d4fb0b2d2a59d60091
+    guid: 60baeb95ec9594e4fb9ce088bc3a0bb3
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 661dbc23201fd4e4e9b0a57adf4330fb

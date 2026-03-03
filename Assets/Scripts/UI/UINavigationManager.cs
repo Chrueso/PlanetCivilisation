@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class UINavigationManager : Singleton<UINavigationManager>
 {
@@ -15,7 +17,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
         TechPanel,
         SciencePanel,
         DiplomacyPanel,
-        AttackPanel
+        AttackPanel,
+        TradePanel
     }
 
     [Header("Panels")]
@@ -26,6 +29,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private GameObject sciencePanel;
     [SerializeField] private GameObject diplomacyPanel;
     [SerializeField] private GameObject attackPanel;
+    [SerializeField] private GameObject tradePanel;
 
     [Header("Base UI Elements")]
     [SerializeField] private GameObject bottomPanel;
@@ -39,6 +43,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private TextMeshProUGUI[] shipDisplay;
     [SerializeField] private TextMeshProUGUI[] shipOwned;
     [SerializeField] private Button exploreBtn;
+    [SerializeField] private Button tradeBtn;
+    [SerializeField] private TextMeshProUGUI[] planetName;
+    [SerializeField] private TextMeshProUGUI[] planetFactions;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -54,6 +61,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         AutoWireButtons();
         SetState(UIState.BaseUI);
         exploreBtn.onClick.AddListener(ExplorePlanet);
+        tradeBtn.onClick.AddListener(IncreasePlanetAffection);
     }
 
     
@@ -127,10 +135,11 @@ public class UINavigationManager : Singleton<UINavigationManager>
                 else if (n.Contains("Science")) btn.onClick.AddListener(OpenSciencePanel);
                 else if (n.Contains("Diplomacy") || n.Contains("Dip")) btn.onClick.AddListener(OpenDiplomacyPanel);
                 else if (n.Contains("Attack")) btn.onClick.AddListener(OpenAttackPanel);
+                else if (n.Contains("Trade")) btn.onClick.AddListener(OpenTradePanel);
             }
         }
 
-        GameObject[] overlays = { techPanel, sciencePanel, diplomacyPanel, attackPanel };
+        GameObject[] overlays = { techPanel, sciencePanel, diplomacyPanel, attackPanel, tradePanel };
         foreach (var overlay in overlays)
         {
             if (overlay == null) continue;
@@ -142,28 +151,57 @@ public class UINavigationManager : Singleton<UINavigationManager>
         }
     }
 
+    private void UpdatePlanetNames(string name)
+    {
+        foreach (var text in planetName)
+        {
+            text.text = name;
+        }
+    }
+
+    private void UpdateFactionName(FactionType faction)
+    {
+        foreach (var text in planetFactions)
+        {
+            text.text = $"FACTION: {faction}";
+        }
+    }
+
     public void ShowFriendlyPlanetSheet(PlanetData planet)
     {
         buildStructButton.SetActive(true);
         currentPlanet = planet;
+        UpdatePlanetNames(planet.PlanetName);
+        UpdateFactionName(planet.FactionType);
         SetState(UIState.FriendlySheet);
     }
 
     public void ShowEnemyPlanetSheet(PlanetData planet)
     {
         currentPlanet = planet;
+        UpdatePlanetNames(planet.PlanetName);
+        UpdateFactionName(planet.FactionType);
         SetState(UIState.EnemySheet);
     }
 
     public void ShowUnknownPlanetSheet(PlanetData planet)
     {
         currentPlanet = planet;
+        UpdatePlanetNames(planet.PlanetName);
         SetState(UIState.UnknownSheet);
     }
 
     private void ExplorePlanet()
     {
         GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
+        if (!GameManager.Instance.Player.OwnedPlanets.Contains(currentPlanet))
+        {
+            if (currentPlanet.FactionType == FactionType.Human)
+            {
+                GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
+            }
+        }
+        PlayerInteractionController.Instance.inPlanet = false;
         BackFromOverlay();
     }
 
@@ -171,6 +209,22 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         currentPlanet = null;
         SetState(UIState.BaseUI);
+        PlayerInteractionController.Instance.inPlanet = false;
+    }
+
+    public void OpenTradePanel()
+    {
+        parentSheet = CurrentState;
+        SetState(UIState.TradePanel);
+    }
+
+    private void IncreasePlanetAffection()
+    {
+
+        currentPlanet.RaiseAffection(FactionType.Human, 100);
+        GameManager.Instance.Player.TakeResource(ResourceType.Rations);
+        GameManager.Instance.Player.GainResource(ResourceType.Metals);
+        TurnManager.Instance.UpdateResourceVisuals();
     }
 
     public void OpenTechPanel()
@@ -203,8 +257,15 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         //parentSheet = CurrentState;
         SetState(UIState.AttackPanel);
-        //BattleManager.Instance.SimulateBattle();
-        EventsHandler.Instance.RunBattleSimulation();
+        BattleResult result = BattleManager.Instance.Battle(GameManager.Instance.Player.Ships, new Dictionary<ShipTypeSO, int>() { {HardcodeReference.Instance.AttackShip,1 } } );
+        EventsHandler.Instance.RunSimulationScreen("ATTACK HAPPENING", $"YOU ARE ATTACKING {currentPlanet.PlanetName}", "ATTACK OUTCOME", $"WIN: {result.AttackerWon}");
+        if (result.AttackerWon == true)
+        {
+            currentPlanet.SetFaction(FactionType.Human);
+            GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
+            CameraController.Instance.Enable();
+            DismissAllSheets();
+        }
         
     }
 
@@ -221,8 +282,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     public void BackFromOverlay()
     {
+        print(parentSheet);
         if (parentSheet == UIState.FriendlySheet || parentSheet == UIState.EnemySheet)
-            SetState(parentSheet);
+            SetState(parentSheet); 
         else
             SetState(UIState.BaseUI);
     }
@@ -243,6 +305,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         if (friendlyPlanetSheet) friendlyPlanetSheet.SetActive(newState == UIState.FriendlySheet);
         if (enemyPlanetSheet) enemyPlanetSheet.SetActive(newState == UIState.EnemySheet || newState == UIState.AttackPanel);
         if (unknownPlanetSheet) unknownPlanetSheet.SetActive(newState == UIState.UnknownSheet);
+        if (tradePanel) tradePanel.SetActive(newState == UIState.TradePanel);
         if (techPanel) techPanel.SetActive(newState == UIState.TechPanel);
         if (sciencePanel) sciencePanel.SetActive(newState == UIState.SciencePanel);
         if (diplomacyPanel) diplomacyPanel.SetActive(newState == UIState.DiplomacyPanel);

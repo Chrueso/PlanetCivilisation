@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TurnManager : Singleton<TurnManager>
@@ -110,14 +111,18 @@ public class TurnManager : Singleton<TurnManager>
             UINavigationManager.Instance.SetHomeShipButton(false);
             GameManager.Instance.Player.CalculateResourceGain();
             UpdateResourceVisuals();
+            if (GameManager.Instance.Player.OwnedPlanets.Count >= 3 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 15)
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
     }
 
-    private void UpdateResourceVisuals()
+    public void UpdateResourceVisuals()
     {
         metalsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Metals]}";
-        rationsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Rations]}";
-        energyDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Energy_Source]}";
+        rationsDisplay.text = $"RATIONS: {GameManager.Instance.Player.Resources[ResourceType.Rations]}";
+        energyDisplay.text = $"ENERGY: {GameManager.Instance.Player.Resources[ResourceType.Energy_Source]}";
     }
 
 }

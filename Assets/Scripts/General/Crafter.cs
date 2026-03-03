@@ -1,16 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 public class Crafter : Singleton<Crafter>
 {
     [SerializeField] private Button craftExtractor;
     [SerializeField] private Button craftShipyard;
 
     //recipes
-    private Dictionary<Structure, Dictionary<Resource, int>> Recipe = new Dictionary<Structure, Dictionary<Resource, int>>() {
-        {Structure.Extractor, new Dictionary<Resource, int>() { { Resource.Metals, 1}, { Resource.Rations, 1 }, { Resource.Energy_Source, 1 } } },
-        {Structure.Shipyard, new Dictionary<Resource, int>() { { Resource.Metals, 1}, { Resource.Rations, 1 }, { Resource.Energy_Source, 0 } } },
+    private Dictionary<Structure, Dictionary<ResourceType, int>> Recipe = new Dictionary<Structure, Dictionary<ResourceType, int>>() {
+        {Structure.Extractor, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Energy_Source, 1 } } },
+        {Structure.Shipyard, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Energy_Source, 0 } } },
     };
     //hardcode for now
     private Dictionary<Resource, int> PlayerInv = new Dictionary<Resource, int>() {
@@ -28,18 +27,21 @@ public class Crafter : Singleton<Crafter>
     {
         if (CheckPlayerInv(structure))
         {
-            EventsHandler.Instance.RunCraftingSimulation();
+            EventsHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU SUCCESSFULLY BUILT STRUCTURE");
             PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(structure);
             UINavigationManager.Instance.BackFromOverlay();
+        } else
+        {
+            EventsHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU FAILED TO BUILT STRUCTURE");
         }
     }
 
     private bool CheckPlayerInv(Structure structure)
     {
         bool canCraft = false;
-        foreach (KeyValuePair<Resource, int> recipe in Recipe[structure] )
+        foreach (KeyValuePair<ResourceType, int> recipe in Recipe[structure] )
         {
-            if (PlayerInv[recipe.Key] > recipe.Value) {
+            if (GameManager.Instance.Player.Resources[recipe.Key] > recipe.Value) {
                 canCraft = true;
             } else
             {

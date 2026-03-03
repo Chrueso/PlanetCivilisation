@@ -22,12 +22,12 @@ public class Player : MonoBehaviour, IGridHexOccupant
         FactionType = factionType;
         CurrentHex = homePlanet.CurrentHex;
         transform.position = new Vector3(CurrentHex.WorldPosition.x, playerY, CurrentHex.WorldPosition.z);
-        this.Resources[ResourceType.Metals] = 1;
-        this.Resources[ResourceType.Rations] = 1;
-        this.Resources[ResourceType.Energy_Source] = 1;
-        Ships[HardcodeReference.Instance.ScoutShip] = 1;
-        Ships[HardcodeReference.Instance.AttackShip] = 1;
-        Ships[HardcodeReference.Instance.WorkerShip] = 1;
+        this.Resources[ResourceType.Metals] = 10;
+        this.Resources[ResourceType.Rations] = 10;
+        this.Resources[ResourceType.Energy_Source] = 10;
+        Ships[HardcodeReference.Instance.ScoutShip] = 10;
+        Ships[HardcodeReference.Instance.AttackShip] = 10;
+        Ships[HardcodeReference.Instance.WorkerShip] = 10;
     }
 
     public void CalculateResourceGain()
@@ -69,6 +69,29 @@ public class Player : MonoBehaviour, IGridHexOccupant
         if (!DiscoveredPlanets.Contains(planet))
         {
             DiscoveredPlanets.Add(planet);
+        }
+    }
+
+    public void AddOwnedPlanets(PlanetData planet)
+    {
+        if (!OwnedPlanets.Contains(planet))
+        {
+            OwnedPlanets.Add(planet);
+        }
+    }
+
+    public void TakeResource(ResourceType resource)
+    {
+        if (this.Resources.TryGetValue(resource, out int amount))
+        {
+            this.Resources[resource] = amount - 1;
+        }
+    }
+    public void GainResource(ResourceType resource)
+    {
+        if (this.Resources.TryGetValue(resource, out int amount))
+        {
+            this.Resources[resource] = amount + 1;
         }
     }
 

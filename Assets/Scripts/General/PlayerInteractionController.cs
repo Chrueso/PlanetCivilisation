@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 public class PlayerInteractionController : Singleton<PlayerInteractionController>
 {
     private Camera cameraInstance;
-    private bool inPlanet = false;
+    public bool inPlanet { get; set; }
     private bool homeShipOnPlanet = true;
     private float offset = 2f;
 
@@ -39,11 +39,12 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 UINavigationManager.Instance.SetHomeShipButton(true);
                 UINavigationManager.Instance.MoveHomeShipButton(gh.WorldPosition);
             }
+            print($"In planet {inPlanet}");
             if (gh.IsOccupied)
             {
                 PlanetData pd = (PlanetData)gh.Occupant;
                 CurrentPlanet = pd;
-                if (pd != null)
+                if (pd != null && !inPlanet)
                 {
                     CameraController.Instance.Disable();
                     cameraInstance.transform.position = new Vector3(gh.WorldPosition.x, 55, gh.WorldPosition.z);
@@ -56,13 +57,14 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                         {
                             UINavigationManager.Instance.ShowEnemyPlanetSheet(pd);    
                         }
-                        
+                        inPlanet = true;
                     } 
                     else if(!GameManager.Instance.Player.DiscoveredPlanets.Contains(pd))
                     {
                         UINavigationManager.Instance.ShowUnknownPlanetSheet(pd);
+                        inPlanet = true;
                     }
-                    inPlanet = true;
+                    
                 }
             } else
             {
