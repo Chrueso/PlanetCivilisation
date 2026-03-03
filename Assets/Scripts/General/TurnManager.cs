@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TurnManager : Singleton<TurnManager>
 {
@@ -10,12 +12,16 @@ public class TurnManager : Singleton<TurnManager>
     protected override void Awake()
     {
         base.Awake();
+    }
 
+    private void Start()
+    {
         StartTurn();
     }
 
     public void StartTurn()
     {
+        currentFaction.BeginTurn();
         currentFaction.OnTurnFinished += EndTurn;
 
         if (currentFaction.ActionPoints > 0)
@@ -24,12 +30,15 @@ public class TurnManager : Singleton<TurnManager>
             Debug.Log($"Starting turn for {currentFaction.FactionType}");
             if (!playerTurn)
             {
-                currentFaction.StartAITurn();
+               StartCoroutine(RunAiTurn());
             }
             else
             {
-                currentFaction.StartPlayerTurn();
+                //currentFaction.StartPlayerTurn();
                 //player stuff
+
+                StartPlayerTurn();
+
             }
         }
     }
@@ -53,8 +62,29 @@ public class TurnManager : Singleton<TurnManager>
         StartTurn();
     }
 
+    private IEnumerator RunAiTurn()
+    {
+        while (currentFaction.ActionPoints > 0)
+        {
+            currentFaction.RunAIAction();
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        currentFaction.FinishTurn();
+    }
+
     public void StartPlayerTurn()
     {
         //enable UI and stuff
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    EndTurn();
+        //}
     }
+
+    public void EndPlayerTurn()
+    {
+        if(playerTurn) EndTurn();
+    }
+
 }

@@ -33,35 +33,54 @@ public class Faction
         }
     }
 
-    public virtual void StartPlayerTurn()
+    public void BeginTurn()
     {
-        Debug.Log($"{FactionType} is beginning");
-        //ActionPoints = maxActionPoints;
-        // Enable player controls here
-        RunAiTurn();
+        ActionPoints = maxActionPoints;
+        Debug.Log($"{FactionType} starts turn with {ActionPoints} AP");
     }
 
-    public virtual void StartAITurn()
+    public void RunAIAction()
     {
-        Debug.Log($"{FactionType} is beginning");
-        //ActionPoints = maxActionPoints;
-        RunAiTurn();
+        if (ActionPoints <= 0) return;
+        ActionPoints --;
+        Debug.Log($"{FactionType} did something. {ActionPoints} AP Remaining");
     }
 
-    public virtual void RunAiTurn()
+    public void FinishTurn()
     {
-        while(ActionPoints > 0)
-        {
-            //do ai stuff here
-            ActionPoints--;
-            Debug.Log($"{FactionType} did an action");
-        }
-        TurnManager.Instance.EndTurn();
-    }
-
-    public virtual void EndTurn()
-    {
-        Debug.Log($"{FactionType} has finished doing stuff");
+        Debug.Log($"{FactionType} finished turn");
         OnTurnFinished?.Invoke();
     }
+
+    //public virtual void StartPlayerTurn()
+    //{
+    //    Debug.Log($"{FactionType} is beginning");
+    //    //ActionPoints = maxActionPoints;
+    //    // Enable player controls here
+    //    RunAiTurn();
+    //}
+
+    //public virtual void StartAITurn()
+    //{
+    //    Debug.Log($"{FactionType} is beginning");
+    //    //ActionPoints = maxActionPoints;
+    //    RunAiTurn();
+    //}
+
+    //public virtual void RunAiTurn()
+    //{
+    //    while(ActionPoints > 0)
+    //    {
+    //        //do ai stuff here
+    //        ActionPoints--;
+    //        Debug.Log($"{FactionType} did an action");
+    //    }
+    //    TurnManager.Instance.EndTurn();
+    //}
+
+    //public virtual void EndTurn()
+    //{
+    //    Debug.Log($"{FactionType} has finished doing stuff");
+    //    OnTurnFinished?.Invoke();
+    //}
 }
