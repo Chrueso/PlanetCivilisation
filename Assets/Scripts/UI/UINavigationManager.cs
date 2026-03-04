@@ -215,6 +215,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     private void ExplorePlanet()
     {
         print(currentPlanet.FactionType);
+        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
         GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
         if (!GameManager.Instance.Player.OwnedPlanets.Contains(currentPlanet))
         {
