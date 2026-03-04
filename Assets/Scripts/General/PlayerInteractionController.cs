@@ -95,10 +95,29 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         } 
         else
         {
-            if (!EventSystem.current.IsPointerOverGameObject()) return;
-            CameraController.Instance.Enable();
-            UINavigationManager.Instance.DismissAllSheets();
-            inPlanet = false;
+            PointerEventData pointerData = new(EventSystem.current);
+            pointerData.position = touchInfo.ScreenPos;
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+            if (results.Count > 0)
+            {
+                foreach (RaycastResult r in results)
+                {
+                    print(r.gameObject.layer);
+                    if (r.gameObject.layer != LayerMask.NameToLayer("UI"))
+                    {
+                        CameraController.Instance.Enable();
+                        UINavigationManager.Instance.DismissAllSheets();
+                        inPlanet = false;
+                    }
+                }
+            }
+            else
+            {
+                CameraController.Instance.Enable();
+                UINavigationManager.Instance.DismissAllSheets();
+                inPlanet = false;
+            }
         }
         
     }
