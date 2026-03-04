@@ -37,7 +37,6 @@ public class Player : MonoBehaviour, IGridHexOccupant
             int increment = planet.StationedShips[HardcodeReference.Instance.WorkerShip];
             if (planet.Structures.Contains(Structure.Extractor))
             {
-                print($"E? {increment}");
                 this.Resources[ResourceType.Metals] += (1 + increment);
                 this.Resources[ResourceType.Rations] += (1 + increment);
                 this.Resources[ResourceType.Energy_Source] += (1 + increment);

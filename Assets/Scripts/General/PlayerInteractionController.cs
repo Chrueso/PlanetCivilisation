@@ -92,15 +92,13 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 }
                 
             }
-                
-            
-            
-            
             print($"this hex has player {gh == playerGrid}");
         } 
         else
         {
-            
+            CameraController.Instance.Enable();
+            UINavigationManager.Instance.DismissAllSheets();
+            inPlanet = false;
         }
         
     }

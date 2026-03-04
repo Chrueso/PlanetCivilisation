@@ -199,10 +199,15 @@ public class UINavigationManager : Singleton<UINavigationManager>
             if (currentPlanet.FactionType == FactionType.Human)
             {
                 GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
+                EventsHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU COLONISED THIS PLANET");
+            } else
+            {
+                EventsHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU FOUND THIS COLONISED PLANET");
             }
         }
-        PlayerInteractionController.Instance.inPlanet = false;
-        BackFromOverlay();
+        //PlayerInteractionController.Instance.inPlanet = false;
+        
+        DismissAllSheets();
     }
 
     public void DismissAllSheets()
