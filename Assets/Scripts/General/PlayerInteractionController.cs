@@ -95,6 +95,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         } 
         else
         {
+            if (!EventSystem.current.IsPointerOverGameObject()) return;
             CameraController.Instance.Enable();
             UINavigationManager.Instance.DismissAllSheets();
             inPlanet = false;
