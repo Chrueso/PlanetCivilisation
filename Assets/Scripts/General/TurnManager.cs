@@ -116,7 +116,7 @@ public class TurnManager : Singleton<TurnManager>
             UINavigationManager.Instance.SetHomeShipButton(false);
             GameManager.Instance.Player.CalculateResourceGain();
             UpdateResourceVisuals();
-            if (GameManager.Instance.Player.OwnedPlanets.Count >= 3 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 15)
+            if (GameManager.Instance.Player.OwnedPlanets.Count >= 5 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 30)
             {
                 SceneManager.LoadScene("MainMenu");
             }
