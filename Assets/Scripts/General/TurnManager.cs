@@ -25,8 +25,14 @@ public class TurnManager : Singleton<TurnManager>
     private void Start()
     {
         StartTurn();
+        endTurnButton.onClick.AddListener(EndTurn);
+        StartCoroutine(wtf());
+    }
+
+    private IEnumerator wtf()
+    {
+        yield return new WaitForSeconds(1);
         UpdateResourceVisuals();
-        endTurnButton.onClick.AddListener(EndPlayerTurn);
     }
 
     public void StartTurn()
@@ -72,7 +78,7 @@ public class TurnManager : Singleton<TurnManager>
 
         if (playerTurn)
         {
-            //EndPlayerTurn();
+            EndPlayerTurn();
         }
         else
         {
@@ -107,7 +113,6 @@ public class TurnManager : Singleton<TurnManager>
     {
         if (playerTurn)
         {
-            EndTurn();
             UINavigationManager.Instance.SetHomeShipButton(false);
             GameManager.Instance.Player.CalculateResourceGain();
             UpdateResourceVisuals();

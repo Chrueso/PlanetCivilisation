@@ -54,7 +54,7 @@ public class Faction
 
     public bool DecreaseTurn(int amount)
     {
-        if (ActionPoints < amount)
+        if (ActionPoints-amount < 0)
         {
             return false;
         }

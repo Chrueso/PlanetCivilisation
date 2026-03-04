@@ -92,7 +92,6 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 }
                 
             }
-            print($"this hex has player {gh == playerGrid}");
         } 
         else
         {

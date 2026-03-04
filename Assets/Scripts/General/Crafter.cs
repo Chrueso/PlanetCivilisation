@@ -25,6 +25,7 @@ public class Crafter : Singleton<Crafter>
 
     private void BuildStructure(Structure structure)
     {
+        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
         if (CheckPlayerInv(structure))
         {
             EventsHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU SUCCESSFULLY BUILT STRUCTURE");
@@ -34,6 +35,8 @@ public class Crafter : Singleton<Crafter>
         {
             EventsHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU FAILED TO BUILT STRUCTURE");
         }
+        
+        UINavigationManager.Instance.UpdateFriendlyUI();
     }
 
     private bool CheckPlayerInv(Structure structure)

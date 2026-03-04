@@ -46,6 +46,10 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private Button tradeBtn;
     [SerializeField] private TextMeshProUGUI[] planetName;
     [SerializeField] private TextMeshProUGUI[] planetFactions;
+    [SerializeField] private TextMeshProUGUI enemyAffection;
+    [SerializeField] private TextMeshProUGUI planetStructure;
+    [SerializeField] private TextMeshProUGUI planetStatonedShips;
+    [SerializeField] private TextMeshProUGUI enemyAffection2;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -167,12 +171,28 @@ public class UINavigationManager : Singleton<UINavigationManager>
         }
     }
 
+    public void UpdateUnfriendlyUI()
+    {
+        enemyAffection.text = $"AFFECTION\n{currentPlanet.Affection[FactionType.Human]}";
+        enemyAffection2.text = $"{currentPlanet.Affection[FactionType.Human]}";
+    }
+
+    public void UpdateFriendlyUI()
+    {
+        if (currentPlanet.Structures.Count>0)
+            planetStructure.text = $"STRUCTURE\n{currentPlanet.Structures[0]}";
+        planetStatonedShips.text = $"SHIPS\n{HardcodeReference.Instance.ScoutShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.ScoutShip]}" +
+            $"\n{HardcodeReference.Instance.AttackShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.AttackShip]}" +
+            $"\n{HardcodeReference.Instance.WorkerShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.WorkerShip]}";
+    }
+
     public void ShowFriendlyPlanetSheet(PlanetData planet)
     {
         buildStructButton.SetActive(true);
         currentPlanet = planet;
         UpdatePlanetNames(planet.PlanetName);
         UpdateFactionName(planet.FactionType);
+        UpdateFriendlyUI();
         SetState(UIState.FriendlySheet);
     }
 
@@ -181,6 +201,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         currentPlanet = planet;
         UpdatePlanetNames(planet.PlanetName);
         UpdateFactionName(planet.FactionType);
+        UpdateUnfriendlyUI();
         SetState(UIState.EnemySheet);
     }
 
@@ -193,12 +214,14 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void ExplorePlanet()
     {
+        print(currentPlanet.FactionType);
         GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
         if (!GameManager.Instance.Player.OwnedPlanets.Contains(currentPlanet))
         {
-            if (currentPlanet.FactionType == FactionType.Human)
+            if (currentPlanet.FactionType == FactionType.Human || currentPlanet.FactionType == FactionType.Nothing)
             {
                 GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
+                currentPlanet.SetFaction(FactionType.Human);
                 EventsHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU COLONISED THIS PLANET");
             } else
             {
@@ -215,6 +238,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         currentPlanet = null;
         SetState(UIState.BaseUI);
         PlayerInteractionController.Instance.inPlanet = false;
+        CameraController.Instance.Enable();
     }
 
     public void OpenTradePanel()
@@ -225,10 +249,11 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void IncreasePlanetAffection()
     {
-
+        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
         currentPlanet.RaiseAffection(FactionType.Human, 100);
         GameManager.Instance.Player.TakeResource(ResourceType.Rations);
         GameManager.Instance.Player.GainResource(ResourceType.Metals);
+        UpdateUnfriendlyUI();
         TurnManager.Instance.UpdateResourceVisuals();
     }
 
@@ -256,11 +281,16 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         parentSheet = CurrentState;
         SetState(UIState.DiplomacyPanel);
+        UpdatePlanetNames(currentPlanet.PlanetName);
+        UpdateFactionName(currentPlanet.FactionType);
     }
 
     public void OpenAttackPanel()
     {
         //parentSheet = CurrentState;
+        bool canAttack = TurnManager.Instance.currentFaction.DecreaseTurn(2);
+        print(canAttack);
+        if (!canAttack) return;
         SetState(UIState.AttackPanel);
         BattleResult result = BattleManager.Instance.Battle(GameManager.Instance.Player.Ships, new Dictionary<ShipTypeSO, int>() { {HardcodeReference.Instance.AttackShip,1 } } );
         EventsHandler.Instance.RunSimulationScreen("ATTACK HAPPENING", $"YOU ARE ATTACKING {currentPlanet.PlanetName}", "ATTACK OUTCOME", $"WIN: {result.AttackerWon}");
@@ -271,7 +301,6 @@ public class UINavigationManager : Singleton<UINavigationManager>
             CameraController.Instance.Enable();
             DismissAllSheets();
         }
-        
     }
 
     public void MoveHomeShipButton(Vector3 screenPos)

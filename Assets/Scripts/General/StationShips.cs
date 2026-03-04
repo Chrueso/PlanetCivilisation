@@ -116,5 +116,6 @@ public class StationShips : MonoBehaviour
         shipAmount[HardcodeReference.Instance.ScoutShip] = 0;
         shipAmount[HardcodeReference.Instance.WorkerShip] = 0;
         shipAmount[HardcodeReference.Instance.AttackShip] = 0;
+        UINavigationManager.Instance.UpdateFriendlyUI();
     }
 }

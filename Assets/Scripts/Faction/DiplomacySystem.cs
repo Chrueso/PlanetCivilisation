@@ -19,6 +19,7 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
 
     private void TryForAlliance()
     {
+        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
         bool success = false;
         PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
         if (pData.Affection.TryGetValue(playerFaction, out int affinity))
