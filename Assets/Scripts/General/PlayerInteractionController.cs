@@ -122,15 +122,15 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         
     }
 
-    private bool CheckPlanet(string planetName)
-    {
-        return PlanetManager.Instance.PlanetDict.ContainsKey(planetName);
-    }
+    //private bool CheckPlanet(string planetName)
+    //{
+    //    return PlanetMapGenerator.Instance.PlanetDict.ContainsKey(planetName);
+    //}
 
-    private PlanetData GetPlanet(string planetName)
-    {
-        PlanetManager.Instance.PlanetDict.TryGetValue(planetName, out var result);
-        return result;
-    }
+    //private PlanetData GetPlanet(string planetName)
+    //{
+    //    PlanetMapGenerator.Instance.PlanetDict.TryGetValue(planetName, out var result);
+    //    return result;
+    //}
 
 }

@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class MapGrid : MonoBehaviour
 {
-    [SerializeField] private int width = 15;
-    [SerializeField] private int height = 17;
-    [SerializeField] private float cellSize = 6f;
-
     public HexGridXZ<GridHex> Grid { get; private set; }
     public BoxCollider Col { get; private set; }
 
@@ -55,28 +51,5 @@ public class MapGrid : MonoBehaviour
         }
     }
 
-    //void OnTouch(object sender, TouchInfo touchInfo)
-    //{
-    //    if (touchInfo.Index != 0) return;
-    //    Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
-    //    RaycastHit hit;
 
-    //    if (Physics.Raycast(fingerRay, out hit, fingerRayMaxDistance))
-    //    {
-    //        Debug.Log(hit.point);
-    //        GridHex hex = grid.GetGridObject(hit.point);
-
-    //        if (hex == null) return;
-
-    //        Debug.Log(hex.WorldPosition);
-    //        Debug.Log(hex.GridPosition);
-
-    //        hex.GridHexVisual.OnSelected();
-    //        //List<GridHex> hexesinRadius = grid.GetGridObjectsInRadius(hex.GridPositionCube, 3);
-    //        //foreach (var h in hexesinRadius)
-    //        //{
-    //        //    h.GridHexVisual.OnSelected();
-    //        //}
-    //    }
-    //}
 }

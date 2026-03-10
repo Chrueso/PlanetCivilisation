@@ -1,16 +1,25 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlanetManager : Singleton<PlanetManager> 
+public class PlanetMapGenerator
 {
-    public Dictionary<string, PlanetData> PlanetDict { get; private set; } = new Dictionary<string, PlanetData>();
+    private int radiusBetweenPlanets = 2;
+    private int maxPlanets = 20;
+    private CustomPlanetSO homePlanetData;
+    private MapGrid mapGrid;
+    private PlanetGenerator planetGenerator;
+    private System.Random rng;
 
-    [SerializeField] private int radiusBetweenPlanets = 2;
-    [SerializeField] private int maxPlanets = 20;
-    [SerializeField] private CustomPlanetSO homePlanetData;
+    public PlanetMapGenerator(int radiusBetweenPlanets, int maxPlanets, CustomPlanetSO homePlanetData, PlanetGenerator planetGenerator, System.Random rng)
+    {
+        this.radiusBetweenPlanets = radiusBetweenPlanets;
+        this.maxPlanets = maxPlanets;
+        this.homePlanetData = homePlanetData;
+        this.planetGenerator = planetGenerator;
+        this.rng = rng;
+    }
 
-    public void GeneratePlanets(MapGrid mapGrid, System.Random rng, out PlanetData homePlanet)
+    public void GeneratePlanets(out PlanetData homePlanet, Transform parent = default)
     {
         // For random index and fast deletion look at AvaliablePool.cs
         AvailablePool<GridHex> avaliableHexes = new AvailablePool<GridHex>();
@@ -36,10 +45,12 @@ public class PlanetManager : Singleton<PlanetManager>
             GameObject planetObject;
             PlanetData planetData;
 
-            if (!hasSpawnedHomePlanet && homePlanetData != null)
+            if (!hasSpawnedHomePlanet && this.homePlanetData != null)
             {
-                (planetObject, planetData) = PlanetGenerator.Instance.GenerateCustomPlanet(homePlanetData, hex.WorldPosition, Quaternion.identity, this.transform);
-                print($"name {planetData.PlanetName} faction {planetData.FactionType}");
+                (planetObject, planetData) = planetGenerator.GenerateCustomPlanet(this.homePlanetData, hex.WorldPosition, Quaternion.identity, parent);
+
+                Debug.Log($"name {planetData.PlanetName} faction {planetData.FactionType}");
+
                 planetData.CurrentHex = hex;
                 homePlanet = planetData;
                 hasSpawnedHomePlanet = true;
@@ -47,12 +58,11 @@ public class PlanetManager : Singleton<PlanetManager>
             }
             else
             {
-                (planetObject, planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, this.transform);
+                (planetObject, planetData) = planetGenerator.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, parent);
                 planetData.CurrentHex = hex;
             }
 
             planetObject.name = $"Planet{iter} {planetData.PlanetName}";
-            PlanetDict.Add(planetObject.name, planetData);
 
             // Assign planet to hex
             hex.Occupant = planetData;
@@ -65,7 +75,7 @@ public class PlanetManager : Singleton<PlanetManager>
         }
     }
 
-    public void AssignFactionToPlanets(MapGrid mapGrid, System.Random rng, PlanetData homePlanet)
+    public void AssignFactionToPlanets(PlanetData homePlanet)
     {
         AvailablePool<GridHex> avaliableHexes = new AvailablePool<GridHex>();
         for (int z = 0; z < mapGrid.Grid.Height; z++)
@@ -110,28 +120,5 @@ public class PlanetManager : Singleton<PlanetManager>
     private void DebugPlanet()
     {
         PlanetData pd = new("DebugPlanet", FactionType.Human);
-        PlanetDict.Add(pd.PlanetName, pd);
     }
-
-    //public void GeneratePlanets(System.Random rng)
-    //{
-    //    PoissonDiscSampler pds = new(spawnRegion.x, spawnRegion.y, radiusBetweenPlanets);
-    //    Vector2 halfSpawnRegion = spawnRegion * 0.5f;
-    //    int iter = 0;
-
-    //    foreach (Vector2 sample in pds.Samples())
-    //    {
-    //        Vector2 spawnPos = sample - halfSpawnRegion;
-    //        Vector3 pos = new Vector3(spawnPos.x, 20, spawnPos.y);
-    //        Vector3 halfPos = pos * 0.5f;
-            
-    //        (var planetObject, var planetData) = PlanetGenerator.Instance.GeneratePlanet(rng, pos, Quaternion.identity, this.transform);
-
-    //        planetObject.name = $"Planet{iter}";
-
-    //        PlanetDict.Add(planetObject.name, planetData);
-    //        iter++;
-    //        if (iter >= maxPlanets) break;
-    //    }
-    //}
 }
