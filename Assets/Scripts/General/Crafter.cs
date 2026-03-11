@@ -8,9 +8,9 @@ public class Crafter : MonoBehaviour
     [SerializeField] private Button craftShipyard;
 
     //recipes
-    private Dictionary<Structure, Dictionary<ResourceType, int>> Recipe = new Dictionary<Structure, Dictionary<ResourceType, int>>() {
-        {Structure.Extractor, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 1 } } },
-        {Structure.Shipyard, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 0 } } },
+    private Dictionary<StructureType, Dictionary<ResourceType, int>> Recipe = new Dictionary<StructureType, Dictionary<ResourceType, int>>() {
+        {StructureType.Extractor, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 1 } } },
+        {StructureType.Shipyard, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 0 } } },
     };
    
     private void OnEnable()
@@ -21,11 +21,11 @@ public class Crafter : MonoBehaviour
 
     private void OnDisable()
     {
-        craftExtractor.onClick.RemoveListener(delegate { BuildStructure(Structure.Extractor); });
-        craftShipyard.onClick.RemoveListener(delegate { BuildStructure(Structure.Shipyard); });
+        craftExtractor.onClick.RemoveListener(delegate { BuildStructure(StructureType.Extractor); });
+        craftShipyard.onClick.RemoveListener(delegate { BuildStructure(StructureType.Shipyard); });
     }
 
-    private void BuildStructure(Structure structure)
+    private void BuildStructure(StructureType structure)
     {
         // if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;  should get player turn from GameManager
         /*

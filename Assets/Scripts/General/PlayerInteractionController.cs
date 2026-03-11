@@ -17,7 +17,7 @@ public class PlayerInteractionController : MonoBehaviour
     private void Start()
     {
         cameraInstance = Camera.main;
-        TouchscreenHandler.Instance.FingerUpCallback += SelectGrid;
+        TouchscreenHandler.FingerUpCallback += SelectGrid;
     }
 
     private void SelectGrid(object sender, TouchInfo e)
@@ -45,13 +45,13 @@ public class PlayerInteractionController : MonoBehaviour
 
                     if (GameManager.Instance.Player.OwnedPlanets.Contains(planetData))
                     {
-                        UINavigationManager.Instance.ShowFriendlyPlanetSheet(planetData);
+                        //UINavigationManager.Instance.ShowFriendlyPlanetSheet(planetData);
                     } else if (GameManager.Instance.Player.DiscoveredPlanets.Contains(planetData))
                     {
-                        UINavigationManager.Instance.ShowEnemyPlanetSheet(planetData);
+                        //UINavigationManager.Instance.ShowEnemyPlanetSheet(planetData);
                     } else
                     {
-                        UINavigationManager.Instance.ShowUnknownPlanetSheet(planetData);
+                        //UINavigationManager.Instance.ShowUnknownPlanetSheet(planetData);
                     }
 
                     cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
@@ -64,7 +64,7 @@ public class PlayerInteractionController : MonoBehaviour
                     EventSystem.current.RaycastAll(pointerData, results);
                     if (results.Count <= 0)
                     {
-                        UINavigationManager.Instance.DismissAllSheets();
+                        //UINavigationManager.Instance.DismissAllSheets();
                         PlayerCam.Enable();
                     }
                     

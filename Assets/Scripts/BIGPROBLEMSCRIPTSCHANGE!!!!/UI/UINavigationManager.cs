@@ -68,7 +68,7 @@ public class UINavigationManager : MonoBehaviour
         AutoWireButtons();
         SetState(UIState.BaseUI);
         exploreBtn.onClick.AddListener(ExplorePlanet);
-        debugButton.onClick.AddListener(DebugFunc);
+        //debugButton.onClick.AddListener(DebugFunc);
     }
 
     private void DebugFunc()
@@ -245,7 +245,7 @@ public class UINavigationManager : MonoBehaviour
     {
         currentPlanet = null;
         SetState(UIState.BaseUI);
-        PlayerInteractionController.Instance.inPlanet = false;
+        //PlayerInteractionController.Instance.inPlanet = false;
         cameraController.Enable();
     }
 

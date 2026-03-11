@@ -24,11 +24,11 @@ public class Player : MonoBehaviour, IGridHexOccupant, IFaction
         transform.position = new Vector3(CurrentHex.WorldPosition.x, playerY, CurrentHex.WorldPosition.z);
         this.Resources[ResourceType.Metals] = 10;
         this.Resources[ResourceType.Rations] = 10;
-        this.Resources[ResourceType.Energy_Source] = 10;
+        this.Resources[ResourceType.Credits] = 10;
         Ships[ShipType.Scout] = 10;
         Ships[ShipType.Attacker] = 10;
         Ships[ShipType.Worker] = 10;
-        this.Resources[ResourceType.Credits] = 10;
+        
     }
 
     public void CalculateResourceGain()
