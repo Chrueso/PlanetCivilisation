@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraController : Singleton<CameraController> 
+public class CameraController : MonoBehaviour
 {
     [SerializeField] private bool orthographicPanning = false;
 
@@ -14,14 +14,14 @@ public class CameraController : Singleton<CameraController>
 
     private bool eventsEnabled = true;
     private bool waitForReset = false;
+    public bool CameraMoving { get; private set; }
     public Camera CameraInstance { get; private set; }
     private Vector3 startingPos = Vector2.zero;
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
@@ -63,7 +63,7 @@ public class CameraController : Singleton<CameraController>
         TouchscreenHandler.Instance.FingerUpCallback -= OnPlayerFingerRelease;
 
     }
-
+    #region PERSPECTIVE
     private void OnPlayerFingerRelease(object sender, TouchInfo e)
     {
         if (e.Index != 0) return;
@@ -105,6 +105,7 @@ public class CameraController : Singleton<CameraController>
         startingPos = GetWorldPos(z, e.ScreenPos);
         if (waitForReset) waitForReset = false;
     }
+    #endregion
 
     private void DisableMovement()
     {
@@ -138,12 +139,18 @@ public class CameraController : Singleton<CameraController>
         if (!eventsEnabled) return;
         if (waitForReset) return;
         Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
-        CameraInstance.transform.position = startingPos - diff;
+        Vector3 nextPos = startingPos - diff;
+        Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), 55, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
+        CameraInstance.transform.position = boundedPos;
+        
         
         if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
         {
             startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
 
+        } else
+        {
+            CameraMoving = true;
         }
 
     }
@@ -154,6 +161,7 @@ public class CameraController : Singleton<CameraController>
         if (!eventsEnabled) return;
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
+        CameraMoving = false;
     }
     #endregion
 

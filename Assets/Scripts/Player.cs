@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IGridHexOccupant
+public class Player : MonoBehaviour, IGridHexOccupant, IFaction
 {
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipTypeSO, int> Ships { get; private set; } = new Dictionary<ShipTypeSO, int>();
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour, IGridHexOccupant
         transform.position = new Vector3(CurrentHex.WorldPosition.x, playerY, CurrentHex.WorldPosition.z);
         this.Resources[ResourceType.Metals] = 10;
         this.Resources[ResourceType.Rations] = 10;
-        this.Resources[ResourceType.Energy_Source] = 10;
+        this.Resources[ResourceType.Credits] = 10;
         Ships[HardcodeReference.Instance.ScoutShip] = 10;
         Ships[HardcodeReference.Instance.AttackShip] = 10;
         Ships[HardcodeReference.Instance.WorkerShip] = 10;
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour, IGridHexOccupant
             {
                 this.Resources[ResourceType.Metals] += (1 + increment);
                 this.Resources[ResourceType.Rations] += (1 + increment);
-                this.Resources[ResourceType.Energy_Source] += (1 + increment);
+                this.Resources[ResourceType.Credits] += (1 + increment);
             }
             if (planet.Structures.Contains(Structure.Shipyard))
             {

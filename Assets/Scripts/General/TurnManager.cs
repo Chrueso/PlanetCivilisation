@@ -127,7 +127,7 @@ public class TurnManager : Singleton<TurnManager>
     {
         metalsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Metals]}";
         rationsDisplay.text = $"RATIONS: {GameManager.Instance.Player.Resources[ResourceType.Rations]}";
-        energyDisplay.text = $"ENERGY: {GameManager.Instance.Player.Resources[ResourceType.Energy_Source]}";
+        energyDisplay.text = $"ENERGY: {GameManager.Instance.Player.Resources[ResourceType.Credits]}";
     }
 
 }

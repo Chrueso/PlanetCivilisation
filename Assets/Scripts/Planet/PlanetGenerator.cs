@@ -44,15 +44,17 @@ public class PlanetGenerator : Singleton<PlanetGenerator>
         }
         else if (count == 2)
         {
+            /*
             types.Add(ResourceType.Copper);
-            types.Add(ResourceType.Iron);
+            types.Add(ResourceType.Iron);*/
         }
         else if (count == 1)
         {
             int num = rng.Next(0, 1);
-
+            /*
             if (num == 0) types.Add(ResourceType.Copper);
             else if (num == 1) types.Add(ResourceType.Iron);
+            */
         }
 
         return types;

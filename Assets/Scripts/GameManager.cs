@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] public MapGrid mapGridPrefab;
     [SerializeField] private Player playerPrefab;
+    [SerializeField] private DiplomacySystem diplomacySystem;
+    public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
@@ -33,7 +35,7 @@ public class GameManager : Singleton<GameManager>
         Player = player;
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        CameraController.Instance.CameraInstance.transform.position =  new Vector3(homeplanetPos.x, CameraController.Instance.CameraInstance.transform.position.y, homeplanetPos.z);
+        Camera.main.transform.position =  new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
     }
 
     private void GenerateSeed()

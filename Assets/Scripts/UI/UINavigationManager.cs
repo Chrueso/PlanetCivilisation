@@ -50,6 +50,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private TextMeshProUGUI planetStructure;
     [SerializeField] private TextMeshProUGUI planetStatonedShips;
     [SerializeField] private TextMeshProUGUI enemyAffection2;
+    [SerializeField] private Button debugButton;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -65,9 +66,13 @@ public class UINavigationManager : Singleton<UINavigationManager>
         AutoWireButtons();
         SetState(UIState.BaseUI);
         exploreBtn.onClick.AddListener(ExplorePlanet);
-        tradeBtn.onClick.AddListener(IncreasePlanetAffection);
+        debugButton.onClick.AddListener(DebugFunc);
     }
 
+    private void DebugFunc()
+    {
+        //GameManager.Instance.DiplomacyInstance.Trade();
+    }
     
 
     private void ApplySafeArea()
@@ -238,8 +243,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         currentPlanet = null;
         SetState(UIState.BaseUI);
-        PlayerInteractionController.Instance.inPlanet = false;
-        CameraController.Instance.Enable();
+        //CameraController.Instance.Enable();
     }
 
     public void OpenTradePanel()
@@ -248,15 +252,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         SetState(UIState.TradePanel);
     }
 
-    private void IncreasePlanetAffection()
-    {
-        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
-        currentPlanet.RaiseAffection(FactionType.Human, 100);
-        GameManager.Instance.Player.TakeResource(ResourceType.Rations);
-        GameManager.Instance.Player.GainResource(ResourceType.Metals);
-        UpdateUnfriendlyUI();
-        TurnManager.Instance.UpdateResourceVisuals();
-    }
+    
 
     public void OpenTechPanel()
     {
@@ -299,7 +295,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         {
             currentPlanet.SetFaction(FactionType.Human);
             GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
-            CameraController.Instance.Enable();
+            //CameraController.Instance.Enable();
             DismissAllSheets();
         }
     }

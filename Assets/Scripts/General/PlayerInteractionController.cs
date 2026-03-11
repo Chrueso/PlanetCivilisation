@@ -5,8 +5,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
 
-public class PlayerInteractionController : Singleton<PlayerInteractionController>
+public class PlayerInteractionController : MonoBehaviour
 {
+    [SerializeField] private CameraController PlayerCam;
     private Camera cameraInstance;
     public bool inPlanet { get; set; }
     private bool homeShipOnPlanet = true;
@@ -19,118 +20,71 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
     private void Start()
     {
         cameraInstance = Camera.main;
-        TouchscreenHandler.Instance.FingerDownCallback += FindPlanet;
+        TouchscreenHandler.Instance.FingerUpCallback += SelectGrid;
+    }
+
+    private void SelectGrid(object sender, TouchInfo e)
+    {
+        if (PlayerCam.CameraMoving) return;
+        if (CurrentGridHex != null)
+        {
+            CurrentGridHex.GridHexVisual.OnSelected();
+            CurrentGridHex = null;
+        }
+        Ray ray = cameraInstance.ScreenPointToRay(e.ScreenPos);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            var grid = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
+            if (grid != null)
+            {
+                grid.GridHexVisual.OnSelected();
+                CurrentGridHex = grid;
+
+                var planetData = (PlanetData)grid.Occupant;
+
+                if (planetData != null)
+                {
+                    CurrentPlanet = planetData;
+
+                    if (GameManager.Instance.Player.OwnedPlanets.Contains(planetData))
+                    {
+                        UINavigationManager.Instance.ShowFriendlyPlanetSheet(planetData);
+                    } else if (GameManager.Instance.Player.DiscoveredPlanets.Contains(planetData))
+                    {
+                        UINavigationManager.Instance.ShowEnemyPlanetSheet(planetData);
+                    } else
+                    {
+                        UINavigationManager.Instance.ShowUnknownPlanetSheet(planetData);
+                    }
+
+                    cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
+                    PlayerCam.Disable();
+                } else
+                {
+                    PointerEventData pointerData = new(EventSystem.current);
+                    pointerData.position = e.ScreenPos;
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(pointerData, results);
+                    if (results.Count <= 0)
+                    {
+                        UINavigationManager.Instance.DismissAllSheets();
+                        PlayerCam.Enable();
+                    }
+                    
+                }
+            }
+        }
     }
 
     private void FindPlanet(object sender, TouchInfo touchInfo)
     {
-        if (touchInfo.Index != 0) return;
-        Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
-        RaycastHit hit;
-        //When tap
-        if (Physics.Raycast(fingerRay, out hit, 1000f))
-        {
-            GridHex gh = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
-            if (gh == null) return;
-            CurrentGridHex = gh;
-            GridHex playerGrid = GameManager.Instance.Player.CurrentHex;
-            if (!inPlanet)
-            {
-                UINavigationManager.Instance.SetHomeShipButton(true);
-                UINavigationManager.Instance.MoveHomeShipButton(gh.WorldPosition);
-            }
-            print($"In planet {inPlanet}");
-            if (gh.IsOccupied)
-            {
-                PlanetData pd = (PlanetData)gh.Occupant;
-                CurrentPlanet = pd;
-                if (pd != null && !inPlanet)
-                {
-                    CameraController.Instance.Disable();
-                    cameraInstance.transform.position = new Vector3(gh.WorldPosition.x, 55, gh.WorldPosition.z);
-                    if (GameManager.Instance.Player.DiscoveredPlanets.Contains(pd) && playerGrid==gh)
-                    {
-                        if (pd.FactionType == FactionType.Human)
-                        {
-                            UINavigationManager.Instance.ShowFriendlyPlanetSheet(pd);
-                        } else
-                        {
-                            UINavigationManager.Instance.ShowEnemyPlanetSheet(pd);    
-                        }
-                        inPlanet = true;
-                    } 
-                    else if(!GameManager.Instance.Player.DiscoveredPlanets.Contains(pd))
-                    {
-                        UINavigationManager.Instance.ShowUnknownPlanetSheet(pd);
-                        inPlanet = true;
-                    }
-                    
-                }
-            } else
-            {
-                PointerEventData pointerData = new(EventSystem.current);
-                pointerData.position = touchInfo.ScreenPos;
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(pointerData, results);
-                if (results.Count > 0)
-                {
-                    foreach (RaycastResult r in results)
-                    {
-                        print(r.gameObject.layer);
-                        if (r.gameObject.layer != LayerMask.NameToLayer("UI"))
-                        {
-                            CameraController.Instance.Enable();
-                            UINavigationManager.Instance.DismissAllSheets();
-                            inPlanet = false;
-                        }
-                    }
-                } else
-                {
-                    CameraController.Instance.Enable();
-                    UINavigationManager.Instance.DismissAllSheets();
-                    inPlanet = false;
-                }
-                
-            }
-        } 
-        else
-        {
-            PointerEventData pointerData = new(EventSystem.current);
-            pointerData.position = touchInfo.ScreenPos;
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, results);
-            if (results.Count > 0)
-            {
-                foreach (RaycastResult r in results)
-                {
-                    print(r.gameObject.layer);
-                    if (r.gameObject.layer != LayerMask.NameToLayer("UI"))
-                    {
-                        CameraController.Instance.Enable();
-                        UINavigationManager.Instance.DismissAllSheets();
-                        inPlanet = false;
-                    }
-                }
-            }
-            else
-            {
-                CameraController.Instance.Enable();
-                UINavigationManager.Instance.DismissAllSheets();
-                inPlanet = false;
-            }
-        }
+        
         
     }
 
-    private bool CheckPlanet(string planetName)
-    {
-        return PlanetManager.Instance.PlanetDict.ContainsKey(planetName);
-    }
-
-    private PlanetData GetPlanet(string planetName)
-    {
-        PlanetManager.Instance.PlanetDict.TryGetValue(planetName, out var result);
-        return result;
-    }
-
 }
+
+
+/*
+ 
+ */

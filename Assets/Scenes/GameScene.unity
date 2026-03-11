@@ -14700,6 +14700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: diplomacySystem
+      value: 
+      objectReference: {fileID: 3356498255554854145}
     - target: {fileID: 7277850567554085818, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -25846,6 +25850,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+--- !u!114 &3356498255554854145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6892991202159899646, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+  m_PrefabInstance: {fileID: 3356498255554854144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b128eda602200d4e879c2bc3a3c56fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiplomacySystem
 --- !u!1001 &6674690847820896035
 PrefabInstance:
   m_ObjectHideFlags: 0

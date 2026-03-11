@@ -34,7 +34,6 @@ public class TouchscreenHandler : Singleton<TouchscreenHandler>
                 lastTouch: touch, 
                 screenPos: touch.screenPosition, 
                 touch.phase);
-
             switch (touch.phase)
             {
                 case TouchPhase.Began: FingerDownCallback.Invoke(this, touchInfo); break;
