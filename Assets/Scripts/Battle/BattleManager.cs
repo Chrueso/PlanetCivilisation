@@ -2,66 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BattleManager : Singleton<BattleManager>
+public class BattleManager 
 {
     public PlanetData SelectedPlanet;
     public ShipType combatShipType;
     public int AttackShipAmount; 
     public ShipDatabaseSO shipDatabase;
 
-
-    //debug/testing functions
-
-    [ContextMenu("Simulate Battle")]
-    public void SimulateBattle()
+    public BattleManager(ShipDatabaseSO shipDatabase)
     {
-        if (SelectedPlanet != null)
-        {
-            Dictionary<ShipType, int> attackingFleet = new Dictionary<ShipType, int>();
-            attackingFleet.Add(combatShipType, AttackShipAmount);
-
-            Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
-            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key}: {kv.Value}"));
-            Debug.Log($"Defending Fleet: {fleetInfo}");
-
-            BattleResult result = Battle(attackingFleet, SelectedPlanet.StationedShips);
-        }
+        this.shipDatabase = shipDatabase;
     }
 
-    [ContextMenu("Simulate Brian Version")]
-    public void SimulateBattleBrian()
-    {
-        if (SelectedPlanet != null)
-        {
-            Dictionary<ShipType, int> attackingFleet = new Dictionary<ShipType, int>();
-            attackingFleet.Add(combatShipType, AttackShipAmount);
-
-            Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
-            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key}: {kv.Value}"));
-            Debug.Log($"Defending Fleet: {fleetInfo}");
-
-            BattleResult result = BattleManager.Instance.BattleBrianVersion(attackingFleet, SelectedPlanet.StationedShips);
-        }
-    }
-
-    //[ContextMenu("Simulate Brian Version")]
-    //public void SimulateBrianVersion()
-    //{
-    //    Dictionary<ShipType, int> attackerDict = attackerFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-    //    Dictionary<ShipType, int> defenderDict = defenderFleet.ToDictionary(e => e.GetShipType(), e => e.count);
-    //    BattleResult result = BattleManager.Instance.BattleBrianVersion(attackerDict, defenderDict);
-    //    //Debug.Log($"Attacker Won: {result.AttackerWon}");
-    //}
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
-    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
+    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, PlanetData targetPlanet)
     {
         bool attackerWon = false;
-        int maxRoll = 10;
+        int maxRoll = 10; // can be adjusted for more or less randomness, the base number for attack power multiplier
+
+        Dictionary<ShipType,int> defenderShips = targetPlanet.StationedShips;
 
         List<ShipType> attackers = new List<ShipType>();
 
@@ -126,10 +84,12 @@ public class BattleManager : Singleton<BattleManager>
         return new BattleResult(remainingAttackers, remainingDefenders, attackerWon);
     }
 
-    public BattleResult BattleBrianVersion(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
+    public BattleResult BattleBrianVersion(Dictionary<ShipType, int> attackerShips, PlanetData targetPlanet)
     {
         int attackerShipPower = 0;
         int defenderShipPower = 0;
+
+        Dictionary<ShipType, int> defenderShips = targetPlanet.StationedShips;
 
         foreach (var ship in attackerShips)
         {

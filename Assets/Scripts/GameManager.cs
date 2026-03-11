@@ -13,12 +13,15 @@ public class GameManager : Singleton<GameManager>
 
     PlanetGenerator planetGenerator;
     MapGenerator mapGenerator;
+    BattleManager battleManager;
 
     [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
     [SerializeField] private GameObject planetPrefab;
 
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
+
+    [SerializeField] private ShipDatabaseSO ShipDatabaseSO;
 
     protected override void Awake()
     {
@@ -30,6 +33,8 @@ public class GameManager : Singleton<GameManager>
         mapGenerator = new MapGenerator(mapSettings, planetGenerator);
         mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
         MapGrid = mapGrid;
+
+        battleManager = new BattleManager(ShipDatabaseSO);
 
         Player = Instantiate(playerPrefab);
         Player.Init(homePlanet, FactionType.Human);
