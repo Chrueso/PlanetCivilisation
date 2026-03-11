@@ -9,6 +9,7 @@ public class BattleManager : Singleton<BattleManager>
     public int AttackShipAmount; 
     public ShipDatabaseSO shipDatabase;
 
+
     //debug/testing functions
 
     [ContextMenu("Simulate Battle")]
