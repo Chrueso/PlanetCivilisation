@@ -287,20 +287,7 @@ public class UINavigationManager : MonoBehaviour
 
     public void OpenAttackPanel()
     {
-        //parentSheet = CurrentState;
-        bool canAttack = TurnManager.Instance.currentFaction.DecreaseActionPoint(2);
-        print(canAttack);
-        if (!canAttack) return;
-        SetState(UIState.AttackPanel);
-        BattleResult result = BattleManager.Instance.Battle(GameManager.Instance.Player.Ships, new Dictionary<ShipType, int>() { { ShipType.Attacker, 1 } } );
-        SimulationHandler.Instance.RunSimulationScreen("ATTACK HAPPENING", $"YOU ARE ATTACKING {currentPlanet.PlanetName}", "ATTACK OUTCOME", $"WIN: {result.AttackerWon}");
-        if (result.AttackerWon == true)
-        {
-            currentPlanet.SetFaction(FactionType.Human);
-            GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
-            cameraController.Enable();
-            DismissAllSheets();
-        }
+        
     }
 
     public void MoveHomeShipButton(Vector3 screenPos)

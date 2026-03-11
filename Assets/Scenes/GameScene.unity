@@ -2729,6 +2729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e64421987cd6354f878904e6aa3af02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveHomeShip
+  uINavigationManager: {fileID: 0}
   moveHomeShipBtn: {fileID: 1883281359}
 --- !u!1 &195354895
 GameObject:
@@ -14826,9 +14827,29 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: mapSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: dd75a7d6e4dcd0d4d87c91858bfa8551, type: 2}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: planetPrefab
+      value: 
+      objectReference: {fileID: 6543573944910321850, guid: ec6b81f390b8c43468930e180662f266, type: 3}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: diplomacySystem
       value: 
       objectReference: {fileID: 3356498255554854145}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 1698070666}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: planetVisualPresets.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'planetVisualPresets.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c8c438714a40cab4d933d46d2f8e40ad, type: 2}
     - target: {fileID: 7277850567554085818, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -17481,7 +17502,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1444938817}
   - component: {fileID: 1444938816}
-  - component: {fileID: 1444938818}
   - component: {fileID: 1444938819}
   m_Layer: 0
   m_Name: UINavigationManager
@@ -17539,6 +17559,8 @@ MonoBehaviour:
   planetStructure: {fileID: 1779455218}
   planetStatonedShips: {fileID: 180203102}
   enemyAffection2: {fileID: 1371653007}
+  debugButton: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!4 &1444938817
 Transform:
   m_ObjectHideFlags: 0
@@ -17554,23 +17576,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1444938818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444938815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634e34ce96b6b1c468289958fcc2a2a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StationShips
-  buttonRows:
-  - {fileID: 20806186}
-  - {fileID: 27606781}
-  - {fileID: 1592450142}
-  stationShipsButton: {fileID: 1427193335}
 --- !u!114 &1444938819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26005,7 +26010,10 @@ PrefabInstance:
       propertyPath: rationsDisplay
       value: 
       objectReference: {fileID: 1649600224}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1893151935399608576, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+    - {fileID: 8520695761310482225, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+    - {fileID: 5878928644986731955, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
