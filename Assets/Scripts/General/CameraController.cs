@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
 
     private bool eventsEnabled = true;
     private bool waitForReset = false;
+    public bool CameraMoving { get; private set; }
     public Camera CameraInstance { get; private set; }
     private Vector3 startingPos = Vector2.zero;
     public Vector3 CurrPos { get; private set; }
@@ -60,7 +61,7 @@ public class CameraController : MonoBehaviour
         TouchscreenHandler.FingerUpCallback -= OnPlayerFingerRelease;
 
     }
-
+    #region PERSPECTIVE
     private void OnPlayerFingerRelease(object sender, TouchInfo e)
     {
         if (e.Index != 0) return;
@@ -102,6 +103,7 @@ public class CameraController : MonoBehaviour
         startingPos = GetWorldPos(z, e.ScreenPos);
         if (waitForReset) waitForReset = false;
     }
+    #endregion
 
     private void DisableMovement()
     {
@@ -135,12 +137,18 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         if (waitForReset) return;
         Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
-        CameraInstance.transform.position = startingPos - diff;
+        Vector3 nextPos = startingPos - diff;
+        Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), 55, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
+        CameraInstance.transform.position = boundedPos;
+        
         
         if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
         {
             startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
 
+        } else
+        {
+            CameraMoving = true;
         }
 
     }
@@ -151,6 +159,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
+        CameraMoving = false;
     }
     #endregion
 

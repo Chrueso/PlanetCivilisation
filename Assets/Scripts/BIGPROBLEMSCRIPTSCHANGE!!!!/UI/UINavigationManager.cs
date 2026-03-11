@@ -50,6 +50,7 @@ public class UINavigationManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI planetStructure;
     [SerializeField] private TextMeshProUGUI planetStatonedShips;
     [SerializeField] private TextMeshProUGUI enemyAffection2;
+    [SerializeField] private Button debugButton;
 
     [SerializeField] private CameraController cameraController;
 
@@ -67,9 +68,13 @@ public class UINavigationManager : MonoBehaviour
         AutoWireButtons();
         SetState(UIState.BaseUI);
         exploreBtn.onClick.AddListener(ExplorePlanet);
-        tradeBtn.onClick.AddListener(IncreasePlanetAffection);
+        debugButton.onClick.AddListener(DebugFunc);
     }
 
+    private void DebugFunc()
+    {
+        //GameManager.Instance.DiplomacyInstance.Trade();
+    }
     
 
     private void ApplySafeArea()
@@ -250,15 +255,7 @@ public class UINavigationManager : MonoBehaviour
         SetState(UIState.TradePanel);
     }
 
-    private void IncreasePlanetAffection()
-    {
-        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
-        currentPlanet.RaiseAffection(FactionType.Human, 100);
-        GameManager.Instance.Player.TakeResource(ResourceType.Rations);
-        GameManager.Instance.Player.GainResource(ResourceType.Metals);
-        UpdateUnfriendlyUI();
-        TurnManager.Instance.UpdateResourceVisuals();
-    }
+    
 
     public void OpenTechPanel()
     {

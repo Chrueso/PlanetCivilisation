@@ -8,6 +8,8 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] MapSettings mapSettings;
     [SerializeField] private Player playerPrefab;
+    [SerializeField] private DiplomacySystem diplomacySystem;
+    public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
     public System.Random SeedRNG;
 
@@ -37,7 +39,7 @@ public class GameManager : Singleton<GameManager>
         Player.Init(homePlanet, FactionType.Human);
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        cameraController.CameraInstance.transform.position = new Vector3(homeplanetPos.x, cameraController.CameraInstance.transform.position.y, homeplanetPos.z);
+        Camera.main.transform.position =  new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
     }
 
     private void GenerateSeed()
