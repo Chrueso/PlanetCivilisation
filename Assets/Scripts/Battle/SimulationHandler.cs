@@ -2,7 +2,7 @@ using NUnit.Framework.Constraints;
 using System.Collections;
 using UnityEngine;
 
-public class EventsHandler : Singleton<EventsHandler>
+public class SimulationHandler : Singleton<SimulationHandler>
 {
     public void RunBattleSimulation()
     {

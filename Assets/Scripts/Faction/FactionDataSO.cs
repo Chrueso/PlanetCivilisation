@@ -4,16 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class StartingShipData
 {
-    public ShipTypeSO ShipType;
+    public ShipDataSO ShipType;
     public int Amount;
-}
-
-public enum FactionType
-{
-    Nothing,
-    Human,
-    DemiHuman,
-    IntelligentConstruct,
 }
 
 [CreateAssetMenu(fileName = "New Faction Data", menuName = "Faction/Faction Data")]
@@ -27,5 +19,5 @@ public class FactionDataSO : ScriptableObject
     public bool IsPlayer = false;
 
     public List<StartingShipData> startingShipDatas = new List<StartingShipData>();
-    public Dictionary<ShipTypeSO, int> shipCounts = new Dictionary<ShipTypeSO, int>();
+    public Dictionary<ShipDataSO, int> shipCounts = new Dictionary<ShipDataSO, int>();
 }

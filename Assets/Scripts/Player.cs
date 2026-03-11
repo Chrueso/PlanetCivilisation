@@ -4,7 +4,7 @@ using UnityEngine;
 public class Player : MonoBehaviour, IGridHexOccupant
 {
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
-    public Dictionary<ShipTypeSO, int> Ships { get; private set; } = new Dictionary<ShipTypeSO, int>();
+    public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
     public FactionType FactionType { get; private set; }
     public List<PlanetData> OwnedPlanets { get; private set; } = new List<PlanetData>();
     public List<PlanetData> DiscoveredPlanets { get; private set; } = new List<PlanetData>();
@@ -25,34 +25,34 @@ public class Player : MonoBehaviour, IGridHexOccupant
         this.Resources[ResourceType.Metals] = 10;
         this.Resources[ResourceType.Rations] = 10;
         this.Resources[ResourceType.Energy_Source] = 10;
-        Ships[HardcodeReference.Instance.ScoutShip] = 10;
-        Ships[HardcodeReference.Instance.AttackShip] = 10;
-        Ships[HardcodeReference.Instance.WorkerShip] = 10;
+        Ships[ShipType.Scout] = 10;
+        Ships[ShipType.Attacker] = 10;
+        Ships[ShipType.Worker] = 10;
     }
 
     public void CalculateResourceGain()
     {
         foreach (var planet in OwnedPlanets)
         {
-            int increment = planet.StationedShips[HardcodeReference.Instance.WorkerShip];
-            if (planet.Structures.Contains(Structure.Extractor))
+            int increment = planet.StationedShips[ShipType.Worker];
+            if (planet.Structures.Contains(StructureType.Extractor))
             {
                 this.Resources[ResourceType.Metals] += (1 + increment);
                 this.Resources[ResourceType.Rations] += (1 + increment);
                 this.Resources[ResourceType.Energy_Source] += (1 + increment);
             }
-            if (planet.Structures.Contains(Structure.Shipyard))
+            if (planet.Structures.Contains(StructureType.Shipyard))
             {
-                Ships[HardcodeReference.Instance.ScoutShip] += (1 + increment);
-                Ships[HardcodeReference.Instance.AttackShip] += (1 + increment);
-                Ships[HardcodeReference.Instance.WorkerShip] += (1 + increment);
+                Ships[ShipType.Scout] += (1 + increment);
+                Ships[ShipType.Attacker] += (1 + increment);
+                Ships[ShipType.Worker] += (1 + increment);
             }
         }
     }
 
-    public void StationShips(Dictionary<ShipTypeSO, int> stationShips)
+    public void StationShips(Dictionary<ShipType, int> stationShips)
     {
-        foreach (KeyValuePair<ShipTypeSO, int> kvp in stationShips)
+        foreach (var kvp in stationShips)
         {
             if (this.Ships.ContainsKey(kvp.Key))
             {

@@ -181,9 +181,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
     {
         if (currentPlanet.Structures.Count>0)
             planetStructure.text = $"STRUCTURE\n{currentPlanet.Structures[0]}";
-        planetStatonedShips.text = $"SHIPS\n{HardcodeReference.Instance.ScoutShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.ScoutShip]}" +
-            $"\n{HardcodeReference.Instance.AttackShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.AttackShip]}" +
-            $"\n{HardcodeReference.Instance.WorkerShip.name}:{currentPlanet.StationedShips[HardcodeReference.Instance.WorkerShip]}";
+        planetStatonedShips.text = $"SHIPS\n{ShipType.Scout}:{currentPlanet.StationedShips[ShipType.Scout]}" +
+            $"\n{ShipType.Attacker}:{currentPlanet.StationedShips[ShipType.Attacker]}" +
+            $"\n{ShipType.Worker}:{currentPlanet.StationedShips[ShipType.Worker]}";
     }
 
     public void ShowFriendlyPlanetSheet(PlanetData planet)
@@ -223,10 +223,10 @@ public class UINavigationManager : Singleton<UINavigationManager>
             {
                 GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
                 currentPlanet.SetFaction(FactionType.Human);
-                EventsHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU COLONISED THIS PLANET");
+                SimulationHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU COLONISED THIS PLANET");
             } else
             {
-                EventsHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU FOUND THIS COLONISED PLANET");
+                SimulationHandler.Instance.RunSimulationScreen("EXPLORATION HAPPENING", "YOU ARE SCANNING THIS PLANET", "EXPLORATION OUTCOME", "YOU FOUND THIS COLONISED PLANET");
             }
         }
         //PlayerInteractionController.Instance.inPlanet = false;
@@ -266,9 +266,9 @@ public class UINavigationManager : Singleton<UINavigationManager>
         {
             text.text = "0";
         }
-        shipOwned[0].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.WorkerShip]}"; 
-        shipOwned[1].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.AttackShip]}"; 
-        shipOwned[2].text = $"OWNED: {GameManager.Instance.Player.Ships[HardcodeReference.Instance.ScoutShip]}"; 
+        shipOwned[0].text = $"OWNED: {GameManager.Instance.Player.Ships[ShipType.Worker]}"; 
+        shipOwned[1].text = $"OWNED: {GameManager.Instance.Player.Ships[ShipType.Attacker]}"; 
+        shipOwned[2].text = $"OWNED: {GameManager.Instance.Player.Ships[ShipType.Scout]}"; 
 
     }
 
@@ -293,8 +293,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
         print(canAttack);
         if (!canAttack) return;
         SetState(UIState.AttackPanel);
-        BattleResult result = BattleManager.Instance.Battle(GameManager.Instance.Player.Ships, new Dictionary<ShipTypeSO, int>() { {HardcodeReference.Instance.AttackShip,1 } } );
-        EventsHandler.Instance.RunSimulationScreen("ATTACK HAPPENING", $"YOU ARE ATTACKING {currentPlanet.PlanetName}", "ATTACK OUTCOME", $"WIN: {result.AttackerWon}");
+        BattleResult result = BattleManager.Instance.Battle(GameManager.Instance.Player.Ships, new Dictionary<ShipType, int>() { { ShipType.Attacker, 1 } } );
+        SimulationHandler.Instance.RunSimulationScreen("ATTACK HAPPENING", $"YOU ARE ATTACKING {currentPlanet.PlanetName}", "ATTACK OUTCOME", $"WIN: {result.AttackerWon}");
         if (result.AttackerWon == true)
         {
             currentPlanet.SetFaction(FactionType.Human);

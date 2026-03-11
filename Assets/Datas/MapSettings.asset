@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181dfed5f8e9ac14fac9d5f1c5a35670, type: 3}
+  m_Name: MapSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MapSettings
+  MapDimensions: {x: 50, y: 50}
+  MapCellSize: 6
+  MapGridPrefab: {fileID: 3810308209017950696, guid: 1daf4cf6af60a43419e14182baecc4df, type: 3}
+  RadiusBetweenPlanets: 2
+  MaxPlanets: 100
+  HomePlanetData: {fileID: 11400000, guid: ee73ebb0de09fec42bc84efd5d59a2f8, type: 2}

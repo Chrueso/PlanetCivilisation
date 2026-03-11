@@ -9,16 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58db86c31f9486c4c8493ccc3e94caf2, type: 3}
+  m_Script: {fileID: 11500000, guid: a96199ea426fd2146a58707ab981e803, type: 3}
   m_Name: Worker
-  m_EditorClassIdentifier: Assembly-CSharp::ShipTypeSO
-  shipName: Worker
-  shipIcon: {fileID: 0}
-  shipPrefab: {fileID: 0}
-  actionType: 3
-  requiredResources:
-  - resourceType: 0
-    amount: 100
-  - resourceType: 1
-    amount: 100
-  buildTime: 5
+  m_EditorClassIdentifier: Assembly-CSharp::ShipDataSO
+  Icon: {fileID: 0}
+  Prefab: {fileID: 0}
+  Type: 2
+  AttackPower: 1
+  RequiredResources: []
+  BuildTime: 5

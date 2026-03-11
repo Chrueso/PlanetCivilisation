@@ -1,27 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-
-public class BattleResult
-{
-    public int AttackerShipsRemaining { get; private set; }
-    public int DefenderShipsRemaining { get; private set; }
-    public bool AttackerWon { get; private set; }
-
-    public BattleResult(int attackerShipsRemaining, int defenderShipsRemaining, bool attackerWon)
-    {
-        AttackerShipsRemaining = attackerShipsRemaining;
-        DefenderShipsRemaining = defenderShipsRemaining;
-        AttackerWon = attackerWon;
-    }
-}
 
 public class BattleManager : Singleton<BattleManager>
 {
     public PlanetData SelectedPlanet;
-    public ShipTypeSO combatShipType;
+    public ShipType combatShipType;
     public int AttackShipAmount; 
+    public ShipDatabaseSO shipDatabase;
 
     //debug/testing functions
 
@@ -30,14 +16,14 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (SelectedPlanet != null)
         {
-            Dictionary<ShipTypeSO, int> attackingFleet = new Dictionary<ShipTypeSO, int>();
+            Dictionary<ShipType, int> attackingFleet = new Dictionary<ShipType, int>();
             attackingFleet.Add(combatShipType, AttackShipAmount);
 
             Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
-            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key.name}: {kv.Value}"));
+            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key}: {kv.Value}"));
             Debug.Log($"Defending Fleet: {fleetInfo}");
 
-            BattleResult result = BattleManager.Instance.Battle(attackingFleet, SelectedPlanet.StationedShips);
+            BattleResult result = Battle(attackingFleet, SelectedPlanet.StationedShips);
         }
     }
 
@@ -46,11 +32,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (SelectedPlanet != null)
         {
-            Dictionary<ShipTypeSO, int> attackingFleet = new Dictionary<ShipTypeSO, int>();
+            Dictionary<ShipType, int> attackingFleet = new Dictionary<ShipType, int>();
             attackingFleet.Add(combatShipType, AttackShipAmount);
 
             Debug.Log($"Starting war against {SelectedPlanet.PlanetName}\n Attacker Ships : {AttackShipAmount} \n ");
-            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key.name}: {kv.Value}"));
+            string fleetInfo = string.Join(", ", SelectedPlanet.StationedShips.Select(kv => $"{kv.Key}: {kv.Value}"));
             Debug.Log($"Defending Fleet: {fleetInfo}");
 
             BattleResult result = BattleManager.Instance.BattleBrianVersion(attackingFleet, SelectedPlanet.StationedShips);
@@ -71,22 +57,23 @@ public class BattleManager : Singleton<BattleManager>
         base.Awake();
     }
 
-    public BattleResult Battle(Dictionary<ShipTypeSO, int> attackerShips, Dictionary<ShipTypeSO, int> defenderShips)
+    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
     {
         bool attackerWon = false;
         int maxRoll = 10;
 
-        List<ShipTypeSO> attackers = new List<ShipTypeSO>();
+        List<ShipType> attackers = new List<ShipType>();
+
         foreach (var kv in attackerShips)
         {
-            if (kv.Key.ActionType == ShipActionType.Combat)
+            if (kv.Key == ShipType.Attacker)
             {
                 for (int i = 0; i < kv.Value; i++)
                     attackers.Add(kv.Key);
             }
         }
 
-        List<ShipTypeSO> defenders = new List<ShipTypeSO>();
+        List<ShipType> defenders = new List<ShipType>();
         foreach (var kv in defenderShips)
         {
             for (int i = 0; i < kv.Value; i++)
@@ -97,7 +84,7 @@ public class BattleManager : Singleton<BattleManager>
         while (attackers.Count > 0 && defenders.Count > 0)
         {
 
-            List<ShipTypeSO> currentAttackers = new List<ShipTypeSO>(attackers);
+            List<ShipType> currentAttackers = new List<ShipType>(attackers);
 
             foreach (var attacker in currentAttackers)
             {
@@ -105,11 +92,14 @@ public class BattleManager : Singleton<BattleManager>
 
                 // Pick a random defender
                 int defenderIndex = Random.Range(0, defenders.Count);
-                ShipTypeSO defender = defenders[defenderIndex];
+                ShipType defender = defenders[defenderIndex];
 
                 // Roll
-                int attackerRoll = Random.Range(1, maxRoll * attacker.AttackPower + 1);
-                int defenderRoll = Random.Range(1, maxRoll * defender.AttackPower + 1);
+                int attackerPower = shipDatabase.GetShip(attacker).AttackPower;
+                int defenderPower = shipDatabase.GetShip(defender).AttackPower;
+
+                int attackerRoll = Random.Range(1, maxRoll * attackerPower + 1);
+                int defenderRoll = Random.Range(1, maxRoll * defenderPower + 1);
 
                 if (attackerRoll > defenderRoll)
                 {
@@ -135,22 +125,24 @@ public class BattleManager : Singleton<BattleManager>
         return new BattleResult(remainingAttackers, remainingDefenders, attackerWon);
     }
 
-    public BattleResult BattleBrianVersion(Dictionary<ShipTypeSO, int> attackerShips, Dictionary<ShipTypeSO, int> defenderShips)
+    public BattleResult BattleBrianVersion(Dictionary<ShipType, int> attackerShips, Dictionary<ShipType, int> defenderShips)
     {
         int attackerShipPower = 0;
         int defenderShipPower = 0;
 
         foreach (var ship in attackerShips)
         {
-            if (ship.Key.ActionType == ShipActionType.Combat)
+            if (ship.Key == ShipType.Attacker)
             {
-                attackerShipPower += ship.Value * ship.Key.AttackPower;
+                int attackPower = shipDatabase.GetShip(ship.Key).AttackPower;
+                attackerShipPower += ship.Value * attackPower;
             }
         }
 
         foreach (var ship in defenderShips)
         {
-            defenderShipPower += ship.Value * ship.Key.AttackPower;
+            int attackPower = shipDatabase.GetShip(ship.Key).AttackPower;
+            defenderShipPower += ship.Value * attackPower;
         }
 
         float chanceForSuccess = (float)attackerShipPower / (attackerShipPower + defenderShipPower);

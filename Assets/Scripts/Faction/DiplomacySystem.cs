@@ -51,6 +51,6 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
 
         UINavigationManager.Instance.DismissAllSheets();
         CameraController.Instance.Enable();
-        EventsHandler.Instance.RunSimulationScreen("DIPLOMACY HAPPENING", "YOU ARE TRYING TO DIPLOMACY THIS PLANET", "DIPLOMACY OUTCOME", $"{words}");
+        SimulationHandler.Instance.RunSimulationScreen("DIPLOMACY HAPPENING", "YOU ARE TRYING TO DIPLOMACY THIS PLANET", "DIPLOMACY OUTCOME", $"{words}");
     }
 }

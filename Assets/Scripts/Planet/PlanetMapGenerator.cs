@@ -10,8 +10,9 @@ public class PlanetMapGenerator
     private PlanetGenerator planetGenerator;
     private System.Random rng;
 
-    public PlanetMapGenerator(int radiusBetweenPlanets, int maxPlanets, CustomPlanetSO homePlanetData, PlanetGenerator planetGenerator, System.Random rng)
+    public PlanetMapGenerator(MapGrid mapGrid, int radiusBetweenPlanets, int maxPlanets, CustomPlanetSO homePlanetData, PlanetGenerator planetGenerator, System.Random rng)
     {
+        this.mapGrid = mapGrid;
         this.radiusBetweenPlanets = radiusBetweenPlanets;
         this.maxPlanets = maxPlanets;
         this.homePlanetData = homePlanetData;
