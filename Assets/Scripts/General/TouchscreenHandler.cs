@@ -1,17 +1,15 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
-public class TouchscreenHandler : Singleton<TouchscreenHandler>
+public class TouchscreenHandler : MonoBehaviour
 {
 
-    public EventHandler<TouchInfo> FingerDownCallback;
-    public EventHandler<TouchInfo> FingerMoveCallback;
-    public EventHandler<TouchInfo> FingerUpCallback;
+    public static EventHandler<TouchInfo> FingerDownCallback;
+    public static EventHandler<TouchInfo> FingerMoveCallback;
+    public static EventHandler<TouchInfo> FingerUpCallback;
 
     private void OnEnable()
     {

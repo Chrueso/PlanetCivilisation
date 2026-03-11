@@ -1,30 +1,30 @@
-using System.Collections;
-using UnityEngine;
+//using System.Collections;
+//using UnityEngine;
 
-public class Queryier : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void OnEnable()
-    {
-        print(TouchscreenHandler.Instance);
-    }
-    void Start()
-    {
-        StartCoroutine(IJustPrintStuff());
-    }
+//public class Queryier : MonoBehaviour
+//{
+//    // Start is called once before the first execution of Update after the MonoBehaviour is created
+//    private void OnEnable()
+//    {
+//        print(TouchscreenHandler.Instance);
+//    }
+//    void Start()
+//    {
+//        StartCoroutine(IJustPrintStuff());
+//    }
 
-    private IEnumerator IJustPrintStuff()
-    {
-        while (true)
-        {
-            print(TouchscreenHandler.Instance);
-            yield return new WaitForSeconds(2);
-        }
-    }
+//    private IEnumerator IJustPrintStuff()
+//    {
+//        while (true)
+//        {
+//            print(TouchscreenHandler.Instance);
+//            yield return new WaitForSeconds(2);
+//        }
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
         
-    }
-}
+//    }
+//}

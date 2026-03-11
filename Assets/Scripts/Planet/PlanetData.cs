@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class PlanetData : IGridHexOccupant
 {
@@ -62,11 +61,6 @@ public class PlanetData : IGridHexOccupant
 
     public void AddShips(ShipType shipType, int amount)
     {
-        if (shipType == null || amount <= 0)
-        {
-            return;
-        }
-
         if (StationedShips.ContainsKey(shipType))
         {
             StationedShips[shipType] += amount;
@@ -77,60 +71,37 @@ public class PlanetData : IGridHexOccupant
         }
     }
 
-    ///// <summary>
-    ///// Remove ships from this planet
-    ///// </summary>
-    ///// For attacking? or moving ship out of planet?
-    //public bool RemoveShips(ShipTypeSO shipType, int amount)
-    //{
-    //    if (shipType == null || !StationedShips.ContainsKey(shipType)|| StationedShips[shipType] < amount)
-    //    {
-    //        return false;
-    //    }
+    public void RemoveShips(ShipType shipType, int amount)
+    {
+        if (StationedShips.ContainsKey(shipType))
+        {
+            StationedShips[shipType] -= amount;
 
-    //    StationedShips[shipType] -= amount;
-    //    if (StationedShips[shipType] <= 0)
-    //    {
-    //        StationedShips.Remove(shipType);
-    //    }
+            if (StationedShips[shipType] <= 0)
+            {
+                StationedShips.Remove(shipType);
+            }
+        }
+    }
 
-    //    return true;
-    //}
+    public int GetShipCount(ShipType shipType)
+    {
+        return StationedShips.ContainsKey(shipType) ? StationedShips[shipType] : 0;
+    }
 
-    ///// <summary>
-    ///// FOR UI!
-    ///// </summary>
-    //public int GetShipCount(ShipTypeSO shipType)
-    //{
-    //    return StationedShips.ContainsKey(shipType) ? StationedShips[shipType] : 0;
-    //}
-
-    //// For attack and defense calculations, like Risk
-    //public int GetTotalAssaultShips()
-    //{
-    //    int total = 0;
-    //    foreach (var ship in StationedShips)
-    //    {
-    //        if (ship.Key.ActionType == ShipActionType.Combat)
-    //        {
-    //            total += ship.Value;
-    //        }
-    //    }
-    //    return total;
-    //}
-
-    //public void StationShips(Dictionary<ShipTypeSO, int> stationShips)
-    //{
-    //    foreach (KeyValuePair<ShipTypeSO, int> kvp in stationShips)
-    //    {
-    //        if (this.StationedShips.ContainsKey(kvp.Key))
-    //        {
-    //            this.StationedShips[kvp.Key] += kvp.Value;
-    //            continue;
-    //        }
-    //        this.StationedShips[kvp.Key] = kvp.Value;
-    //    }
-    //}
+    // For attack and defense calculations, like Risk
+    public int GetTotalAssaultShips()
+    {
+        int total = 0;
+        foreach (var ship in StationedShips)
+        {
+            if (ship.Key == ShipType.Attacker)
+            {
+                total += ship.Value;
+            }
+        }
+        return total;
+    }
 
     //public void DebugPurposes()
     public void RaiseAffection(FactionType rizzler, int affection)
@@ -146,6 +117,4 @@ public class PlanetData : IGridHexOccupant
         if (this.Structures.Contains(structure)) return;
         this.Structures.Add(structure);
     }
-
-   
 }

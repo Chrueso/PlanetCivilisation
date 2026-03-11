@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class TurnManager : Singleton<TurnManager>
 {
+    [SerializeField] UINavigationManager uINavigationManager;
     [SerializeField] private Button endTurnButton;
     [SerializeField] private TextMeshProUGUI turnDisplay;
     [SerializeField] private TextMeshProUGUI metalsDisplay;
@@ -113,7 +114,7 @@ public class TurnManager : Singleton<TurnManager>
     {
         if (playerTurn)
         {
-            UINavigationManager.Instance.SetHomeShipButton(false);
+            uINavigationManager.SetHomeShipButton(false);
             GameManager.Instance.Player.CalculateResourceGain();
             UpdateResourceVisuals();
             if (GameManager.Instance.Player.OwnedPlanets.Count >= 5 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 30)

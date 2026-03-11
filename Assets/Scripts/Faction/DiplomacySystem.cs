@@ -3,8 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class DiplomacySystem : Singleton<DiplomacySystem>
+public class DiplomacySystem : MonoBehaviour
 {
+    [SerializeField] UINavigationManager uINavigationManager;
+    [SerializeField] private CameraController cameraController;
+
     [SerializeField] private Button DiplomacyButton;
     // hardcoded values cause dont have data yet
     private Dictionary<FactionType, int> demihumanRelationships = new Dictionary<FactionType, int>() { {FactionType.Human, 20 }, { FactionType.IntelligentConstruct, 100 } };
@@ -19,7 +22,7 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
 
     private void TryForAlliance()
     {
-        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
+        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
         bool success = false;
         PlanetData pData = PlayerInteractionController.Instance.CurrentPlanet;
         if (pData.Affection.TryGetValue(playerFaction, out int affinity))
@@ -49,8 +52,8 @@ public class DiplomacySystem : Singleton<DiplomacySystem>
             words = "FAIL";
         }
 
-        UINavigationManager.Instance.DismissAllSheets();
-        CameraController.Instance.Enable();
+        uINavigationManager.DismissAllSheets();
+        cameraController.Enable();
         SimulationHandler.Instance.RunSimulationScreen("DIPLOMACY HAPPENING", "YOU ARE TRYING TO DIPLOMACY THIS PLANET", "DIPLOMACY OUTCOME", $"{words}");
     }
 }

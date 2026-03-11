@@ -1,12 +1,13 @@
-using System;
 using System.Collections.Generic;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.UIElements;
 
 public class PlayerInteractionController : Singleton<PlayerInteractionController>
 {
+    [SerializeField] UINavigationManager uINavigationManager;
+    [SerializeField] private CameraController cameraController;
+
     private Camera cameraInstance;
     public bool inPlanet { get; set; }
     private bool homeShipOnPlanet = true;
@@ -14,12 +15,11 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
 
     public PlanetData CurrentPlanet { get; private set; }
     public GridHex CurrentGridHex { get; private set; }
-    public Vector3 currGrid;
 
     private void Start()
     {
         cameraInstance = Camera.main;
-        TouchscreenHandler.Instance.FingerDownCallback += FindPlanet;
+        TouchscreenHandler.FingerDownCallback += FindPlanet;
     }
 
     private void FindPlanet(object sender, TouchInfo touchInfo)
@@ -28,6 +28,7 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
         Ray fingerRay = cameraInstance.ScreenPointToRay(touchInfo.ScreenPos);
         RaycastHit hit;
         //When tap
+
         if (Physics.Raycast(fingerRay, out hit, 1000f))
         {
             GridHex gh = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
@@ -36,8 +37,8 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
             GridHex playerGrid = GameManager.Instance.Player.CurrentHex;
             if (!inPlanet)
             {
-                UINavigationManager.Instance.SetHomeShipButton(true);
-                UINavigationManager.Instance.MoveHomeShipButton(gh.WorldPosition);
+                uINavigationManager.SetHomeShipButton(true);
+                uINavigationManager.MoveHomeShipButton(gh.WorldPosition);
             }
             print($"In planet {inPlanet}");
             if (gh.IsOccupied)
@@ -46,26 +47,30 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                 CurrentPlanet = pd;
                 if (pd != null && !inPlanet)
                 {
-                    CameraController.Instance.Disable();
+                    cameraController.Disable();
                     cameraInstance.transform.position = new Vector3(gh.WorldPosition.x, 55, gh.WorldPosition.z);
                     if (GameManager.Instance.Player.DiscoveredPlanets.Contains(pd) && playerGrid==gh)
                     {
                         if (pd.FactionType == FactionType.Human)
                         {
-                            UINavigationManager.Instance.ShowFriendlyPlanetSheet(pd);
+                            uINavigationManager.ShowFriendlyPlanetSheet(pd);
                         } else
                         {
-                            UINavigationManager.Instance.ShowEnemyPlanetSheet(pd);    
+                            uINavigationManager.ShowEnemyPlanetSheet(pd);    
                         }
                         inPlanet = true;
                     } 
                     else if(!GameManager.Instance.Player.DiscoveredPlanets.Contains(pd))
                     {
-                        UINavigationManager.Instance.ShowUnknownPlanetSheet(pd);
+                        uINavigationManager.ShowUnknownPlanetSheet(pd);
                         inPlanet = true;
                     }
                     
                 }
+
+
+
+                //NOT OCCUPIED
             } else
             {
                 PointerEventData pointerData = new(EventSystem.current);
@@ -79,20 +84,26 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                         print(r.gameObject.layer);
                         if (r.gameObject.layer != LayerMask.NameToLayer("UI"))
                         {
-                            CameraController.Instance.Enable();
-                            UINavigationManager.Instance.DismissAllSheets();
+                            cameraController.Enable();
+                            uINavigationManager.DismissAllSheets();
                             inPlanet = false;
                         }
                     }
                 } else
                 {
-                    CameraController.Instance.Enable();
-                    UINavigationManager.Instance.DismissAllSheets();
+                    cameraController.Enable();
+                    uINavigationManager.DismissAllSheets();
                     inPlanet = false;
                 }
                 
             }
         } 
+
+
+
+        //IF NO RAYCAAST
+        //UI ???
+        //CLOSE UI
         else
         {
             PointerEventData pointerData = new(EventSystem.current);
@@ -106,16 +117,16 @@ public class PlayerInteractionController : Singleton<PlayerInteractionController
                     print(r.gameObject.layer);
                     if (r.gameObject.layer != LayerMask.NameToLayer("UI"))
                     {
-                        CameraController.Instance.Enable();
-                        UINavigationManager.Instance.DismissAllSheets();
+                        cameraController.Enable();
+                        uINavigationManager.DismissAllSheets(); //CLOSE UI
                         inPlanet = false;
                     }
                 }
             }
             else
             {
-                CameraController.Instance.Enable();
-                UINavigationManager.Instance.DismissAllSheets();
+                cameraController.Enable();
+                uINavigationManager.DismissAllSheets();
                 inPlanet = false;
             }
         }

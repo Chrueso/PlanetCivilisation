@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.DefaultInputActions;
 
-public class UINavigationManager : Singleton<UINavigationManager>
+public class UINavigationManager : MonoBehaviour
 {
     public enum UIState
     {
@@ -50,6 +50,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
     [SerializeField] private TextMeshProUGUI planetStructure;
     [SerializeField] private TextMeshProUGUI planetStatonedShips;
     [SerializeField] private TextMeshProUGUI enemyAffection2;
+
+    [SerializeField] private CameraController cameraController;
 
     public UIState CurrentState { get; private set; } = UIState.BaseUI;
 
@@ -215,7 +217,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     private void ExplorePlanet()
     {
         print(currentPlanet.FactionType);
-        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
+        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
         GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
         if (!GameManager.Instance.Player.OwnedPlanets.Contains(currentPlanet))
         {
@@ -239,7 +241,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         currentPlanet = null;
         SetState(UIState.BaseUI);
         PlayerInteractionController.Instance.inPlanet = false;
-        CameraController.Instance.Enable();
+        cameraController.Enable();
     }
 
     public void OpenTradePanel()
@@ -250,7 +252,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void IncreasePlanetAffection()
     {
-        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
+        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
         currentPlanet.RaiseAffection(FactionType.Human, 100);
         GameManager.Instance.Player.TakeResource(ResourceType.Rations);
         GameManager.Instance.Player.GainResource(ResourceType.Metals);
@@ -289,7 +291,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     public void OpenAttackPanel()
     {
         //parentSheet = CurrentState;
-        bool canAttack = TurnManager.Instance.currentFaction.DecreaseTurn(2);
+        bool canAttack = TurnManager.Instance.currentFaction.DecreaseActionPoint(2);
         print(canAttack);
         if (!canAttack) return;
         SetState(UIState.AttackPanel);
@@ -299,7 +301,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         {
             currentPlanet.SetFaction(FactionType.Human);
             GameManager.Instance.Player.AddOwnedPlanets(currentPlanet);
-            CameraController.Instance.Enable();
+            cameraController.Enable();
             DismissAllSheets();
         }
     }

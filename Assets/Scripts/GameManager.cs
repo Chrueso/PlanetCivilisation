@@ -17,6 +17,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
     [SerializeField] private GameObject planetPrefab;
 
+    [SerializeField] CameraController cameraController;
+
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
 
@@ -35,7 +37,7 @@ public class GameManager : Singleton<GameManager>
         Player.Init(homePlanet, FactionType.Human);
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        CameraController.Instance.CameraInstance.transform.position = new Vector3(homeplanetPos.x, CameraController.Instance.CameraInstance.transform.position.y, homeplanetPos.z);
+        cameraController.CameraInstance.transform.position = new Vector3(homeplanetPos.x, cameraController.CameraInstance.transform.position.y, homeplanetPos.z);
     }
 
     private void GenerateSeed()

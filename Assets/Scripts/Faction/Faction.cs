@@ -52,7 +52,7 @@ public class Faction
         OnTurnFinished?.Invoke();
     }
 
-    public bool DecreaseTurn(int amount)
+    public bool DecreaseActionPoint(int amount)
     {
         if (ActionPoints-amount < 0)
         {

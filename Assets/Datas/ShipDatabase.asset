@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ShipDatabase
   m_EditorClassIdentifier: Assembly-CSharp::ShipDatabaseSO
   ships:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 3ab3d2ecff2292d4e9a5fc8eff17a342, type: 2}
+  - {fileID: 11400000, guid: 19fa297c7e02adc4b8583e38a2cb53fb, type: 2}
+  - {fileID: 11400000, guid: 4aa4e2ca1c26ab3408914d74d48d1ed6, type: 2}

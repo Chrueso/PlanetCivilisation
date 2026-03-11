@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraController : Singleton<CameraController> 
+public class CameraController : MonoBehaviour
 {
     [SerializeField] private bool orthographicPanning = false;
 
@@ -19,13 +19,11 @@ public class CameraController : Singleton<CameraController>
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
-
 
     private void Start()
     {
@@ -33,34 +31,33 @@ public class CameraController : Singleton<CameraController>
         // 90 degree orthographic implementation
         if (orthographicPanning)
         {
-            TouchscreenHandler.Instance.FingerDownCallback += PlayerFingerDown;
-            TouchscreenHandler.Instance.FingerMoveCallback += PlayerFingerMove;
-            TouchscreenHandler.Instance.FingerUpCallback += PlayerFingerRelease;
+            TouchscreenHandler.FingerDownCallback += PlayerFingerDown;
+            TouchscreenHandler.FingerMoveCallback += PlayerFingerMove;
+            TouchscreenHandler.FingerUpCallback += PlayerFingerRelease;
             return;
         }
         #endregion
 
-        TouchscreenHandler.Instance.FingerDownCallback += OnPlayerFingerDown;
-        TouchscreenHandler.Instance.FingerMoveCallback += OnPlayerFingerMove;
-        TouchscreenHandler.Instance.FingerUpCallback += OnPlayerFingerRelease;
+        TouchscreenHandler.FingerDownCallback += OnPlayerFingerDown;
+        TouchscreenHandler.FingerMoveCallback += OnPlayerFingerMove;
+        TouchscreenHandler.FingerUpCallback += OnPlayerFingerRelease;
     }
-
 
     private void OnDisable()
     {
         #region ORTHO EVENTS
         if (orthographicPanning)
         {
-            TouchscreenHandler.Instance.FingerDownCallback -= PlayerFingerDown;
-            TouchscreenHandler.Instance.FingerMoveCallback -= PlayerFingerMove;
-            TouchscreenHandler.Instance.FingerUpCallback -= PlayerFingerRelease;
+            TouchscreenHandler.FingerDownCallback -= PlayerFingerDown;
+            TouchscreenHandler.FingerMoveCallback -= PlayerFingerMove;
+            TouchscreenHandler.FingerUpCallback -= PlayerFingerRelease;
             return;
         }
         #endregion
 
-        TouchscreenHandler.Instance.FingerDownCallback -= OnPlayerFingerDown;
-        TouchscreenHandler.Instance.FingerMoveCallback -= OnPlayerFingerMove;
-        TouchscreenHandler.Instance.FingerUpCallback -= OnPlayerFingerRelease;
+        TouchscreenHandler.FingerDownCallback -= OnPlayerFingerDown;
+        TouchscreenHandler.FingerMoveCallback -= OnPlayerFingerMove;
+        TouchscreenHandler.FingerUpCallback -= OnPlayerFingerRelease;
 
     }
 

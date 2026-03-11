@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 public class Crafter : Singleton<Crafter>
 {
+    [SerializeField] UINavigationManager uINavigationManager;
     [SerializeField] private Button craftExtractor;
     [SerializeField] private Button craftShipyard;
 
@@ -11,6 +12,7 @@ public class Crafter : Singleton<Crafter>
         {StructureType.Extractor, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Energy_Source, 1 } } },
         {StructureType.Shipyard, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Energy_Source, 0 } } },
     };
+
     //hardcode for now
     private Dictionary<ResourceType, int> PlayerInv = new Dictionary<ResourceType, int>() {
         {ResourceType.Metals, 5 },
@@ -25,18 +27,18 @@ public class Crafter : Singleton<Crafter>
 
     private void BuildStructure(StructureType structure)
     {
-        if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
+        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
         if (CheckPlayerInv(structure))
         {
             SimulationHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU SUCCESSFULLY BUILT STRUCTURE");
             PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(structure);
-            UINavigationManager.Instance.BackFromOverlay();
+            uINavigationManager.BackFromOverlay();
         } else
         {
             SimulationHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU FAILED TO BUILT STRUCTURE");
         }
-        
-        UINavigationManager.Instance.UpdateFriendlyUI();
+
+        uINavigationManager.UpdateFriendlyUI();
     }
 
     private bool CheckPlayerInv(StructureType structure)
