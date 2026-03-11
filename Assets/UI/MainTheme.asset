@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65cf13c9878d87429be07b1d88bb983, type: 3}
+  m_Name: MainTheme
+  m_EditorClassIdentifier: Assembly-CSharp::UITheme
+  logoFont: {fileID: 11400000, guid: 23ae69cd954cea548bf5e3991c2a3015, type: 2}
+  titleFont: {fileID: 11400000, guid: a462bf81f14a094458069504107407e2, type: 2}
+  bodyFont: {fileID: 11400000, guid: a462bf81f14a094458069504107407e2, type: 2}
+  logoSize: 42
+  headingSize: 22
+  buttonSize: 16
+  bodySize: 18
+  captionSize: 14
+  cyan: {r: 0, g: 0.898, b: 1, a: 1}
+  magenta: {r: 1, g: 0, b: 0.502, a: 1}
+  green: {r: 0, g: 1, b: 0.533, a: 1}
+  gold: {r: 1, g: 0.843, b: 0, a: 1}
+  purpleBg: {r: 0.102, g: 0.039, b: 0.18, a: 1}
+  purpleMid: {r: 0.176, g: 0.106, b: 0.306, a: 1}
+  purpleLight: {r: 0.239, g: 0.169, b: 0.369, a: 1}
+  dark: {r: 0.051, g: 0.008, b: 0.129, a: 1}
+  textColor: {r: 0.878, g: 0.902, b: 0.941, a: 1}
+  textDim: {r: 0.541, g: 0.498, b: 0.667, a: 1}
+  panelBg: {r: 0.078, g: 0.039, b: 0.196, a: 0.85}
+  panelBorder: {r: 0, g: 0.898, b: 1, a: 0.25}
+  panelBorderStrong: {r: 0, g: 0.898, b: 1, a: 0.5}
+  buttonBg: {r: 0, g: 0.898, b: 1, a: 0.08}
+  buttonBorder: {r: 0, g: 0.898, b: 1, a: 0.5}
+  buttonLetterSpacing: 8
