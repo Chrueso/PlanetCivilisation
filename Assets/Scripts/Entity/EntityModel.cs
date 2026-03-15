@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class EntityData
+public class EntityModel : IGridHexOccupant
 {
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
@@ -8,9 +8,9 @@ public class EntityData
     public List<PlanetData> OwnedPlanets { get; private set; } = new List<PlanetData>();
     public List<PlanetData> DiscoveredPlanets { get; private set; } = new List<PlanetData>();
     public PlanetData HomePlanet { get; private set; }
-    public GridHex CurrentHex { get; private set; }
+    public GridHex CurrentHex { get; set; }
 
-    public EntityData(PlanetData homePlanet, FactionType factionType)
+    public EntityModel(PlanetData homePlanet, FactionType factionType)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);
@@ -23,11 +23,6 @@ public class EntityData
         Ships[ShipType.Scout] = 10;
         Ships[ShipType.Attacker] = 10;
         Ships[ShipType.Worker] = 10;
-    }
-
-    public void UpdateCurrentHex(GridHex hex)
-    {
-        CurrentHex = hex;
     }
 
     public void CalculateResourceGain()
@@ -76,6 +71,14 @@ public class EntityData
         if (!OwnedPlanets.Contains(planet))
         {
             OwnedPlanets.Add(planet);
+        }
+    }
+
+    public void RemoveOwnedPlanets(PlanetData planet)
+    {
+        if (OwnedPlanets.Contains(planet))
+        {
+            OwnedPlanets.Remove(planet);
         }
     }
 
