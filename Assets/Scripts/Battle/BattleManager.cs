@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class BattleManager 
 {
-    public PlanetData SelectedPlanet;
-    public ShipType combatShipType;
-    public int AttackShipAmount; 
-    public ShipDatabaseSO shipDatabase;
+    private ShipDatabaseSO shipDatabase;
 
     public BattleManager(ShipDatabaseSO shipDatabase)
     {

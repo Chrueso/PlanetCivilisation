@@ -1,31 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager> //CHANGE!
 {
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
 
-    [SerializeField] MapSettings mapSettings;
+    public System.Random SeedRNG;
+
+    private PlanetGenerator planetGenerator;
+    private MapGenerator mapGenerator;
+    private BattleManager battleManager;
+    private CommandInvoker commandInvoker;
+
+    [Header("Map")]
+    [SerializeField] private MapSettings mapSettings;
+    // addd map asset for prefabs i think
+    [SerializeField] private GameObject planetPrefab;
+    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
+
+    [Header("Player")]
     [SerializeField] private Player playerPrefab;
+    [SerializeField] private ShipDatabaseSO shipDatabase;
+
+    [Header("Camera")]
+    [SerializeField] private CameraController cameraController;
+
     [SerializeField] private DiplomacySystem diplomacySystem;
     public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
-    public System.Random SeedRNG;
-
-    PlanetGenerator planetGenerator;
-    MapGenerator mapGenerator;
-    BattleManager battleManager;
-
-    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
-    [SerializeField] private GameObject planetPrefab;
-
-    [SerializeField] CameraController cameraController;
-
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
-
-    [SerializeField] private ShipDatabaseSO ShipDatabaseSO;
 
     protected override void Awake()
     {
@@ -38,7 +43,7 @@ public class GameManager : Singleton<GameManager>
         mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
         MapGrid = mapGrid;
 
-        battleManager = new BattleManager(ShipDatabaseSO);
+        battleManager = new BattleManager(shipDatabase);
 
         Player = Instantiate(playerPrefab);
         Player.Init(homePlanet, FactionType.Human);

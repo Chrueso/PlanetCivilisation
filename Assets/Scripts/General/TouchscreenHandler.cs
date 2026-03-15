@@ -6,7 +6,6 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 public class TouchscreenHandler : MonoBehaviour
 {
-
     public static EventHandler<TouchInfo> FingerDownCallback;
     public static EventHandler<TouchInfo> FingerMoveCallback;
     public static EventHandler<TouchInfo> FingerUpCallback;
