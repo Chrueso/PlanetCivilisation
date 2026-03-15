@@ -37,9 +37,9 @@ public class EntityData
             int increment = planet.StationedShips[ShipType.Worker];
             if (planet.Structures.Contains(StructureType.Extractor))
             {
-                this.Resources[ResourceType.Metals] += (1 + increment);
-                this.Resources[ResourceType.Rations] += (1 + increment);
-                this.Resources[ResourceType.Credits] += (1 + increment);
+                Resources[ResourceType.Metals] += (1 + increment);
+                Resources[ResourceType.Rations] += (1 + increment);
+                Resources[ResourceType.Credits] += (1 + increment);
             }
             if (planet.Structures.Contains(StructureType.Shipyard))
             {

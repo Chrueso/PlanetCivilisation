@@ -4,7 +4,7 @@ public interface IEntityController
 {
     public void Move(GridHex hex);
 
-    public void BuildStructure(PlanetData planet);
+    public void BuildStructure(PlanetData planet, StructureType structure);
 
     public void BuildShip(PlanetData planet);
 
