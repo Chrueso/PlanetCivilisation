@@ -31,6 +31,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
         PlayerController controller = new PlayerController(model, view, mapGrid, commandInvoker);
+        model.CurrentHex = homePlanet.CurrentHex;
 
         avaliableFactions.Remove(factionType);
         return controller;

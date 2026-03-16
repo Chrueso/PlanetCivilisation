@@ -18,13 +18,17 @@ public class MoveCommand : ICommand
     public void Execute()
     {
         entityModel.CurrentHex = targetHex;
-        entityView.Move(targetHex.WorldPosition);
+        entityView.Move(targetHex.WorldPosition, entityModel.yValue);
+
+        Debug.Log(this.ToString());
     }
 
     public void Undo()
     {
         entityModel.CurrentHex = originHex;    
-        entityView.Move(originHex.WorldPosition);
+        entityView.Move(originHex.WorldPosition, entityModel.yValue);
+
+        Debug.Log(this.ToString());
     }
 
     //For logging overrides ToString

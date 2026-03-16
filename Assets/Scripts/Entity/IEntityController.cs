@@ -2,13 +2,13 @@ using UnityEngine;
 
 public interface IEntityController
 {
-    public void Move(GridHex hex);
+    public bool TryMove(GridHex hex);
 
-    public void Colonize(PlanetData planet);
+    public bool TryColonize(PlanetData planet);
 
-    public void Attack(PlanetData planet);
+    public bool TryAttack(PlanetData planet);
 
-    public void BuildStructure(PlanetData planet, StructureType structure);
+    public bool TryBuildStructure(PlanetData planet, StructureType structure);
 
     
     // Diplomacy

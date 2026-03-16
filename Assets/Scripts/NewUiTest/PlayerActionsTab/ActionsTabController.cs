@@ -26,32 +26,48 @@ public class ActionsTabController
 
     private void ConnectView()
     {
-        view.CloseButton.onClick.AddListener(OnCloseButtonClicked);
+        view.CloseButton.onClick.AddListener(CloseView);
+        view.MoveButton.onClick.AddListener(OnMoveButtonClicked);
         view.AttackButton.onClick.AddListener(OnAttackButtonClicked);
         view.ColonizeButton.onClick.AddListener(OnColonizeButtonClicked);
-        view.MoveButton.onClick.AddListener(OnMoveButtonClicked);
 
         view.Init(playerController);
     }
-    
-    private void OnCloseButtonClicked()
+
+    private void CloseView()
     {
         GameScreenManager.Pop();
         OnViewClose?.Invoke();
     }
 
-    private void OnAttackButtonClicked()
+    private void OnMoveButtonClicked()
     {
-
+        if (playerController.TryMove(selectedHex))
+        {
+            CloseView();
+        }
     }
 
     private void OnColonizeButtonClicked()
     {
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
+        {
+            if (playerController.TryColonize(planet))
+            {
+                CloseView();
+            }
+        }
+    }
 
+    private void OnAttackButtonClicked()
+    {
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
+        {
+            if (playerController.TryAttack(planet))
+            {
+                CloseView();
+            }
+        }
     }
     
-    private void OnMoveButtonClicked()
-    {
-        
-    }
 }

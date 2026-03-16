@@ -32,7 +32,6 @@ public class EntityModel
         OwnedPlanets.Add(homePlanet);
         DiscoveredPlanets.Add(homePlanet);
         FactionType = factionType;
-        CurrentHex = homePlanet.CurrentHex;
         Resources[ResourceType.Metals] = 10;
         Resources[ResourceType.Rations] = 10;
         Resources[ResourceType.Credits] = 10;

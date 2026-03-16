@@ -28,19 +28,6 @@ public class PlayerController : IEntityController
         model.OnCurrentHexChanged += UpdateHexesInMoveRadius;
     }
 
-    public void Move(GridHex targetHex)
-    {
-        if (hexesInMoveRadius.Contains(targetHex))
-        {
-            ICommand command = new MoveCommand(model, view, targetHex);
-            commandInvoker.ExecuteCommand(command);
-        }
-        else
-        {
-            Debug.Log("Outside move radius");
-        }
-    }
-
     private void UpdateHexesInMoveRadius()
     {
         hexesInMoveRadius.Clear();
@@ -52,27 +39,40 @@ public class PlayerController : IEntityController
         }
     }
 
-    public void Colonize(PlanetData planet)
+    public bool TryMove(GridHex targetHex)
+    {
+        if (hexesInMoveRadius.Contains(targetHex))
+        {
+            ICommand command = new MoveCommand(model, view, targetHex);
+            commandInvoker.ExecuteCommand(command);
+            return true;
+        }
+
+        Debug.Log("Outside move radius");
+        return false;
+    }
+
+    public bool TryColonize(PlanetData planet)
     {
         if (planet.FactionType == FactionType.Nothing)
         {
             ICommand command = new ColonizeCommand(model, planet);
             commandInvoker.ExecuteCommand(command);
+            return true;
         }
-        else
-        {
-            Debug.Log("You cannot colonize a owned planet!");
-        }
+
+        Debug.Log("You cannot colonize a owned planet!");
+        return false;
     }
 
-    public void Attack(PlanetData planet)
+    public bool TryAttack(PlanetData planet)
     {
-      
+        return false;
     }
 
-    public void BuildStructure(PlanetData planet, StructureType structure)
+    public bool TryBuildStructure(PlanetData planet, StructureType structure)
     {
-
+        return false;
     }
 
     // Diplomacy

@@ -15,11 +15,19 @@ public class ColonizeCommand : ICommand
     {
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
+
+        Debug.Log(this.ToString());
     }
 
     public void Undo()
     {
         targetPlanet.SetFaction(FactionType.Nothing);
         entityModel.RemoveOwnedPlanets(targetPlanet);
+
+        Debug.Log($"{targetPlanet.PlanetName} is now uninhabited");
     }
+
+    //For logging overrides ToString
+    public override string ToString() =>
+        $"[{entityModel.FactionType}] Has colonized planet {targetPlanet.PlanetName}";
 }
