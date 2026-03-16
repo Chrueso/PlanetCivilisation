@@ -222,7 +222,7 @@ public class UINavigationManager : MonoBehaviour
     private void ExplorePlanet()
     {
         print(currentPlanet.FactionType);
-        if (!TurnManager.Instance.currentFaction.DecreaseActionPoint(1)) return;
+        if (!GameManager.Instance.turnManager.currentFaction.DecreaseActionPoint(1)) return;
         GameManager.Instance.Player.AddPlanetDiscovery(currentPlanet);
         if (!GameManager.Instance.Player.OwnedPlanets.Contains(currentPlanet))
         {

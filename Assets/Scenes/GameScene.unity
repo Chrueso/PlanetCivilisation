@@ -14822,6 +14822,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 116513535908485254, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: turnDisplay
+      value: 
+      objectReference: {fileID: 2104817839}
+    - target: {fileID: 116513535908485254, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: endTurnButton
+      value: 
+      objectReference: {fileID: 884844403}
+    - target: {fileID: 116513535908485254, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: energyDisplay
+      value: 
+      objectReference: {fileID: 951697654}
+    - target: {fileID: 116513535908485254, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: metalsDisplay
+      value: 
+      objectReference: {fileID: 762242109}
+    - target: {fileID: 116513535908485254, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: rationsDisplay
+      value: 
+      objectReference: {fileID: 1649600224}
     - target: {fileID: 739636086863223599, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -14834,6 +14854,10 @@ PrefabInstance:
       propertyPath: planetPrefab
       value: 
       objectReference: {fileID: 6543573944910321850, guid: ec6b81f390b8c43468930e180662f266, type: 3}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: ShipDatabaseSO
+      value: 
+      objectReference: {fileID: 11400000, guid: c5fc1bc0145b86e408cf4250423cd68e, type: 2}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: diplomacySystem
       value: 
@@ -14850,6 +14874,22 @@ PrefabInstance:
       propertyPath: 'planetVisualPresets.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: c8c438714a40cab4d933d46d2f8e40ad, type: 2}
+    - target: {fileID: 6104197331305883487, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: FactionData.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104197331305883487, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'FactionData.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: bc808bae3de98664b9ed24fb066f4200, type: 2}
+    - target: {fileID: 6104197331305883487, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'FactionData.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 956a544f2d03dab4e80bc75ce1fb96b5, type: 2}
+    - target: {fileID: 6104197331305883487, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'FactionData.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b33e07e0a904c246b93b725af48ce6b, type: 2}
     - target: {fileID: 7277850567554085818, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -26014,6 +26054,8 @@ PrefabInstance:
     - {fileID: 1893151935399608576, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
     - {fileID: 8520695761310482225, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
     - {fileID: 5878928644986731955, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+    - {fileID: 3663851865050219334, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
+    - {fileID: 7291412782175535056, guid: 577f5b566003e7a49849cc262b1a88f1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -17,6 +17,8 @@ public class GameManager : Singleton<GameManager>
     MapGenerator mapGenerator;
     BattleManager battleManager;
 
+    public TurnManager turnManager { get; private set; }
+
     [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
     [SerializeField] private GameObject planetPrefab;
 
@@ -26,6 +28,7 @@ public class GameManager : Singleton<GameManager>
     public Player Player { get; private set; }
 
     [SerializeField] private ShipDatabaseSO ShipDatabaseSO;
+    [SerializeField] private FactionManager factionManagerRef;
 
     protected override void Awake()
     {
@@ -39,12 +42,19 @@ public class GameManager : Singleton<GameManager>
         MapGrid = mapGrid;
 
         battleManager = new BattleManager(ShipDatabaseSO);
+        turnManager = new TurnManager(factionManagerRef);
 
         Player = Instantiate(playerPrefab);
         Player.Init(homePlanet, FactionType.Human);
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
         Camera.main.transform.position =  new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
+    }
+
+    private void Start()
+    {
+        //temporary to make the turns start, ideally you want somehting else like pressing the play game button or something
+        turnManager.StartTurn();
     }
 
     private void GenerateSeed()

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-public class FactionManager : Singleton<FactionManager>
+public class FactionManager : MonoBehaviour
 {
 
     public FactionDataSO[] FactionData;
@@ -9,13 +10,12 @@ public class FactionManager : Singleton<FactionManager>
 
     private void Awake()
     {
-        base.Awake();
-
         foreach(FactionDataSO data in FactionData)
         {
             FactionsInUse.Add(new Faction(data));
         }
 
         FactionsInUse = FactionsInUse.OrderByDescending(f => f.IsPlayer).ToList();
+
     }
 }
