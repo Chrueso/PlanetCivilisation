@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerInteractionController : MonoBehaviour
+public class OldPlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private CameraController PlayerCam;
     private Camera cameraInstance;

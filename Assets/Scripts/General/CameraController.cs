@@ -20,13 +20,13 @@ public class CameraController : MonoBehaviour
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    private void Awake()
+    public void Init()
     {
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         #region ORTHO EVENTS
         // 90 degree orthographic implementation

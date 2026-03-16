@@ -1,22 +1,55 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : IEntityController
 {
-    EntityModel model;
-    EntityView view;
-    
-    public PlayerController(EntityModel model, EntityView view)
+    private EntityModel model;
+    private EntityView view;
+    private MapGrid mapGrid;
+    private CommandInvoker commandInvoker;
+
+    private HashSet<GridHex> hexesInMoveRadius = new HashSet<GridHex>();
+    public HashSet<GridHex> HexesInMoveRadius => hexesInMoveRadius; 
+
+    public GridHex CurrentHex => model.CurrentHex;
+    public FactionType Faction => model.FactionType;
+
+    public PlayerController(EntityModel model, EntityView view, MapGrid mapGrid, CommandInvoker commandInvoker)
     {
         this.model = model;
         this.view = view;
+        this.mapGrid = mapGrid;
+        this.commandInvoker = commandInvoker;
+        ConnectModel();
+    }
+
+    private void ConnectModel()
+    {
+        model.OnCurrentHexChanged += UpdateHexesInMoveRadius;
     }
 
     public void Move(GridHex targetHex)
     {
-        ICommand command = new MoveCommand(model, view, targetHex);
-        CommandInvoker.ExecuteCommand(command);
+        if (hexesInMoveRadius.Contains(targetHex))
+        {
+            ICommand command = new MoveCommand(model, view, targetHex);
+            commandInvoker.ExecuteCommand(command);
+        }
+        else
+        {
+            Debug.Log("Outside move radius");
+        }
+    }
 
-        view.Move(targetHex.WorldPosition);
+    private void UpdateHexesInMoveRadius()
+    {
+        hexesInMoveRadius.Clear();
+        List<GridHex> list = mapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
+
+        foreach (GridHex hex in list)
+        {
+            hexesInMoveRadius.Add(hex);
+        }
     }
 
     public void Colonize(PlanetData planet)
@@ -24,7 +57,7 @@ public class PlayerController : IEntityController
         if (planet.FactionType == FactionType.Nothing)
         {
             ICommand command = new ColonizeCommand(model, planet);
-            CommandInvoker.ExecuteCommand(command);
+            commandInvoker.ExecuteCommand(command);
         }
         else
         {

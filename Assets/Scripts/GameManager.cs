@@ -8,27 +8,33 @@ public class GameManager : Singleton<GameManager> //CHANGE!
 
     public System.Random SeedRNG;
 
+    [Header("Settings")]
+    [SerializeField] private MapSettings mapSettings;
+    [SerializeField] private ShipDatabaseSO shipDatabase;
+
+    [Header("Prefabs")]
+    [SerializeField] private GameObject planetPrefab;
+    [SerializeField] private EntityView entityViewPrefab;
+    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
+
+    [Header("Controllers")]
+    [SerializeField] private CameraController cameraController;
+    [SerializeField] private PlayerInteractionController playerInteractionController;
+    //[SerializeField] private DiplomacySystem diplomacySystem;
+
+    [Header("UI")]
+    [SerializeField] private ActionsTabView actionsTabView;
+
+    // runtime
     private PlanetGenerator planetGenerator;
     private MapGenerator mapGenerator;
     private BattleManager battleManager;
     private CommandInvoker commandInvoker;
+    private EntityFactory entityFactory;
+    private ActionsTabController actionsTabController;
 
-    [Header("Map")]
-    [SerializeField] private MapSettings mapSettings;
-    // addd map asset for prefabs i think
-    [SerializeField] private GameObject planetPrefab;
-    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
-
-    [Header("Player")]
-    [SerializeField] private Player playerPrefab;
-    [SerializeField] private ShipDatabaseSO shipDatabase;
-
-    [Header("Camera")]
-    [SerializeField] private CameraController cameraController;
-
-    [SerializeField] private DiplomacySystem diplomacySystem;
-    public DiplomacySystem DiplomacyInstance => diplomacySystem;
-
+    //TO CHANGE
+    //public DiplomacySystem DiplomacyInstance => diplomacySystem;
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
 
@@ -38,6 +44,8 @@ public class GameManager : Singleton<GameManager> //CHANGE!
 
         GenerateSeed();
 
+        cameraController.Init();
+
         planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(mapSettings, planetGenerator);
         mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
@@ -45,11 +53,20 @@ public class GameManager : Singleton<GameManager> //CHANGE!
 
         battleManager = new BattleManager(shipDatabase);
 
-        Player = Instantiate(playerPrefab);
-        Player.Init(homePlanet, FactionType.Human);
+        commandInvoker = new CommandInvoker();
+        entityFactory = new EntityFactory(mapGrid, entityViewPrefab, commandInvoker);
+
+        PlayerController player = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition);
+
+        //UI
+        actionsTabController = new ActionsTabController(actionsTabView, player);
+
+        playerInteractionController.Init(cameraController, mapGrid, actionsTabController);
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        Camera.main.transform.position =  new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
+        Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
+
+
     }
 
     private void GenerateSeed()

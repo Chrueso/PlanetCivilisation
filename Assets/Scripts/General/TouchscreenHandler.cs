@@ -33,10 +33,10 @@ public class TouchscreenHandler : MonoBehaviour
                 touch.phase);
             switch (touch.phase)
             {
-                case TouchPhase.Began: FingerDownCallback.Invoke(this, touchInfo); break;
-                case TouchPhase.Moved: FingerMoveCallback.Invoke(this, touchInfo); break;
-                case TouchPhase.Ended: FingerUpCallback.Invoke(this, touchInfo); break;
-                case TouchPhase.Stationary: FingerMoveCallback.Invoke(this, touchInfo); break;   
+                case TouchPhase.Began: FingerDownCallback?.Invoke(this, touchInfo); break;
+                case TouchPhase.Moved: FingerMoveCallback?.Invoke(this, touchInfo); break;
+                case TouchPhase.Ended: FingerUpCallback?.Invoke(this, touchInfo); break;
+                case TouchPhase.Stationary: FingerMoveCallback?.Invoke(this, touchInfo); break;   
             }
         }
     }
