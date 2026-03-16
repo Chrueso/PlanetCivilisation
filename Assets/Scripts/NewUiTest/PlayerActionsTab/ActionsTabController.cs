@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class ActionsTabController
+public class ActionsTabController : IUIMenuController
 {
     private ActionsTabView view;
     private PlayerController playerController;
@@ -16,14 +16,7 @@ public class ActionsTabController
         ConnectView();
     }
 
-    public void HandleHexSelected(GridHex selectedHex)
-    {
-        this.selectedHex = selectedHex;
-        view.UpdateCurrentHex(selectedHex);
-        GameScreenManager.Push(view);
-    }
-
-    private void ConnectView()
+    public void ConnectView()
     {
         view.CloseButton.onClick.AddListener(CloseView);
         view.MoveButton.onClick.AddListener(OnMoveButtonClicked);
@@ -33,10 +26,17 @@ public class ActionsTabController
         view.Init(playerController);
     }
 
-    private void CloseView()
+    public void CloseView()
     {
         GameScreenManager.Pop();
         OnViewClose?.Invoke();
+    }
+
+    public void HandleHexSelected(GridHex selectedHex)
+    {
+        this.selectedHex = selectedHex;
+        view.UpdateCurrentHex(selectedHex);
+        GameScreenManager.Push(view);
     }
 
     private void OnMoveButtonClicked()

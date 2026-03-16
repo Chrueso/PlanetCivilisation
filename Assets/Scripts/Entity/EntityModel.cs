@@ -9,8 +9,6 @@ public class EntityModel
     public List<PlanetData> OwnedPlanets { get; private set; } = new List<PlanetData>();
     public List<PlanetData> DiscoveredPlanets { get; private set; } = new List<PlanetData>();
     public PlanetData HomePlanet { get; private set; }
-
-    public event Action OnCurrentHexChanged;
     private GridHex currentHex;
     public GridHex CurrentHex
     {
@@ -23,9 +21,14 @@ public class EntityModel
     }
 
     public int MoveRadius { get; private set; }
-
     public float yValue { get; private set; }
 
+    public event Action OnResourcesChanged;
+    public event Action OnShipsChanged;
+    public event Action OnOwnedPlanetsChanged;
+    public event Action OnDiscoveredPlanetsChanged;
+    public event Action OnCurrentHexChanged;
+    
     public EntityModel(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30)
     {
         HomePlanet = homePlanet;
@@ -41,7 +44,14 @@ public class EntityModel
 
         MoveRadius = moveRadius;
         this.yValue = yValue;
+
+        OnResourcesChanged?.Invoke();
+        OnShipsChanged?.Invoke();
+        OnOwnedPlanetsChanged?.Invoke();
+        OnDiscoveredPlanetsChanged?.Invoke();
     }
+
+
 
     public void CalculateResourceGain()
     {
@@ -61,19 +71,38 @@ public class EntityModel
                 Ships[ShipType.Worker] += (1 + increment);
             }
         }
+
+        OnResourcesChanged?.Invoke();
     }
 
-    public void StationShips(Dictionary<ShipType, int> stationShips)
+    public void AddShips(ShipType shipType, int amount)
     {
-        foreach (var kvp in stationShips)
+        if (Ships.ContainsKey(shipType))
         {
-            if (this.Ships.ContainsKey(kvp.Key))
-            {
-                this.Ships[kvp.Key] -= kvp.Value;
-                continue;
-            }
-            this.Ships[kvp.Key] = kvp.Value;
+            Ships[shipType] += amount;
         }
+        else
+        {
+            Ships.Add(shipType, amount);
+        }
+
+        OnShipsChanged?.Invoke();
+    }
+
+    public void RemoveShips(ShipType shipType, int amount) 
+    {
+        if (Ships.ContainsKey(shipType))
+        {
+            Ships[shipType] -= amount;
+
+            if (Ships[shipType] <= 0)
+            {
+                Ships[shipType] = 0;
+            }
+
+            OnShipsChanged?.Invoke();
+        }
+
     }
 
     public void AddPlanetDiscovery(PlanetData planet)
@@ -81,6 +110,8 @@ public class EntityModel
         if (!DiscoveredPlanets.Contains(planet))
         {
             DiscoveredPlanets.Add(planet);
+            OnDiscoveredPlanetsChanged?.Invoke();
+
         }
     }
 
@@ -89,6 +120,7 @@ public class EntityModel
         if (!OwnedPlanets.Contains(planet))
         {
             OwnedPlanets.Add(planet);
+            OnOwnedPlanetsChanged?.Invoke();
         }
     }
 
@@ -97,6 +129,7 @@ public class EntityModel
         if (OwnedPlanets.Contains(planet))
         {
             OwnedPlanets.Remove(planet);
+            OnOwnedPlanetsChanged?.Invoke();
         }
     }
 
@@ -105,6 +138,7 @@ public class EntityModel
         if (Resources.TryGetValue(resource, out int amount))
         {
             Resources[resource] = amount - 1;
+            OnResourcesChanged?.Invoke();
         }
     }
     public void GainResource(ResourceType resource)
@@ -112,6 +146,7 @@ public class EntityModel
         if (Resources.TryGetValue(resource, out int amount))
         {
             Resources[resource] = amount + 1;
+            OnResourcesChanged?.Invoke();
         }
     }
 }

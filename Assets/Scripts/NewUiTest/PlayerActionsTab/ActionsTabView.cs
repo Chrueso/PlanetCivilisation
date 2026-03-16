@@ -17,11 +17,11 @@ public class ActionsTabView : ScreenBase
     public TMP_Text hexOccupantText;
 
     private GridHex selectedHex;
-    private PlayerController player;
+    private PlayerController playerController;
 
     public void Init(PlayerController playerController)
     {
-        this.player = playerController;
+        this.playerController = playerController;
     }
 
     public void UpdateCurrentHex(GridHex selectedHex)
@@ -31,12 +31,12 @@ public class ActionsTabView : ScreenBase
 
     public void HandleButtons()
     {
-        if (selectedHex == null || player == null) return;
+        if (selectedHex == null || playerController == null) return;
 
         HideAllButtons();
 
-        bool isCurrentHex = selectedHex == player.CurrentHex;
-        bool inMoveRange = player.HexesInMoveRadius.Contains(selectedHex);
+        bool isCurrentHex = selectedHex == playerController.CurrentHex;
+        bool inMoveRange = playerController.HexesInMoveRadius.Contains(selectedHex);
 
         // Move — not current hex and in range
         if (!isCurrentHex && inMoveRange)
@@ -51,7 +51,7 @@ public class ActionsTabView : ScreenBase
         // Not on current hex — only info
         if (!isCurrentHex) return;
 
-        bool isOwnedByMe = planet.FactionType == player.Faction;
+        bool isOwnedByMe = planet.FactionType == playerController.Faction;
         bool isOwnedByEnemy = planet.FactionType != FactionType.Nothing && !isOwnedByMe;
         bool isUninhabited = planet.FactionType == FactionType.Nothing;
 

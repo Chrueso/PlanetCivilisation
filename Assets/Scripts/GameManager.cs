@@ -56,10 +56,10 @@ public class GameManager : Singleton<GameManager> //CHANGE!
         commandInvoker = new CommandInvoker();
         entityFactory = new EntityFactory(mapGrid, entityViewPrefab, commandInvoker);
 
-        PlayerController player = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition);
+        PlayerController playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition);
 
         //UI
-        actionsTabController = new ActionsTabController(actionsTabView, player);
+        actionsTabController = new ActionsTabController(actionsTabView, playerController);
 
         playerInteractionController.Init(cameraController, mapGrid, actionsTabController);
 
