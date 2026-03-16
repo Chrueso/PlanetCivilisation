@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class SimpleScreenController : MonoBehaviour
 {
-    private readonly Stack<ScreenBase> screens = new();
+    private readonly List<ScreenBase> screens = new();
 
     // The first screen to show, MUST NOT BE NULL
     [SerializeField] private ScreenBase startingScreen;
@@ -33,12 +33,12 @@ public class SimpleScreenController : MonoBehaviour
         // add new screen to end of collection
         // show the new screen, respecting 'instant'
 
-        if (screens.Count > 0 && screens.Peek() != null)
+        if (screens.Count > 0 && screens[^1] != null) // [^1] is last item of array
         {
-            screens.Peek().Unfocus();
+            screens[^1].Unfocus();
         }
 
-        screens.Push(newScreen);
+        screens.Add(newScreen);
 
         newScreen.Show(instant);
     }
@@ -49,20 +49,18 @@ public class SimpleScreenController : MonoBehaviour
         // remove current screen from end of collection
         // focus previous screen
 
-        // hide current screen if there is one
-        if (screens.Count > 0 && screens.Peek() != null)
+        if (screens.Count > 0 && screens[^1] != null) // [^1] is last item of array
         {
-            screens.Peek().Hide(instant);
+            screens[^1].Hide(instant);
         }
 
         // remove current screen
-        if (screens.Count > 0)
-            screens.Pop();
+        if (screens.Count > 0) screens.RemoveAt(screens.Count - 1);
 
         // focus previous screen only if one exists
-        if (screens.Count > 0 && screens.Peek() != null)
+        if (screens.Count > 0 && screens[^1] != null)
         {
-            screens.Peek().Focus();
+            screens[^1].Focus();
         }
     }
 
@@ -76,7 +74,7 @@ public class SimpleScreenController : MonoBehaviour
 
         if (backAction.WasPerformedThisFrame() && screens.Count > 1)
         {
-            if (screens.Peek().ShouldHonorBackButton())
+            if (screens[^1].ShouldHonorBackButton())
             {
                 Pop(true);
             }
@@ -84,7 +82,13 @@ public class SimpleScreenController : MonoBehaviour
 
     }
 
+    public bool IsTopScreen(ScreenBase screen)
+    {
+        return screens.Count > 0 && screens[^1] == screen;
+    }
+
 #if UNITY_EDITOR
+
     private void OnGUI()
     {
         GUIStyle fontStyle = new GUIStyle();
@@ -95,22 +99,20 @@ public class SimpleScreenController : MonoBehaviour
 
         GUILayout.Label("SimpleScreenManager [Editor DebugView]", fontStyle);
         GUILayout.Label("Screens:", fontStyle);
-
-        int i = 0;
-        foreach (var screen in screens)
+        for (int i = 0; i < screens.Count; i++)
         {
-            bool isTop = i == 0; // first item in stack enumeration = top
-            fontStyle.normal.textColor = isTop ? Color.green : Color.white;
+            bool isLast = i == screens.Count - 1;
+            fontStyle.normal.textColor = isLast ? Color.green : Color.white;
 
+            var screen = screens[i];
             GUILayout.BeginHorizontal();
             GUILayout.Space(20);
-            GUILayout.Label($"[{i}] {screen.name} {(isTop ? "<--" : "")}", fontStyle);
+            GUILayout.Label($"[{i}] {screen.name} {(isLast ? "<--" : "")}", fontStyle);
             GUILayout.EndHorizontal();
-
-            i++;
         }
 
         GUILayout.EndVertical();
     }
+
 #endif
 }

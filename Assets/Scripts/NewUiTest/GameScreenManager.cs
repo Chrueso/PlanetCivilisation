@@ -32,4 +32,12 @@ public static class GameScreenManager //Service locator for simple screen contro
         }
         current.Pop();
     }
+
+    public static bool IsTopScreen(ScreenBase screen)
+    {
+        if (current == null)
+            return false;
+
+        return current.IsTopScreen(screen);
+    }
 }

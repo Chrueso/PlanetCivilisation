@@ -18,7 +18,11 @@ public class ActionsTabController
 
     public void HandleHexSelected(GridHex selectedHex)
     {
-        GameScreenManager.Pop();
+        if (GameScreenManager.IsTopScreen(view))
+        {
+            GameScreenManager.Pop();
+        }
+
         this.selectedHex = selectedHex;
         view.UpdateCurrentHex(selectedHex);
         GameScreenManager.Push(view);
