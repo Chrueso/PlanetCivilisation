@@ -33,13 +33,29 @@ public class SimpleScreenController : MonoBehaviour
         // add new screen to end of collection
         // show the new screen, respecting 'instant'
 
-        if (screens.Count > 0 && screens[^1] != null) // [^1] is last item of array
+        // If already top screen call show and return
+        if (screens.Count > 0 && screens[^1] == newScreen)
+        {
+            newScreen.Show(instant);
+            return;
+        }
+
+        // If screen exists somewhere in stack and u want to push it remove old screen
+        if (screens.Contains(newScreen))
+        {
+            screens.Remove(newScreen);
+        }
+
+        // Unfocus current top screen
+        if (screens.Count > 0)
         {
             screens[^1].Unfocus();
         }
 
+        // Push new screen
         screens.Add(newScreen);
 
+        // Show it
         newScreen.Show(instant);
     }
 
@@ -80,11 +96,6 @@ public class SimpleScreenController : MonoBehaviour
             }
         }
 
-    }
-
-    public bool IsTopScreen(ScreenBase screen)
-    {
-        return screens.Count > 0 && screens[^1] == screen;
     }
 
 #if UNITY_EDITOR

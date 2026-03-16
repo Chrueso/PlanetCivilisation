@@ -93,7 +93,6 @@ public class ActionsTabView : ScreenBase
 
     protected override void OnShow()
     {
-        Debug.Log(player.HexesInMoveRadius.Count);
         HandleText();
         HandleButtons();
     }
