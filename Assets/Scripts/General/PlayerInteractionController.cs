@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using UnityEngine.EventSystems;
 
 public class PlayerInteractionController : MonoBehaviour
@@ -7,22 +8,23 @@ public class PlayerInteractionController : MonoBehaviour
     private Camera cam;
     private MapGrid mapGrid;
     private GridHex selectedHex;
-    private ActionsTabController actionsTabController;
+
+    public static event Action<GridHex> OnHexSelected;
 
     private void OnDisable()
     {
         TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
+        ActionsTabController.OnViewClose -= UnselectHex;
     }
 
-    public void Init(CameraController cameraController, MapGrid mapGrid, ActionsTabController actionsTabController)
+    public void Init(CameraController cameraController, MapGrid mapGrid)
     {
         this.cameraController = cameraController;
         cam = cameraController.CameraInstance;
         this.mapGrid = mapGrid;
-        this.actionsTabController = actionsTabController; //I need this cause they depennd too much on each other
 
         TouchscreenHandler.FingerUpCallback += OnSelectGrid;
-        actionsTabController.OnViewClose += UnselectHex;
+        ActionsTabController.OnViewClose += UnselectHex;
     }
 
     private void OnSelectGrid(object sender, TouchInfo touchInfo)
@@ -45,7 +47,7 @@ public class PlayerInteractionController : MonoBehaviour
                 selectedHex = hex;
                 selectedHex.GridHexVisual.OnSelected();
 
-                actionsTabController.HandleHexSelected(selectedHex);
+                OnHexSelected?.Invoke(selectedHex);
 
                 //cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
                 //PlayerCam.Disable();

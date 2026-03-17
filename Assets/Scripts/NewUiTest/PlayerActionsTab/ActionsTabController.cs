@@ -1,4 +1,3 @@
-using UnityEngine;
 using System;
 
 public class ActionsTabController : IUIMenuController
@@ -6,13 +5,15 @@ public class ActionsTabController : IUIMenuController
     private ActionsTabView view;
     private PlayerController playerController;
     private GridHex selectedHex;
-    public event Action OnViewClose;
+
+    public static event Action OnViewClose;
 
     public ActionsTabController(ActionsTabView view, PlayerController playerController)
     {
         this.view = view;
         this.playerController = playerController;
 
+        PlayerInteractionController.OnHexSelected += HandleHexSelected;
         ConnectView();
     }
 

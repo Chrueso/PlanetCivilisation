@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager> //CHANGE!
+public class GameManager : Singleton<GameManager> 
 {
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
@@ -61,7 +61,7 @@ public class GameManager : Singleton<GameManager> //CHANGE!
         //UI
         actionsTabController = new ActionsTabController(actionsTabView, playerController);
 
-        playerInteractionController.Init(cameraController, mapGrid, actionsTabController);
+        playerInteractionController.Init(cameraController, mapGrid);
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
         Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
