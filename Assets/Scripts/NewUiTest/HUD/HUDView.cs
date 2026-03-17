@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine;
 
 public class HUDView : ScreenBase
 {
@@ -16,7 +17,15 @@ public class HUDView : ScreenBase
 
     public FactionWidget FactionWidget;
 
+    private List<Sprite> resourceIcons;
+    private ResourcesWidget resourceWidgetPrefab;
+
     public List<ResourcesWidget> ResourcesWidgets;
+
+    public void HandleResources()
+    {
+        
+    }
 
     public void UpdateFaction(FactionType faction)
     {

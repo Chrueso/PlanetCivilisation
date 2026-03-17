@@ -54,7 +54,8 @@ public class ActionsTabController : IUIMenuController
         {
             if (playerController.TryColonize(planet))
             {
-                CloseView();
+                //CloseView();
+                view.Show(true); // updates after colonize
             }
         }
     }

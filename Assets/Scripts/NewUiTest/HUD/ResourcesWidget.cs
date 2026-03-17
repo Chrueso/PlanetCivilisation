@@ -8,6 +8,8 @@ public class ResourcesWidget : MonoBehaviour, IHoverable
     [SerializeField] public TMP_Text amountText;
     [SerializeField] private GameObject hoverVisual;
 
+    [SerializeField] ResourceType resourceType;
+
     public void OnHover()
     {
         //do something later
