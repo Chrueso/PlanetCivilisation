@@ -5,13 +5,9 @@ public class HUDController : IUIMenuController
 {
     private HUDView view;
     private EntityModel playerModel;
+    CameraController cameraController;
 
-    public static event Action OnSettingsButtonsClicked;
-    public static event Action OnPlanetListButtonClicked;
-    public static event Action<Vector3> OnHomeShipButtonClicked;
-    public static event Action OnEndTurnButtonClicked;
-
-    public HUDController(HUDView view, EntityModel playerModel) //Needs model when model resources update then this updates
+    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController) //Needs model when model resources update then this updates
     {
         this.view = view;
         this.playerModel = playerModel;
@@ -29,6 +25,8 @@ public class HUDController : IUIMenuController
         playerModel.OnResourcesChanged += HandleResourcesChanged;
 
         view.UpdateFaction(playerModel.FactionType);
+        view.HandleResources();
+        view.UpdateResources(playerModel.Resources);
     }
 
     public void CloseView()
@@ -38,22 +36,22 @@ public class HUDController : IUIMenuController
 
     private void HandleSettingsButtonClicked()
     {
-        OnSettingsButtonsClicked?.Invoke();
+       
     }
 
     private void HandlePlanetListButtonClicked()
     {
-        OnPlanetListButtonClicked?.Invoke();
+        
     }
 
     private void HandleHomeShipButtonClicked()
     {
-        OnHomeShipButtonClicked?.Invoke(playerModel.CurrentHex.WorldPosition);
+        cameraController.CenterToHomeShip(playerModel.CurrentHex.WorldPosition);
     }
 
     private void HandleEndTurnButtonClicked()
     {
-        OnEndTurnButtonClicked?.Invoke();
+        
     }
 
     private void HandleResourcesChanged()

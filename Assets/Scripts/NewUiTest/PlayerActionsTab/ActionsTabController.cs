@@ -3,34 +3,48 @@ using System;
 public class ActionsTabController : IUIMenuController
 {
     private ActionsTabView view;
+    private InfoMenuController infoMenuController;
     private PlayerController playerController;
+    private PlayerInteractionController playerInteractionController;
     private GridHex selectedHex;
 
-    public static event Action OnViewClose;
-
-    public ActionsTabController(ActionsTabView view, PlayerController playerController)
+    public ActionsTabController(ActionsTabView view, InfoMenuController infoMenuController, PlayerController playerController, PlayerInteractionController playerInteractionController)
     {
         this.view = view;
-        this.playerController = playerController;
 
-        PlayerInteractionController.OnHexSelected += HandleHexSelected;
+        this.infoMenuController = infoMenuController;
+        this.playerController = playerController;
+        this.playerInteractionController = playerInteractionController;
+
+        playerInteractionController.OnHexSelected += HandleHexSelected;
         ConnectView();
     }
 
     public void ConnectView()
     {
-        view.CloseButton.onClick.AddListener(CloseView);
-        view.MoveButton.onClick.AddListener(HandleMoveButtonClicked);
-        view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
-        view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
-
         view.Init(playerController);
+
+        view.CloseButton.onClick.AddListener(CloseView);
+        view.InfoButton.onClick.AddListener(HandleInfoButtonClicked);
+        view.MoveButton.onClick.AddListener(HandleMoveButtonClicked);
+        view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
+        view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
+        view.DiplomacyButton.onClick.AddListener(HandleDiplomacyButtonClicked);
+        view.BuildStructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
     }
 
     public void CloseView()
     {
         GameScreenManager.Pop();
-        OnViewClose?.Invoke();
+        playerInteractionController.UnselectHex();
+    }
+
+    public void HandleInfoButtonClicked()
+    {
+        if (selectedHex.Occupant != null)
+        {
+            infoMenuController.ShowInfo(selectedHex.Occupant);
+        }
     }
 
     public void HandleHexSelected(GridHex selectedHex)
@@ -72,6 +86,15 @@ public class ActionsTabController : IUIMenuController
 
     }
 
+    private void HandleDiplomacyButtonClicked()
+    {
+
+    }
+
+    private void HandleBuildStructuresButtonClicked()
+    {
+
+    }
     
     
 }

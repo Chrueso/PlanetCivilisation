@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager>
     //[SerializeField] private DiplomacySystem diplomacySystem;
 
     [Header("UI")]
+    [SerializeField] private InfoMenuView infoMenuView;
     [SerializeField] private ActionsTabView actionsTabView;
     [SerializeField] private HUDView hudView;
 
@@ -32,6 +33,7 @@ public class GameManager : Singleton<GameManager>
     private BattleManager battleManager;
     private CommandInvoker commandInvoker;
     private EntityFactory entityFactory;
+    private InfoMenuController infoMenuController;
     private ActionsTabController actionsTabController;
     private HUDController hudController;
 
@@ -58,13 +60,16 @@ public class GameManager : Singleton<GameManager>
         commandInvoker = new CommandInvoker();
         entityFactory = new EntityFactory(mapGrid, entityViewPrefab, commandInvoker);
 
+        playerInteractionController.Init(cameraController, mapGrid);
+
         PlayerController playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
             out EntityModel playerModel, out EntityView playerView);
 
         //UI
-        actionsTabController = new ActionsTabController(actionsTabView, playerController);
-        hudController = new HUDController(hudView, playerModel);    
-        playerInteractionController.Init(cameraController, mapGrid);
+        infoMenuController = new InfoMenuController(infoMenuView);
+        actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
+        hudController = new HUDController(hudView, playerModel, cameraController);    
+       
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
         Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);

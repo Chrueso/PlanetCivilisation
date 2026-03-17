@@ -9,12 +9,11 @@ public class PlayerInteractionController : MonoBehaviour
     private MapGrid mapGrid;
     private GridHex selectedHex;
 
-    public static event Action<GridHex> OnHexSelected;
+    public event Action<GridHex> OnHexSelected;
 
     private void OnDisable()
     {
         TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
-        ActionsTabController.OnViewClose -= UnselectHex;
     }
 
     public void Init(CameraController cameraController, MapGrid mapGrid)
@@ -24,7 +23,6 @@ public class PlayerInteractionController : MonoBehaviour
         this.mapGrid = mapGrid;
 
         TouchscreenHandler.FingerUpCallback += OnSelectGrid;
-        ActionsTabController.OnViewClose += UnselectHex;
     }
 
     private void OnSelectGrid(object sender, TouchInfo touchInfo)
@@ -60,7 +58,7 @@ public class PlayerInteractionController : MonoBehaviour
         }
     }
 
-    private void UnselectHex()
+    public void UnselectHex()
     {
         if (selectedHex != null)
         {

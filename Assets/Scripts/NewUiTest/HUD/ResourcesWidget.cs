@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class ResourcesWidget : MonoBehaviour, IHoverable
 {
-    [SerializeField] private Image icon;
-    [SerializeField] public TMP_Text amountText;
-    [SerializeField] private GameObject hoverVisual;
+    public Image Icon;
+    public TMP_Text AmountText;
+    public GameObject HoverVisual;
 
-    [SerializeField] ResourceType resourceType;
+    public ResourceType ResourceType;
 
     public void OnHover()
     {
