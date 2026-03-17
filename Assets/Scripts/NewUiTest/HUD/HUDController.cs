@@ -7,7 +7,7 @@ public class HUDController : IUIMenuController
 
     public static event Action OnSettingsButtonsClicked;
     public static event Action OnPlanetListButtonClicked;
-    public static event Action OnHomeShipButtonClicked;
+    public static event Action<GridHex> OnHomeShipButtonClicked;
     public static event Action OnEndTurnButtonClicked;
 
     public HUDController(HUDView view, EntityModel playerModel) //Needs model when model resources update then this updates
@@ -47,7 +47,7 @@ public class HUDController : IUIMenuController
 
     private void HandleHomeShipButtonClicked()
     {
-        OnHomeShipButtonClicked?.Invoke();
+        OnHomeShipButtonClicked?.Invoke(playerModel.CurrentHex);
     }
 
     private void HandleEndTurnButtonClicked()

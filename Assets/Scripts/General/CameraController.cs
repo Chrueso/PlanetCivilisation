@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour
     {
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
+        HUDController.OnHomeShipButtonClicked += CenterToHomeShip;
     }
 
     private void OnEnable()
@@ -104,6 +105,11 @@ public class CameraController : MonoBehaviour
         if (waitForReset) waitForReset = false;
     }
     #endregion
+
+    public void CenterToHomeShip(GridHex hex)
+    {
+        CameraInstance.transform.position = new Vector3(hex.WorldPosition.x, CameraInstance.transform.position.y , hex.WorldPosition.z);
+    }
 
     private void DisableMovement()
     {
