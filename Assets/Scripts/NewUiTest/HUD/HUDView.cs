@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class HUDView : ScreenBase
 {
+    public override bool ShouldHonorBackButton => false;
+    public override bool ShouldUnfocusPrevScreen => false;
+
     public Button SettingsButton;
     public Button PlanetListButton;
     public Button HomeShipButton;

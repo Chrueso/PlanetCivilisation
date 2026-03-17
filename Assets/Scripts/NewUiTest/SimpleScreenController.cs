@@ -46,8 +46,8 @@ public class SimpleScreenController : MonoBehaviour
             screens.Remove(newScreen);
         }
 
-        // Unfocus current top screen
-        if (screens.Count > 0)
+        // Unfocus current top screen only if new screen says so
+        if (screens.Count > 0 && newScreen.ShouldUnfocusPrevScreen)
         {
             screens[^1].Unfocus();
         }
@@ -90,7 +90,7 @@ public class SimpleScreenController : MonoBehaviour
 
         if (backAction.WasPerformedThisFrame() && screens.Count > 1)
         {
-            if (screens[^1].ShouldHonorBackButton())
+            if (screens[^1].ShouldHonorBackButton)
             {
                 Pop(true);
             }

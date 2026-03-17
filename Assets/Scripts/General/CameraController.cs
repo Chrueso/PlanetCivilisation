@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
@@ -106,10 +103,9 @@ public class CameraController : MonoBehaviour
     }
     #endregion
 
-    public void CenterToHomeShip(GridHex hex)
+    public void CenterToHomeShip(Vector3 position)
     {
-        Debug.Log(hex.WorldPosition);
-        Camera.main.transform.position = new Vector3(hex.WorldPosition.x, Camera.main.transform.position.y , hex.WorldPosition.z);
+        Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y , position.z);
     }
 
     private void DisableMovement()

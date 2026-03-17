@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class HUDController : IUIMenuController
 {
@@ -7,7 +8,7 @@ public class HUDController : IUIMenuController
 
     public static event Action OnSettingsButtonsClicked;
     public static event Action OnPlanetListButtonClicked;
-    public static event Action<GridHex> OnHomeShipButtonClicked;
+    public static event Action<Vector3> OnHomeShipButtonClicked;
     public static event Action OnEndTurnButtonClicked;
 
     public HUDController(HUDView view, EntityModel playerModel) //Needs model when model resources update then this updates
@@ -47,7 +48,7 @@ public class HUDController : IUIMenuController
 
     private void HandleHomeShipButtonClicked()
     {
-        OnHomeShipButtonClicked?.Invoke(playerModel.CurrentHex);
+        OnHomeShipButtonClicked?.Invoke(playerModel.CurrentHex.WorldPosition);
     }
 
     private void HandleEndTurnButtonClicked()

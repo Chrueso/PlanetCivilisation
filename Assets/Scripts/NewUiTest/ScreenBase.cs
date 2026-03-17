@@ -21,6 +21,14 @@ public class ScreenBase : MonoBehaviour
 
     protected CanvasGroup CanvasGroup => group;
 
+    // Whether this screen listens to back button
+    // override and return false if unwanted
+    // e.g. forced answer confirmation pop up
+    public virtual bool ShouldHonorBackButton => true;
+
+    // Unfocuses previously open screen if this is true
+    public virtual bool ShouldUnfocusPrevScreen => true;
+
     private void Awake()
     {
         canvas = GetComponent<Canvas>();
@@ -28,14 +36,6 @@ public class ScreenBase : MonoBehaviour
 
         canvas.enabled = false;
         group.interactable = false;
-    }
-
-    // Whether this screen listens to back button
-    // override and return false if unwanted
-    // e.g. forced answer confirmation pop up
-    public virtual bool ShouldHonorBackButton()
-    {
-        return true;
     }
 
     // To be called by SimpleScreenManager

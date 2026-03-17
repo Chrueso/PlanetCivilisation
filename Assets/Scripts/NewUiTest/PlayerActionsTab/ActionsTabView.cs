@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class ActionsTabView : ScreenBase
 {
+    public override bool ShouldHonorBackButton => false;
+    public override bool ShouldUnfocusPrevScreen => false;
+
     public Button InfoButton;
     public Button MoveButton;
     public Button ColonizeButton;
