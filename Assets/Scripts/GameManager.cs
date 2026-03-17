@@ -1,33 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager> 
 {
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
 
-    [SerializeField] MapSettings mapSettings;
-    [SerializeField] private Player playerPrefab;
-    [SerializeField] private DiplomacySystem diplomacySystem;
-    public DiplomacySystem DiplomacyInstance => diplomacySystem;
-
     public System.Random SeedRNG;
 
-    PlanetGenerator planetGenerator;
-    MapGenerator mapGenerator;
-    BattleManager battleManager;
+    [Header("Settings")]
+    [SerializeField] private MapSettings mapSettings;
+    [SerializeField] private ShipDatabaseSO shipDatabase;
 
     public TurnManager turnManager { get; private set; }
 
-    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
+    [Header("Prefabs")]
     [SerializeField] private GameObject planetPrefab;
+    [SerializeField] private EntityView entityViewPrefab;
+    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
 
-    [SerializeField] CameraController cameraController;
+    [Header("Controllers")]
+    [SerializeField] private CameraController cameraController;
+    [SerializeField] private PlayerInteractionController playerInteractionController;
+    //[SerializeField] private DiplomacySystem diplomacySystem;
 
+    [Header("UI")]
+    [SerializeField] private InfoMenuView infoMenuView;
+    [SerializeField] private ActionsTabView actionsTabView;
+    [SerializeField] private HUDView hudView;
+
+    // runtime
+    private PlanetGenerator planetGenerator;
+    private MapGenerator mapGenerator;
+    private BattleManager battleManager;
+    private CommandInvoker commandInvoker;
+    private EntityFactory entityFactory;
+    private InfoMenuController infoMenuController;
+    private ActionsTabController actionsTabController;
+    private HUDController hudController;
+
+    //TO CHANGE
+    //public DiplomacySystem DiplomacyInstance => diplomacySystem;
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
 
-    [SerializeField] private ShipDatabaseSO ShipDatabaseSO;
     [SerializeField] private FactionManager factionManagerRef;
 
     protected override void Awake()
@@ -36,19 +52,34 @@ public class GameManager : Singleton<GameManager>
 
         GenerateSeed();
 
+        cameraController.Init();
+
         planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(mapSettings, planetGenerator);
         mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
         MapGrid = mapGrid;
 
-        battleManager = new BattleManager(ShipDatabaseSO);
         turnManager = new TurnManager(factionManagerRef);
+        battleManager = new BattleManager(shipDatabase);
 
-        Player = Instantiate(playerPrefab);
-        Player.Init(homePlanet, FactionType.Human);
+        commandInvoker = new CommandInvoker();
+        entityFactory = new EntityFactory(mapGrid, entityViewPrefab, commandInvoker);
+
+        playerInteractionController.Init(cameraController, mapGrid);
+
+        PlayerController playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
+            out EntityModel playerModel, out EntityView playerView);
+
+        //UI
+        infoMenuController = new InfoMenuController(infoMenuView);
+        actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
+        hudController = new HUDController(hudView, playerModel, cameraController);    
+       
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        Camera.main.transform.position =  new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
+        Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
+
+
     }
 
     private void Start()

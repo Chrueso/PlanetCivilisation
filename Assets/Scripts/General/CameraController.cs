@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
@@ -20,13 +17,13 @@ public class CameraController : MonoBehaviour
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    private void Awake()
+    public void Init()
     {
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         #region ORTHO EVENTS
         // 90 degree orthographic implementation
@@ -104,6 +101,11 @@ public class CameraController : MonoBehaviour
         if (waitForReset) waitForReset = false;
     }
     #endregion
+
+    public void CenterToHomeShip(Vector3 position)
+    {
+        Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y , position.z);
+    }
 
     private void DisableMovement()
     {

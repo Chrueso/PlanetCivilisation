@@ -1,87 +1,70 @@
-using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
+using System;
 using UnityEngine.EventSystems;
 
 public class PlayerInteractionController : MonoBehaviour
 {
-    [SerializeField] private CameraController PlayerCam;
-    private Camera cameraInstance;
-    public bool inPlanet { get; set; }
-    private bool homeShipOnPlanet = true;
-    private float offset = 2f;
+    private CameraController cameraController;
+    private Camera cam;
+    private MapGrid mapGrid;
+    private GridHex selectedHex;
 
-    public PlanetData CurrentPlanet { get; private set; }
-    public GridHex CurrentGridHex { get; private set; }
+    public event Action<GridHex> OnHexSelected;
 
-    private void Start()
+    private void OnDisable()
     {
-        cameraInstance = Camera.main;
-        TouchscreenHandler.FingerUpCallback += SelectGrid;
+        TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
     }
 
-    private void SelectGrid(object sender, TouchInfo e)
+    public void Init(CameraController cameraController, MapGrid mapGrid)
     {
-        if (PlayerCam.CameraMoving) return;
-        if (CurrentGridHex != null)
-        {
-            CurrentGridHex.GridHexVisual.OnSelected();
-            CurrentGridHex = null;
-        }
-        Ray ray = cameraInstance.ScreenPointToRay(e.ScreenPos);
+        this.cameraController = cameraController;
+        cam = cameraController.CameraInstance;
+        this.mapGrid = mapGrid;
+
+        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
+    }
+
+    private void OnSelectGrid(object sender, TouchInfo touchInfo)
+    {
+        if (EventSystem.current.IsPointerOverGameObject(touchInfo.Current.touchId)) return;
+
+        if (mapGrid == null) return;
+        if (cameraController.CameraMoving) return;
+
+        UnselectHex();
+
+        Ray ray = cam.ScreenPointToRay(touchInfo.ScreenPos);
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            var grid = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
-            if (grid != null)
+            GridHex hex = mapGrid.Grid.GetGridObject(hit.point);
+
+            if (hex != null)
             {
-                grid.GridHexVisual.OnSelected();
-                CurrentGridHex = grid;
+                selectedHex = hex;
+                selectedHex.GridHexVisual.OnSelected();
 
-                var planetData = (PlanetData)grid.Occupant;
+                OnHexSelected?.Invoke(selectedHex);
 
-                if (planetData != null)
-                {
-                    CurrentPlanet = planetData;
-
-                    if (GameManager.Instance.Player.OwnedPlanets.Contains(planetData))
-                    {
-                        //UINavigationManager.Instance.ShowFriendlyPlanetSheet(planetData);
-                    } else if (GameManager.Instance.Player.DiscoveredPlanets.Contains(planetData))
-                    {
-                        //UINavigationManager.Instance.ShowEnemyPlanetSheet(planetData);
-                    } else
-                    {
-                        //UINavigationManager.Instance.ShowUnknownPlanetSheet(planetData);
-                    }
-
-                    cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
-                    PlayerCam.Disable();
-                } else
-                {
-                    PointerEventData pointerData = new(EventSystem.current);
-                    pointerData.position = e.ScreenPos;
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    EventSystem.current.RaycastAll(pointerData, results);
-                    if (results.Count <= 0)
-                    {
-                        //UINavigationManager.Instance.DismissAllSheets();
-                        PlayerCam.Enable();
-                    }
-                    
-                }
+                //cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
+                //PlayerCam.Disable();
             }
+            else
+            {
+                GameScreenManager.Pop();
+            }
+
         }
     }
 
-    private void FindPlanet(object sender, TouchInfo touchInfo)
+    public void UnselectHex()
     {
-        
-        
+        if (selectedHex != null)
+        {
+            selectedHex.GridHexVisual.OnSelected();
+            selectedHex = null;
+        }
     }
-
 }
 
-
-/*
- 
- */
