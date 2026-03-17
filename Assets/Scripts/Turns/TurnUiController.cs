@@ -5,12 +5,6 @@ using UnityEngine.UI;
 
 public class TurnUiController : MonoBehaviour
 {
-    //[SerializeField] UINavigationManager uINavigationManager;
-    //[SerializeField] private Button endTurnButton;
-    //[SerializeField] private TextMeshProUGUI turnDisplay;
-    //[SerializeField] private TextMeshProUGUI metalsDisplay;
-    //[SerializeField] private TextMeshProUGUI rationsDisplay;
-    //[SerializeField] private TextMeshProUGUI energyDisplay;
 
     private TurnManager turnManager;
 
@@ -35,10 +29,6 @@ public class TurnUiController : MonoBehaviour
         turnManager.OnTurnStart += HandleTurnStartUI;
         turnManager.OnTurnEnd += HandleTurnEndUI;
 
-        //if (endTurnButton != null)
-        //{
-        //    endTurnButton.onClick.AddListener(turnManager.EndTurn);
-        //}
     }
 
     private void HandleTurnStartUI()
@@ -50,7 +40,7 @@ public class TurnUiController : MonoBehaviour
     private void HandleTurnEndUI()
     {
         StartCoroutine(UpdateResourceTimer());
-        //uINavigationManager.SetHomeShipButton(false);
+        
     }
 
     private IEnumerator UpdateResourceTimer()
@@ -62,26 +52,13 @@ public class TurnUiController : MonoBehaviour
     //js get rid of ts once the ui is fixed
     private void UpdateResourceVisuals()
     {
-        //metalsDisplay.text = $"METALS: {GameManager.Instance.Player.Resources[ResourceType.Metals]}";
-        //rationsDisplay.text = $"RATIONS: {GameManager.Instance.Player.Resources[ResourceType.Rations]}";
-        //energyDisplay.text = $"ENERGY: {GameManager.Instance.Player.Resources[ResourceType.Credits]}";
+       
     }
 
     //js get rid of ts once the ui is fixed
     private void idk()
     {
-        //switch(turnManager.currentFaction.FactionType)
-        //{
-        //    case FactionType.Human:
-        //        turnDisplay.text = "HUMAN";
-        //        break;
-        //    case FactionType.DemiHuman:
-        //        turnDisplay.text = "DEMIHUMAN";
-        //        break;
-        //    case FactionType.IntelligentConstruct:
-        //        turnDisplay.text = "INTELLIGENT CONSTRUCT";
-        //        break;
-        //}
+        
     }
 
 
