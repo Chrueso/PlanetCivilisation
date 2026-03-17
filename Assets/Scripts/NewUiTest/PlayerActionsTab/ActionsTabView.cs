@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class ActionsTabView : ScreenBase
@@ -13,8 +12,8 @@ public class ActionsTabView : ScreenBase
 
     public Button CloseButton;
 
-    public TMP_Text hexText;
     public TMP_Text hexOccupantText;
+    public TMP_Text additionalInfoText;
 
     private GridHex selectedHex;
     private PlayerController playerController;
@@ -75,20 +74,30 @@ public class ActionsTabView : ScreenBase
     {
         if (selectedHex == null) return;
 
-        hexText.text = $"Hex {selectedHex.GridPosition.x},{selectedHex.GridPosition.y}";
-  
+        hexOccupantText.text = $"Empty hex";
+        additionalInfoText.text = "";
+
         if (selectedHex.Occupant != null)
         {
             if (selectedHex.Occupant is PlanetData planet)
             {
                 hexOccupantText.text = planet.PlanetName;
+
+                if (planet.FactionType == FactionType.Nothing)
+                {
+                    additionalInfoText.text = "Uninhabited";
+                }
+                else
+                {
+                    additionalInfoText.text = $"Colonized by {planet.FactionType}";
+
+                    if (planet.FactionType == playerController.Faction)
+                    {
+                        additionalInfoText.text = $"Colonized by {planet.FactionType} (You)";
+                    }
+                }
             }
         }
-        else
-        {
-            hexOccupantText.text = "";
-        }
-
     }
 
     protected override void OnShow()
