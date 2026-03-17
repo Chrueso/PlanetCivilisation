@@ -39,19 +39,19 @@ public class ActionsTabController : IUIMenuController
         playerInteractionController.UnselectHex();
     }
 
+    public void HandleHexSelected(GridHex selectedHex)
+    {
+        this.selectedHex = selectedHex;
+        view.UpdateCurrentHex(selectedHex);
+        GameScreenManager.Push(view);
+    }
+
     public void HandleInfoButtonClicked()
     {
         if (selectedHex.Occupant != null)
         {
             infoMenuController.ShowInfo(selectedHex.Occupant);
         }
-    }
-
-    public void HandleHexSelected(GridHex selectedHex)
-    {
-        this.selectedHex = selectedHex;
-        view.UpdateCurrentHex(selectedHex);
-        GameScreenManager.Push(view);
     }
 
     private void HandleMoveButtonClicked()

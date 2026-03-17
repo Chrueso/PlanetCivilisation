@@ -11,6 +11,7 @@ public class HUDController : IUIMenuController
     {
         this.view = view;
         this.playerModel = playerModel;
+        this.cameraController = cameraController;
 
         ConnectView();
     }
