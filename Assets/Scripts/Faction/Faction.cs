@@ -33,7 +33,7 @@ public class Faction
         }
     }
 
-    public void BeginTurn()
+    public void BeginTurn(TurnManager turnManager)
     {
         ActionPoints = maxActionPoints;
         Debug.Log($"{FactionType} starts turn with {ActionPoints} AP");
