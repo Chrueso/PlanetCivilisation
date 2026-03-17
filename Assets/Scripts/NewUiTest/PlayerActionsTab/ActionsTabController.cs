@@ -20,9 +20,9 @@ public class ActionsTabController : IUIMenuController
     public void ConnectView()
     {
         view.CloseButton.onClick.AddListener(CloseView);
-        view.MoveButton.onClick.AddListener(OnMoveButtonClicked);
-        view.AttackButton.onClick.AddListener(OnAttackButtonClicked);
-        view.ColonizeButton.onClick.AddListener(OnColonizeButtonClicked);
+        view.MoveButton.onClick.AddListener(HandleMoveButtonClicked);
+        view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
+        view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
 
         view.Init(playerController);
     }
@@ -40,7 +40,7 @@ public class ActionsTabController : IUIMenuController
         GameScreenManager.Push(view);
     }
 
-    private void OnMoveButtonClicked()
+    private void HandleMoveButtonClicked()
     {
         if (playerController.TryMove(selectedHex))
         {
@@ -48,7 +48,7 @@ public class ActionsTabController : IUIMenuController
         }
     }
 
-    private void OnColonizeButtonClicked()
+    private void HandleColonizeButtonClicked()
     {
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
@@ -59,7 +59,7 @@ public class ActionsTabController : IUIMenuController
         }
     }
 
-    private void OnAttackButtonClicked()
+    private void HandleAttackButtonClicked()
     {
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {

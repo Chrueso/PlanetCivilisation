@@ -22,7 +22,7 @@ public class HUDView : ScreenBase
 
     public void UpdateResources(Dictionary<ResourceType, int> resources)
     {
-
+        
     }
 
 }

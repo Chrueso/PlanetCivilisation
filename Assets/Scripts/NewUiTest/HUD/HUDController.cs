@@ -1,10 +1,14 @@
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+using System;
 
 public class HUDController : IUIMenuController
 {
     private HUDView view;
     private EntityModel playerModel;
+
+    public static event Action OnSettingsButtonsClicked;
+    public static event Action OnPlanetListButtonClicked;
+    public static event Action OnHomeShipButtonClicked;
+    public static event Action OnEndTurnButtonClicked;
 
     public HUDController(HUDView view, EntityModel playerModel) //Needs model when model resources update then this updates
     {
@@ -16,10 +20,10 @@ public class HUDController : IUIMenuController
 
     public void ConnectView()
     {
-        view.SettingsButton.onClick.AddListener(OnSettingsButtonClicked);
-        view.PlanetListButton.onClick.AddListener(OnPlanetListButtonClicked);
-        view.HomeShipButton.onClick.AddListener(OnHomeShipButtonClicked);
-        view.EndTurnButton.onClick.AddListener(OnEndTurnButtonClicked);
+        view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
+        view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
+        view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
+        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
 
         playerModel.OnResourcesChanged += HandleResourcesChanged;
 
@@ -31,24 +35,24 @@ public class HUDController : IUIMenuController
        //Should u be able to close hud idk???
     }
 
-    private void OnSettingsButtonClicked()
+    private void HandleSettingsButtonClicked()
     {
-        // open settings view or maybe raise event then settings controller + view open
+        OnSettingsButtonsClicked?.Invoke();
     }
 
-    private void OnPlanetListButtonClicked()
+    private void HandlePlanetListButtonClicked()
     {
-        // same thing another planet list controller + view probably unless low logic
+        OnPlanetListButtonClicked?.Invoke();
     }
 
-    private void OnHomeShipButtonClicked()
+    private void HandleHomeShipButtonClicked()
     {
-
+        OnHomeShipButtonClicked?.Invoke();
     }
 
-    private void OnEndTurnButtonClicked()
+    private void HandleEndTurnButtonClicked()
     {
-        // tells turn manager through event 
+        OnEndTurnButtonClicked?.Invoke();
     }
 
     private void HandleResourcesChanged()
