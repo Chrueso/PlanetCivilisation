@@ -108,7 +108,8 @@ public class CameraController : MonoBehaviour
 
     public void CenterToHomeShip(GridHex hex)
     {
-        CameraInstance.transform.position = new Vector3(hex.WorldPosition.x, CameraInstance.transform.position.y , hex.WorldPosition.z);
+        Debug.Log(hex.WorldPosition);
+        Camera.main.transform.position = new Vector3(hex.WorldPosition.x, Camera.main.transform.position.y , hex.WorldPosition.z);
     }
 
     private void DisableMovement()
