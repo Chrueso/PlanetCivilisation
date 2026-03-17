@@ -4712,6 +4712,10 @@ PrefabInstance:
       propertyPath: PlayerCam
       value: 
       objectReference: {fileID: 1698070666}
+    - target: {fileID: 3501411848352986973, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7427189796316326057, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
       propertyPath: m_Name
       value: PlayerInteractionController
@@ -4719,7 +4723,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7427189796316326057, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 520364371}
   m_SourcePrefab: {fileID: 100100000, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
 --- !u!1 &337440965
 GameObject:
@@ -6972,6 +6979,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519025128}
   m_CullTransparentMesh: 1
+--- !u!1 &520364368 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7427189796316326057, guid: a17ea359072c05e47b735ca38c8d4cc7, type: 3}
+  m_PrefabInstance: {fileID: 330636952}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &520364371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520364368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d1356a8ed2dae44863135fbd37e968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractionController
 --- !u!1 &523394322
 GameObject:
   m_ObjectHideFlags: 0
@@ -9189,10 +9213,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 182493805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150.93765, y: -90}
+  m_SizeDelta: {x: 261.8753, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &762242109
 MonoBehaviour:
@@ -10484,10 +10508,10 @@ RectTransform:
   - {fileID: 629160205}
   m_Father: {fileID: 461282236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 445.53796, y: -75}
+  m_SizeDelta: {x: 891.0759, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &889204097
 GameObject:
@@ -11121,10 +11145,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 182493805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 776.5033, y: -90}
+  m_SizeDelta: {x: 389.14532, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &951697654
 MonoBehaviour:
@@ -14867,6 +14891,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1698070666}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: entityViewPrefab
+      value: 
+      objectReference: {fileID: 9047871074101804308, guid: 13ab2b576eae7704ba1643f6084755fd, type: 3}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: playerInteractionController
+      value: 
+      objectReference: {fileID: 520364371}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: planetVisualPresets.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -17549,7 +17581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1444938816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20449,10 +20481,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 182493805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 431.90295, y: -90}
+  m_SizeDelta: {x: 280.05533, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1649600224
 MonoBehaviour:
@@ -22686,7 +22718,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1793486841
 RectTransform:
   m_ObjectHideFlags: 0
