@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
 
-    public TurnManager turnManager { get; private set; }
+    //public TurnManager turnManager { get; private set; }
 
     [Header("Prefabs")]
     [SerializeField] private GameObject planetPrefab;
@@ -28,6 +28,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private InfoMenuView infoMenuView;
     [SerializeField] private ActionsTabView actionsTabView;
     [SerializeField] private HUDView hudView;
+    [SerializeField] private PlanetListView planetListView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -38,13 +39,14 @@ public class GameManager : Singleton<GameManager>
     private InfoMenuController infoMenuController;
     private ActionsTabController actionsTabController;
     private HUDController hudController;
+    private PlanetListController planetListController;
 
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
     public MapGrid MapGrid { get; private set; }
     public Player Player { get; private set; }
 
-    [SerializeField] private FactionManager factionManagerRef;
+    //[SerializeField] private FactionManager factionManagerRef;
 
     protected override void Awake()
     {
@@ -59,7 +61,7 @@ public class GameManager : Singleton<GameManager>
         mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
         MapGrid = mapGrid;
 
-        turnManager = new TurnManager(factionManagerRef);
+        //turnManager = new TurnManager(factionManagerRef);
         battleManager = new BattleManager(shipDatabase);
 
         commandInvoker = new CommandInvoker();
@@ -73,7 +75,9 @@ public class GameManager : Singleton<GameManager>
         //UI
         infoMenuController = new InfoMenuController(infoMenuView);
         actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
-        hudController = new HUDController(hudView, playerModel, cameraController);    
+
+        planetListController = new PlanetListController(planetListView);
+        hudController = new HUDController(hudView, playerModel, planetListController, cameraController);    
        
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
@@ -85,7 +89,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         //temporary to make the turns start, ideally you want somehting else like pressing the play game button or something
-        turnManager.StartTurn();
+        //turnManager.StartTurn();
     }
 
     private void GenerateSeed()

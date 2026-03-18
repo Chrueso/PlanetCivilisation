@@ -1,22 +1,22 @@
-using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class MoveHomeShip : MonoBehaviour
-{
-    [SerializeField] UINavigationManager uINavigationManager;
-    [SerializeField] private Button moveHomeShipBtn;
+//public class MoveHomeShip : MonoBehaviour
+//{
+//    [SerializeField] UINavigationManager uINavigationManager;
+//    [SerializeField] private Button moveHomeShipBtn;
 
-    private void OnEnable()
-    {
-        moveHomeShipBtn.onClick.AddListener(MoveHomeShipHere);
-    }
+//    private void OnEnable()
+//    {
+//        moveHomeShipBtn.onClick.AddListener(MoveHomeShipHere);
+//    }
 
-    private void MoveHomeShipHere()
-    {
+//    private void MoveHomeShipHere()
+//    {
         
-        //if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
-        //UINavigationManager.Instance.SetHomeShipButton(false);
-        //GameManager.Instance.Player.MoveToHex(PlayerInteractionController.Instance.CurrentGridHex);
+//        //if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;
+//        //UINavigationManager.Instance.SetHomeShipButton(false);
+//        //GameManager.Instance.Player.MoveToHex(PlayerInteractionController.Instance.CurrentGridHex);
         
-    }
-}
+//    }
+//}

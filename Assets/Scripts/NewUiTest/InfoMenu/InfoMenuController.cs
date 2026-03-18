@@ -11,16 +11,21 @@ public class InfoMenuController : IUIMenuController
 
     public void ConnectView()
     {
-       
+
+    }
+
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
-        
+        GameScreenManager.Pop();
     }
 
-    public void ShowInfo(IGridHexOccupant hexOccupant)
+    public void UpdateView(IGridHexOccupant hexOccupant)
     {
-
+       
     }
 }

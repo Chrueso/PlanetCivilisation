@@ -5,12 +5,14 @@ public class HUDController : IUIMenuController
 {
     private HUDView view;
     private EntityModel playerModel;
-    CameraController cameraController;
+    private PlanetListController planetListController;
+    private CameraController cameraController;
 
-    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController) //Needs model when model resources update then this updates
+    public HUDController(HUDView view, EntityModel playerModel, PlanetListController planetListController, CameraController cameraController) 
     {
         this.view = view;
         this.playerModel = playerModel;
+        this.planetListController = planetListController;
         this.cameraController = cameraController;
 
         ConnectView();
@@ -18,21 +20,31 @@ public class HUDController : IUIMenuController
 
     public void ConnectView()
     {
-        view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
-        view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
-        view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
-        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
-
         playerModel.OnResourcesChanged += HandleResourcesChanged;
 
         view.UpdateFaction(playerModel.FactionType);
         view.HandleResources();
         view.UpdateResources(playerModel.Resources);
+
+        view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
+        view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
+        view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
+        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked); 
+    }
+
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
-       //Should u be able to close hud idk???
+        GameScreenManager.Pop();
+    }
+
+    private void HandleResourcesChanged()
+    {
+        view.UpdateResources(playerModel.Resources);
     }
 
     private void HandleSettingsButtonClicked()
@@ -42,7 +54,7 @@ public class HUDController : IUIMenuController
 
     private void HandlePlanetListButtonClicked()
     {
-        
+        planetListController.OpenView();
     }
 
     private void HandleHomeShipButtonClicked()
@@ -53,10 +65,5 @@ public class HUDController : IUIMenuController
     private void HandleEndTurnButtonClicked()
     {
         
-    }
-
-    private void HandleResourcesChanged()
-    {
-        view.UpdateResources(playerModel.Resources);
     }
 }

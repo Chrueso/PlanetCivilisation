@@ -33,6 +33,12 @@ public class ActionsTabController : IUIMenuController
         view.BuildStructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
     }
 
+    public void OpenView()
+    {
+        view.UpdateCurrentHex(selectedHex);
+        GameScreenManager.Push(view);
+    }
+
     public void CloseView()
     {
         GameScreenManager.Pop();
@@ -42,15 +48,14 @@ public class ActionsTabController : IUIMenuController
     public void HandleHexSelected(GridHex selectedHex)
     {
         this.selectedHex = selectedHex;
-        view.UpdateCurrentHex(selectedHex);
-        GameScreenManager.Push(view);
+        OpenView();
     }
 
     public void HandleInfoButtonClicked()
     {
         if (selectedHex.Occupant != null)
         {
-            infoMenuController.ShowInfo(selectedHex.Occupant);
+            infoMenuController.UpdateView(selectedHex.Occupant);
         }
     }
 
