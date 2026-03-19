@@ -14,13 +14,6 @@ public class PlayerInteractionController : MonoBehaviour
     public event Action<GridHex> OnHexSelected;
     private EventBinding<GameStartEvent> gameStartBinding;
 
-    private void OnDisable()
-    {
-        TouchscreenHandler.FingerDownCallback -= OnFingerDown;
-        TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
-        EventBus<GameStartEvent>.Deregister(gameStartBinding);
-    }
-
     public void Init(CameraController cameraController)
     {
         TouchscreenHandler.FingerDownCallback += OnFingerDown;
@@ -31,6 +24,13 @@ public class PlayerInteractionController : MonoBehaviour
 
         this.cameraController = cameraController;
         cam = cameraController.CameraInstance;
+    }
+
+    private void OnDisable()
+    {
+        TouchscreenHandler.FingerDownCallback -= OnFingerDown;
+        TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
