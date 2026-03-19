@@ -9,26 +9,26 @@ public class PlayerInteractionController : MonoBehaviour
     private MapGrid mapGrid;
     private GridHex selectedHex;
 
+    private bool touchStartedOnUI = false;
+
     public event Action<GridHex> OnHexSelected;
-
     private EventBinding<GameStartEvent> gameStartBinding;
-
-    private void OnEnable()
-    {
-        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
-
-        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
-        EventBus<GameStartEvent>.Register(gameStartBinding);
-    }
 
     private void OnDisable()
     {
+        TouchscreenHandler.FingerDownCallback -= OnFingerDown;
         TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 
     public void Init(CameraController cameraController)
     {
+        TouchscreenHandler.FingerDownCallback += OnFingerDown;
+        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+
         this.cameraController = cameraController;
         cam = cameraController.CameraInstance;
     }
@@ -39,12 +39,16 @@ public class PlayerInteractionController : MonoBehaviour
         Debug.Log("PlayerInteractionController received game context");
     }
 
+    public void OnFingerDown(object sender, TouchInfo touchInfo)
+    {
+        touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(touchInfo.Current.touchId);
+    }
+
     private void OnSelectGrid(object sender, TouchInfo touchInfo)
     {
-        if (EventSystem.current.IsPointerOverGameObject(touchInfo.Current.touchId)) return;
-
         if (mapGrid == null) return;
         if (cameraController.CameraMoving) return;
+        if (touchStartedOnUI) return;
 
         UnselectHex();
 

@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7277850567554085818}
   - component: {fileID: 1766306238438235574}
-  - component: {fileID: 6104197331305883487}
-  - component: {fileID: 116513535908485254}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,40 +45,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   mapSettings: {fileID: 0}
-  playerPrefab: {fileID: 107135288185769075, guid: ebc36d71807a1b04dad12658b0a1c593, type: 3}
-  diplomacySystem: {fileID: 0}
-  planetVisualPresets: []
-  planetPrefab: {fileID: 0}
+  shipDatabase: {fileID: 0}
   cameraController: {fileID: 0}
-  ShipDatabaseSO: {fileID: 0}
---- !u!114 &6104197331305883487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739636086863223599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89622f8d11a45af4ba6db472331c8856, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FactionManager
-  FactionData: []
---- !u!114 &116513535908485254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739636086863223599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf81ee308aef3d4fb85c4ade405ad3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TurnUiController
-  uINavigationManager: {fileID: 0}
-  endTurnButton: {fileID: 0}
-  turnDisplay: {fileID: 0}
-  metalsDisplay: {fileID: 0}
-  rationsDisplay: {fileID: 0}
-  energyDisplay: {fileID: 0}
+  playerInteractionController: {fileID: 0}
+  planetPrefab: {fileID: 0}
+  entityView: {fileID: 0}
+  planetVisualPresets: []
+  infoMenuView: {fileID: 0}
+  actionsTabView: {fileID: 0}
+  hudView: {fileID: 0}
+  planetListView: {fileID: 0}
+  structuresMenuView: {fileID: 0}
+  settingsView: {fileID: 0}

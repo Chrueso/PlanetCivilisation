@@ -21,18 +21,20 @@ public class HUDController : IUIMenuController, IDisposable
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
-
-        ConnectView();
     }
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
     {
         playerModel = gameStartEvent.PlayerModel;
         Debug.Log("HUD recieved player");
+
+        ConnectView();
     }
 
     public void ConnectView()
     {
+        if (playerModel == null) return;
+
         playerModel.OnResourcesChanged += HandleResourcesChanged;
 
         view.UpdateFaction(playerModel.FactionType);
@@ -57,7 +59,8 @@ public class HUDController : IUIMenuController, IDisposable
 
     private void HandleResourcesChanged()
     {
-        view.UpdateResources(playerModel.Resources);
+        if (playerModel == null) return;
+        view.UpdateResources(playerModel?.Resources);
     }
 
     private void HandleSettingsButtonClicked()
@@ -82,7 +85,9 @@ public class HUDController : IUIMenuController, IDisposable
 
     public void Dispose()
     {
-        playerModel.OnResourcesChanged -= HandleResourcesChanged;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
+
+        if (playerModel == null) return;
+        playerModel.OnResourcesChanged -= HandleResourcesChanged;
     }
 }

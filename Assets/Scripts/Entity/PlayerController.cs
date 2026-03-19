@@ -33,6 +33,8 @@ public class PlayerController : IEntityController, IDisposable
         commandInvoker = gameStartEvent.CommandInvoker;
         mapGrid = gameStartEvent.MapGrid;
         Debug.Log("Player recieved game context");
+
+        UpdateHexesInMoveRadius();
     }
 
     private void ConnectModel()
@@ -42,6 +44,8 @@ public class PlayerController : IEntityController, IDisposable
 
     private void UpdateHexesInMoveRadius()
     {
+        if (mapGrid == null) return;
+
         hexesInMoveRadius.Clear();
         List<GridHex> list = mapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
 
@@ -53,6 +57,8 @@ public class PlayerController : IEntityController, IDisposable
 
     public bool TryMove(GridHex targetHex)
     {
+        if (commandInvoker == null) return false;
+
         if (hexesInMoveRadius.Contains(targetHex))
         {
             ICommand command = new MoveCommand(model, view, targetHex);
@@ -66,6 +72,8 @@ public class PlayerController : IEntityController, IDisposable
 
     public bool TryColonize(PlanetData planet)
     {
+        if (commandInvoker == null) return false;
+
         if (planet.FactionType == FactionType.Nothing)
         {
             ICommand command = new ColonizeCommand(model, planet);
@@ -79,11 +87,13 @@ public class PlayerController : IEntityController, IDisposable
 
     public bool TryAttack(PlanetData planet)
     {
+        if (commandInvoker == null) return false;
         return false;
     }
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure)
     {
+        if (commandInvoker == null) return false;
         return false;
     }
 

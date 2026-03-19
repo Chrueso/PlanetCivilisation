@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[RequireComponent(typeof(BoxCollider))]
 public class MapGrid : MonoBehaviour
 {
     public HexGridXZ<GridHex> Grid { get; private set; }

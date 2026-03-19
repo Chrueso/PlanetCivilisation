@@ -50,7 +50,7 @@ public class PlanetMapGenerator
             {
                 (planetObject, planetData) = planetGenerator.GenerateCustomPlanet(this.homePlanetData, hex.WorldPosition, Quaternion.identity, parent);
 
-                Debug.Log($"name {planetData.PlanetName} faction {planetData.FactionType}");
+                //Debug.Log($"name {planetData.PlanetName} faction {planetData.FactionType}");
 
                 planetData.CurrentHex = hex;
                 homePlanet = planetData;

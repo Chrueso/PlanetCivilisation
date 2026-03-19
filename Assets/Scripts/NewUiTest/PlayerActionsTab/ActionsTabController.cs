@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ActionsTabController : IUIMenuController
+public class ActionsTabController : IUIMenuController, IDisposable
 {
     private ActionsTabView view;
     private PlayerController playerController;
@@ -25,18 +25,20 @@ public class ActionsTabController : IUIMenuController
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
-
-        ConnectView();
     }
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
     {
         playerController = gameStartEvent.PlayerController;
         Debug.Log("ActionTabController recieved player");
+
+        ConnectView();
     }
 
     public void ConnectView()
     {
+        if (playerController == null) return;
+        
         view.Init(playerController);
 
         view.CloseButton.onClick.AddListener(CloseView);
@@ -77,6 +79,8 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleMoveButtonClicked()
     {
+        if (playerController == null) return;
+
         if (playerController.TryMove(selectedHex))
         {
             CloseView();
@@ -85,6 +89,8 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleColonizeButtonClicked()
     {
+        if (playerController == null) return;
+
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             if (playerController.TryColonize(planet))
@@ -97,6 +103,8 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleAttackButtonClicked()
     {
+        if (playerController == null) return; 
+
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             if (playerController.TryAttack(planet))
@@ -115,8 +123,12 @@ public class ActionsTabController : IUIMenuController
     private void HandleBuildStructuresButtonClicked()
     {
         structuresController.OpenView();
-        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
     
+    public void Dispose()
+    {
+        playerInteractionController.OnHexSelected -= HandleHexSelected;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
+    }
     
 }
