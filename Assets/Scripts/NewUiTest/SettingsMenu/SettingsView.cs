@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InfoMenuView : ScreenBase
+public class SettingsView : ScreenBase
 {
     public Button CloseButton;
 }

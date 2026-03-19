@@ -7,11 +7,13 @@ public class InfoMenuController : IUIMenuController
     public InfoMenuController(InfoMenuView view)
     {
         this.view = view;
+
+        ConnectView();
     }
 
     public void ConnectView()
     {
-
+        view.CloseButton.onClick.AddListener(CloseView);
     }
 
     public void OpenView()

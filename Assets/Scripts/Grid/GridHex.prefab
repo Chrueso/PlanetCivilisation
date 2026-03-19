@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridHexVisual
   material: {fileID: 2100000, guid: 9adba80ad54986a46bffaeff9aefd0ce, type: 2}
-  defaultColor: {r: 1, g: 1, b: 1, a: 0.019607844}
+  defaultColor: {r: 1, g: 1, b: 1, a: 0.011764706}
   selectedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!33 &3892350228008545311
 MeshFilter:

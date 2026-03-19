@@ -5,15 +5,17 @@ public class HUDController : IUIMenuController
 {
     private HUDView view;
     private EntityModel playerModel;
-    private PlanetListController planetListController;
     private CameraController cameraController;
+    private PlanetListController planetListController;
+    private SettingsController settingsController;
 
-    public HUDController(HUDView view, EntityModel playerModel, PlanetListController planetListController, CameraController cameraController) 
+    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
     {
         this.view = view;
         this.playerModel = playerModel;
-        this.planetListController = planetListController;
         this.cameraController = cameraController;
+        this.planetListController = planetListController;
+        this.settingsController = settingsController;
 
         ConnectView();
     }
@@ -49,7 +51,7 @@ public class HUDController : IUIMenuController
 
     private void HandleSettingsButtonClicked()
     {
-       
+       settingsController.OpenView();
     }
 
     private void HandlePlanetListButtonClicked()

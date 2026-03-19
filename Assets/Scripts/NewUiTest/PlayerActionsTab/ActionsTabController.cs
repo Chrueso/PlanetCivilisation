@@ -3,18 +3,21 @@ using System;
 public class ActionsTabController : IUIMenuController
 {
     private ActionsTabView view;
-    private InfoMenuController infoMenuController;
     private PlayerController playerController;
     private PlayerInteractionController playerInteractionController;
+    private InfoMenuController infoMenuController;
+    private StructuresController structuresController;
     private GridHex selectedHex;
 
-    public ActionsTabController(ActionsTabView view, InfoMenuController infoMenuController, PlayerController playerController, PlayerInteractionController playerInteractionController)
+    public ActionsTabController(ActionsTabView view, PlayerController playerController, PlayerInteractionController playerInteractionController,
+        InfoMenuController infoMenuController, StructuresController structuresController)
     {
         this.view = view;
 
-        this.infoMenuController = infoMenuController;
         this.playerController = playerController;
         this.playerInteractionController = playerInteractionController;
+        this.infoMenuController = infoMenuController;
+        this.structuresController = structuresController;
 
         playerInteractionController.OnHexSelected += HandleHexSelected;
         ConnectView();
@@ -56,6 +59,7 @@ public class ActionsTabController : IUIMenuController
         if (selectedHex.Occupant != null)
         {
             infoMenuController.UpdateView(selectedHex.Occupant);
+            infoMenuController.OpenView();
         }
     }
 
@@ -98,7 +102,7 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleBuildStructuresButtonClicked()
     {
-
+        structuresController.OpenView();
     }
     
     

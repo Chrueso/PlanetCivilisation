@@ -29,6 +29,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private ActionsTabView actionsTabView;
     [SerializeField] private HUDView hudView;
     [SerializeField] private PlanetListView planetListView;
+    [SerializeField] private StructuresMenuView structuresMenuView;
+    [SerializeField] private SettingsView settingsView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -40,6 +42,8 @@ public class GameManager : Singleton<GameManager>
     private ActionsTabController actionsTabController;
     private HUDController hudController;
     private PlanetListController planetListController;
+    private StructuresController structuresController;
+    private SettingsController settingsController;
 
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
@@ -74,10 +78,12 @@ public class GameManager : Singleton<GameManager>
 
         //UI
         infoMenuController = new InfoMenuController(infoMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
+        structuresController = new StructuresController(structuresMenuView);
+        actionsTabController = new ActionsTabController(actionsTabView, playerController, playerInteractionController, infoMenuController, structuresController);
 
+        settingsController = new SettingsController(settingsView);
         planetListController = new PlanetListController(planetListView);
-        hudController = new HUDController(hudView, playerModel, planetListController, cameraController);    
+        hudController = new HUDController(hudView, playerModel, cameraController, planetListController, settingsController);    
        
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;

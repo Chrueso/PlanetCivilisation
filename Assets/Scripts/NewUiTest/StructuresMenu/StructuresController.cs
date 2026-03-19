@@ -1,16 +1,28 @@
 using UnityEngine;
 
-public class StructuresController : MonoBehaviour
+public class StructuresController : IUIMenuController
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private StructuresMenuView view;
+
+    public StructuresController(StructuresMenuView view)
     {
-        
+        this.view = view;
+
+        ConnectView();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ConnectView()
     {
-        
+        view.CloseButton.onClick.AddListener(CloseView);
+    }
+
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
+    }
+
+    public void CloseView()
+    {
+        GameScreenManager.Pop();
     }
 }
