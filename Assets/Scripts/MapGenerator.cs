@@ -2,18 +2,15 @@ using UnityEngine;
 
 public class MapGenerator 
 {
-    private MapSettings settings;
     private PlanetMapGenerator planetMapGenerator;
-
     private PlanetGenerator planetGenerator;
 
-    public MapGenerator(MapSettings mapSettings, PlanetGenerator planetGenerator)
+    public MapGenerator(PlanetGenerator planetGenerator)
     {
-        this.settings = mapSettings;
         this.planetGenerator = planetGenerator;
     }
 
-    public void GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, System.Random rng)
+    public void GenerateMap(MapSettings settings, out MapGrid mapGrid, out PlanetData homePlanet, System.Random rng)
     {
         mapGrid = null;
         homePlanet = null;

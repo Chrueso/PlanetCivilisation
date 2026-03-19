@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HUDController : IUIMenuController
+public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
     private EntityModel playerModel;
@@ -9,15 +9,26 @@ public class HUDController : IUIMenuController
     private PlanetListController planetListController;
     private SettingsController settingsController;
 
-    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
     {
         this.view = view;
-        this.playerModel = playerModel;
+
         this.cameraController = cameraController;
         this.planetListController = planetListController;
         this.settingsController = settingsController;
 
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+
         ConnectView();
+    }
+
+    public void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        playerModel = gameStartEvent.PlayerModel;
+        Debug.Log("HUD recieved player");
     }
 
     public void ConnectView()
@@ -61,11 +72,17 @@ public class HUDController : IUIMenuController
 
     private void HandleHomeShipButtonClicked()
     {
-        cameraController.CenterToHomeShip(playerModel.CurrentHex.WorldPosition);
+        cameraController.MoveCamera(playerModel.CurrentHex.WorldPosition);
     }
 
     private void HandleEndTurnButtonClicked()
     {
         
+    }
+
+    public void Dispose()
+    {
+        playerModel.OnResourcesChanged -= HandleResourcesChanged;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 }

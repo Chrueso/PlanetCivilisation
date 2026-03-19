@@ -17,6 +17,8 @@ public class CameraController : MonoBehaviour
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
+    private EventBinding<GameStartEvent> gameStartBinding;
+
     public void Init()
     {
         CameraInstance = Camera.main;
@@ -39,6 +41,9 @@ public class CameraController : MonoBehaviour
         TouchscreenHandler.FingerDownCallback += OnPlayerFingerDown;
         TouchscreenHandler.FingerMoveCallback += OnPlayerFingerMove;
         TouchscreenHandler.FingerUpCallback += OnPlayerFingerRelease;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
     }
 
     private void OnDisable()
@@ -56,6 +61,8 @@ public class CameraController : MonoBehaviour
         TouchscreenHandler.FingerDownCallback -= OnPlayerFingerDown;
         TouchscreenHandler.FingerMoveCallback -= OnPlayerFingerMove;
         TouchscreenHandler.FingerUpCallback -= OnPlayerFingerRelease;
+
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
 
     }
     #region PERSPECTIVE
@@ -102,7 +109,12 @@ public class CameraController : MonoBehaviour
     }
     #endregion
 
-    public void CenterToHomeShip(Vector3 position)
+    public void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        MoveCamera(gameStartEvent.PlayerModel.CurrentHex.WorldPosition);
+    }
+
+    public void MoveCamera(Vector3 position)
     {
         Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y , position.z);
     }

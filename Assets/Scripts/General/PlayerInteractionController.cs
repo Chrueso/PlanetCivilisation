@@ -11,18 +11,32 @@ public class PlayerInteractionController : MonoBehaviour
 
     public event Action<GridHex> OnHexSelected;
 
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    private void OnEnable()
+    {
+        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+    }
+
     private void OnDisable()
     {
         TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 
-    public void Init(CameraController cameraController, MapGrid mapGrid)
+    public void Init(CameraController cameraController)
     {
         this.cameraController = cameraController;
         cam = cameraController.CameraInstance;
-        this.mapGrid = mapGrid;
+    }
 
-        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
+    public void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        mapGrid = gameStartEvent.MapGrid;
+        Debug.Log("PlayerInteractionController received game context");
     }
 
     private void OnSelectGrid(object sender, TouchInfo touchInfo)

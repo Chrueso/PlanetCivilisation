@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : IEntityController
+public class PlayerController : IEntityController, IDisposable
 {
     private EntityModel model;
     private EntityView view;
@@ -14,13 +15,24 @@ public class PlayerController : IEntityController
     public GridHex CurrentHex => model.CurrentHex;
     public FactionType Faction => model.FactionType;
 
-    public PlayerController(EntityModel model, EntityView view, MapGrid mapGrid, CommandInvoker commandInvoker)
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    public PlayerController(EntityModel model, EntityView view)
     {
         this.model = model;
         this.view = view;
-        this.mapGrid = mapGrid;
-        this.commandInvoker = commandInvoker;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+
         ConnectModel();
+    }
+
+    public void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        commandInvoker = gameStartEvent.CommandInvoker;
+        mapGrid = gameStartEvent.MapGrid;
+        Debug.Log("Player recieved game context");
     }
 
     private void ConnectModel()
@@ -89,5 +101,11 @@ public class PlayerController : IEntityController
     public void Agreement(PlanetData planet)
     {
 
+    }
+
+    public void Dispose()
+    {
+        model.OnCurrentHexChanged -= UpdateHexesInMoveRadius;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 }

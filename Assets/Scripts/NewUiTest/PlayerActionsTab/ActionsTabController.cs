@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class ActionsTabController : IUIMenuController
 {
@@ -9,18 +10,29 @@ public class ActionsTabController : IUIMenuController
     private StructuresController structuresController;
     private GridHex selectedHex;
 
-    public ActionsTabController(ActionsTabView view, PlayerController playerController, PlayerInteractionController playerInteractionController,
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    public ActionsTabController(ActionsTabView view, PlayerInteractionController playerInteractionController,
         InfoMenuController infoMenuController, StructuresController structuresController)
     {
         this.view = view;
 
-        this.playerController = playerController;
         this.playerInteractionController = playerInteractionController;
         this.infoMenuController = infoMenuController;
         this.structuresController = structuresController;
 
         playerInteractionController.OnHexSelected += HandleHexSelected;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+
         ConnectView();
+    }
+
+    public void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        playerController = gameStartEvent.PlayerController;
+        Debug.Log("ActionTabController recieved player");
     }
 
     public void ConnectView()
@@ -103,6 +115,7 @@ public class ActionsTabController : IUIMenuController
     private void HandleBuildStructuresButtonClicked()
     {
         structuresController.OpenView();
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
     
     

@@ -3,17 +3,13 @@ using UnityEngine;
 
 public class EntityFactory 
 {
-    private MapGrid mapGrid;
     private EntityView entityView;
-    private CommandInvoker commandInvoker;
 
     private List<FactionType> avaliableFactions;
 
-    public EntityFactory(MapGrid mapGrid, EntityView entityView, CommandInvoker commandInvoker)
+    public EntityFactory(EntityView entityView)
     {
-        this.mapGrid = mapGrid;
         this.entityView = entityView;
-        this.commandInvoker = commandInvoker;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
     }
@@ -30,10 +26,11 @@ public class EntityFactory
         Vector3 spawnPos = position;
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
-        PlayerController controller = new PlayerController(model, view, mapGrid, commandInvoker);
+        PlayerController controller = new PlayerController(model, view);
         model.CurrentHex = homePlanet.CurrentHex;
 
         avaliableFactions.Remove(factionType);
+
         return controller;
     }
 }
