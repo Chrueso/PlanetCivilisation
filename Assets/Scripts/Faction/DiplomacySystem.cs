@@ -27,6 +27,21 @@ public enum TradeType
     UNFAIR
 }
 
+public enum PactType
+{
+    NAP, // Non-Aggression Pact
+    FCP, // Faction Conversion Pact
+
+}
+
+public enum RelationshipLevel
+{
+    HOSTILE,
+    INDIFFERENT,
+    NEUTRAL,
+    FRIENDLY
+}
+
 public class DiplomacySystem : MonoBehaviour 
 {
 
@@ -94,12 +109,17 @@ public class DiplomacySystem : MonoBehaviour
         //planetData.RaiseAffection(GameManager.Instance.Player.FactionType, affection); // temporary formula
     }
 
-    public void Agreement()
+    public void Agreement(/*PlanetData planetData,*/ PactType pactType)
     {
-        // not yet tbh
-    }
-    
-    
+        if (pactType == PactType.NAP)
+        {
+            //if (planetData.HasNAPact) return;
 
-    
+        } else if (pactType == PactType.FCP)
+        {
+            //GameManager.Instance.Player.AddOwnedPlanets(planetData);
+            //planetData.SetFaction(GameManager.Instance.Player.FactionType);
+        }
+        //planetData.AddPact(pactType);
+    }
 }

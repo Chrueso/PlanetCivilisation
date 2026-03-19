@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IGridHexOccupant
 {
-    public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
+    public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>(); // Inventory
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
     public FactionType FactionType { get; private set; }
     public List<PlanetData> OwnedPlanets { get; private set; } = new List<PlanetData>();
@@ -38,6 +38,7 @@ public class Player : MonoBehaviour, IGridHexOccupant
             int increment = planet.StationedShips[ShipType.Worker];
             if (planet.Structures.Contains(StructureType.Extractor))
             {
+                
                 this.Resources[ResourceType.Metals] += (1 + increment);
                 this.Resources[ResourceType.Rations] += (1 + increment);
                 this.Resources[ResourceType.Credits] += (1 + increment);
@@ -80,18 +81,18 @@ public class Player : MonoBehaviour, IGridHexOccupant
         }
     }
 
-    public void TakeResource(ResourceType resource)
+    public void TakeResource(ResourceType resource, int amount)
     {
-        if (this.Resources.TryGetValue(resource, out int amount))
+        if (this.Resources.TryGetValue(resource, out int inventoryAmount))
         {
-            this.Resources[resource] = amount - 1;
+            this.Resources[resource] = inventoryAmount - amount;
         }
     }
-    public void GainResource(ResourceType resource)
+    public void GainResource(ResourceType resource, int amount)
     {
-        if (this.Resources.TryGetValue(resource, out int amount))
+        if (this.Resources.TryGetValue(resource, out int inventoryAmount))
         {
-            this.Resources[resource] = amount + 1;
+            this.Resources[resource] = amount + inventoryAmount;
         }
     }
 

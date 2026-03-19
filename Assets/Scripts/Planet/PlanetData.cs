@@ -1,37 +1,53 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
+using UnityEngine;
 
+public enum ResourceClass
+{
+    Abundant,
+    Scarce
+}
 public class PlanetData : IGridHexOccupant
 {
     public string PlanetName { get; private set; }
-    public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
+    public Dictionary<ResourceClass, ResourceType> PlanetResource {  get; private set; }
+    public Dictionary<ResourceType, int> Resources { get; private set; } // resources it generates
+    public Dictionary<ResourceType, int> ResourceInventory { get; private set; } // Resource in inv, how many they have
     public FactionType FactionType { get; private set; }
     public List<StructureType> Structures { get; private set; }
     public Dictionary<ShipType, int> StationedShips { get; private set; } = new Dictionary<ShipType, int>();
     public Dictionary<FactionType, int> Affection {  get; private set; }
+    public Dictionary<FactionType, RelationshipLevel> Relations {  get; private set; }
+    public bool HasNAPact { get; private set; } = false;
     public GridHex CurrentHex { get; set; }
+    
 
-    public PlanetData(string planetName, FactionType faction, GridHex hex = null)
+    public PlanetData(string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
     {
         this.PlanetName = planetName;
-        this.Resources = new Dictionary<ResourceType, int>();
+        this.PlanetResource = resource;
+        this.Resources = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
+        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals,0 }, { ResourceType.Rations, 0 } };
         this.FactionType = faction;
 
         this.Structures = new List<StructureType>();
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
             {ShipType.Scout, 0},
-            {ShipType.Attacker, 0 },
+            {ShipType.Attacker, 0},
             {ShipType.Worker, 0 }
         };
 
         this.Affection = new Dictionary<FactionType, int>() {
             {FactionType.Human, 0 },
             {FactionType.DemiHuman, 0},
-            {FactionType.IntelligentConstruct, 0 },
+            {FactionType.IntelligentConstruct, 0},
         };
 
         this.CurrentHex = hex;
+        UpdateRelations();
     }
 
     //public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<StructureType> structure, GridHex hex)
@@ -73,14 +89,9 @@ public class PlanetData : IGridHexOccupant
 
     public void RemoveShips(ShipType shipType, int amount)
     {
-        if (StationedShips.ContainsKey(shipType))
+        if (StationedShips.TryGetValue(shipType, out var shipAmount))
         {
-            StationedShips[shipType] -= amount;
-
-            if (StationedShips[shipType] <= 0)
-            {
-                StationedShips.Remove(shipType);
-            }
+            StationedShips[shipType] -= Mathf.Max(0, shipAmount-amount);
         }
     }
 
@@ -109,6 +120,28 @@ public class PlanetData : IGridHexOccupant
         if (this.Affection.TryGetValue(rizzler, out int currAffection))
         {
             this.Affection[rizzler] = Math.Clamp(currAffection + affection, 0, 100);
+            UpdateRelations();
+        }
+    }
+
+    private void UpdateRelations()
+    {
+        foreach (var relations in Affection)
+        {
+            int affection = relations.Value;
+            if (affection == 0 && affection <= 20)
+            {
+                Relations[relations.Key] = RelationshipLevel.HOSTILE;
+            } else if (affection >= 21 && affection <= 49)
+            {
+                Relations[relations.Key] = RelationshipLevel.INDIFFERENT;
+            } else if (affection >= 50 && affection <= 79)
+            {
+                Relations[relations.Key] = RelationshipLevel.NEUTRAL;
+            } else if (affection >= 80 &&  affection <= 100)
+            {
+                Relations[relations.Key] = RelationshipLevel.FRIENDLY;
+            }
         }
     }
 
@@ -116,5 +149,36 @@ public class PlanetData : IGridHexOccupant
     {
         if (this.Structures.Contains(structure)) return;
         this.Structures.Add(structure);
+    }
+
+    public void GainResource(ResourceType resource, int amount)
+    {
+        if (ResourceInventory.TryGetValue(resource, out var inventory))
+        {
+            ResourceInventory[resource] = Mathf.Clamp(inventory+amount, 0, 8000);
+        }
+    }
+
+    public void AddPact(PactType pactType)
+    {
+        switch (pactType)
+        {
+            case PactType.NAP:
+                HasNAPact = true;
+                break;
+            case PactType.FCP:
+                FactionType = GameManager.Instance.turnManager.currentFaction.FactionType;
+                break;
+        }
+    }
+
+    public void RemovePact(PactType pactType)
+    {
+        switch(pactType)
+        {
+            case PactType.NAP:
+                HasNAPact = false;
+                break;
+        }
     }
 }

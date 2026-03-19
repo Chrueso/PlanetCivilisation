@@ -39,20 +39,23 @@ public class PlanetGenerator
         return baseName + "-" + new string(suffix);
     }
 
-    private List<ResourceType> GenerateResourceTypes(System.Random rng) // should use the plannet name as seed
+    private Dictionary<ResourceClass, ResourceType> GenerateResourceTypes(System.Random rng) // should use the plannet name as seed
     {
-        int count = rng.Next(0, 2); // Each planet has 0 to 2 additional resources
+        int count = rng.Next(1, 2); // Each planet has 0 to 2 additional resources
+        Dictionary<ResourceClass, ResourceType> resourceList = new();
         List<ResourceType> types = new List<ResourceType>();
 
         if (count == 0)
         {
-            return types; // No additional resources
+            return resourceList; // No additional resources
         }
         else if (count == 2)
         {
             /*
             types.Add(ResourceType.Copper);
             types.Add(ResourceType.Iron);*/
+            resourceList[ResourceClass.Abundant] = ResourceType.Metals;
+            resourceList[ResourceClass.Scarce] = ResourceType.Rations;
         }
         else if (count == 1)
         {
@@ -61,9 +64,11 @@ public class PlanetGenerator
             if (num == 0) types.Add(ResourceType.Copper);
             else if (num == 1) types.Add(ResourceType.Iron);
             */
+            resourceList[ResourceClass.Abundant] = ResourceType.Rations;
+            resourceList[ResourceClass.Scarce] = ResourceType.Metals;
         }
 
-        return types;
+        return resourceList;
     }
 
     // Randomize faction type this is temp change later idk wtf factions do
@@ -196,8 +201,8 @@ public class PlanetGenerator
         int planetSeed = SeedUtil.StringToHashCode(planetName);
         System.Random planetRNG = new System.Random(planetSeed);
 
-        List<ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
-
+        Dictionary<ResourceClass, ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
+        
         FactionType factionType = PickFactionType(planetRNG);
 
         PlanetVisualTypesSO preset = ChooseVisualPreset(planetRNG);   
@@ -206,7 +211,7 @@ public class PlanetGenerator
 
         PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
-        PlanetData data = new PlanetData(planetName, factionType); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(planetName, factionType, additionalResources); // Check out PlanetData.cs
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
@@ -218,7 +223,11 @@ public class PlanetGenerator
 
     public (GameObject, PlanetData) GenerateCustomPlanet(CustomPlanetSO customPlanetData, Vector3 position, Quaternion rotation, Transform parent)
     {
-        PlanetData data = new PlanetData(customPlanetData.PlanetName, customPlanetData.FactionType); // Check out PlanetData.cs
+        Dictionary<ResourceClass, ResourceType> resource = new() {
+            {ResourceClass.Abundant, ResourceType.Metals },
+            {ResourceClass.Scarce, ResourceType.Rations},
+        };
+        PlanetData data = new PlanetData(customPlanetData.PlanetName, customPlanetData.FactionType, resource); // Check out PlanetData.cs
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
