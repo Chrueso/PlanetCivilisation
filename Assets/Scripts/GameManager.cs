@@ -76,6 +76,8 @@ public class GameManager : Singleton<GameManager>
         PlayerController playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
             out EntityModel playerModel, out EntityView playerView);
 
+        cameraController.CenterToHomeShip(playerController.CurrentHex.WorldPosition);
+
         //UI
         infoMenuController = new InfoMenuController(infoMenuView);
         structuresController = new StructuresController(structuresMenuView);
@@ -84,12 +86,6 @@ public class GameManager : Singleton<GameManager>
         settingsController = new SettingsController(settingsView);
         planetListController = new PlanetListController(planetListView);
         hudController = new HUDController(hudView, playerModel, cameraController, planetListController, settingsController);    
-       
-
-        Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
-
-
     }
 
     private void Start()
