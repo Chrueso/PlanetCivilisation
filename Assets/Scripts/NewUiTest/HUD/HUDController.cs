@@ -6,12 +6,14 @@ public class HUDController : IUIMenuController
     private HUDView view;
     private EntityModel playerModel;
     CameraController cameraController;
+    private TurnManager turnManager;
 
-    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController) //Needs model when model resources update then this updates
+    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController, TurnManager turnManager) //Needs model when model resources update then this updates
     {
         this.view = view;
         this.playerModel = playerModel;
         this.cameraController = cameraController;
+        this.turnManager = turnManager;
 
         ConnectView();
     }
@@ -52,7 +54,7 @@ public class HUDController : IUIMenuController
 
     private void HandleEndTurnButtonClicked()
     {
-        
+        turnManager.EndTurn();
     }
 
     private void HandleResourcesChanged()

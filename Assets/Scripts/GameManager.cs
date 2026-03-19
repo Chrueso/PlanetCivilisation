@@ -73,7 +73,7 @@ public class GameManager : Singleton<GameManager>
         //UI
         infoMenuController = new InfoMenuController(infoMenuView);
         actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
-        hudController = new HUDController(hudView, playerModel, cameraController);    
+        hudController = new HUDController(hudView, playerModel, cameraController,turnManager);    
        
 
         Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;

@@ -83,11 +83,11 @@ public class TurnManager
     {
         if (playerTurn)
         {
-            GameManager.Instance.Player.CalculateResourceGain();
-            if (GameManager.Instance.Player.OwnedPlanets.Count >= 5 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 30)
-            {
-                SceneManager.LoadScene("MainMenu");
-            }
+            //GameManager.Instance.Player.CalculateResourceGain();
+            //if (GameManager.Instance.Player.OwnedPlanets.Count >= 5 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 30)
+            //{
+              //  SceneManager.LoadScene("MainMenu");
+            //}
         }
     }
 
