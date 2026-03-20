@@ -15,7 +15,7 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
-    [SerializeField] private PlayerInteractionController playerInteractionController;
+    [SerializeField] private GridInteractionController gridInteractionController;
     //[SerializeField] private DiplomacySystem diplomacySystem;
 
     [Header("Views")]
@@ -43,13 +43,12 @@ public class GameManager : Singleton<GameManager>
     private PlanetListController planetListController;
     private StructuresController structuresController;
     private SettingsController settingsController;
+    private TurnManager turnManager;
 
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
     public MapGrid MapGrid { get; private set; } // not used
     public Player Player { get; private set; } // not used
-
-    //[SerializeField] private FactionManager factionManagerRef;
 
     private readonly List<IDisposable> disposables = new(); // for cleanup
 
@@ -73,6 +72,7 @@ public class GameManager : Singleton<GameManager>
         EventBus<GameStartEvent>.Raise(new GameStartEvent
         {
             CommandInvoker = commandInvoker,
+            TurnManager = turnManager,
             MapGrid = mapGrid,
             PlayerController = playerController,
             PlayerModel = playerModel,
@@ -83,10 +83,10 @@ public class GameManager : Singleton<GameManager>
     private void CreateSystems()
     {
         cameraController.Init();
-        playerInteractionController.Init(cameraController);
+        gridInteractionController.Init(cameraController);
         planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(planetGenerator);
-        //turnManager = new TurnManager(factionManagerRef);
+        turnManager = new TurnManager();
         battleManager = new BattleManager(shipDatabase);
         commandInvoker = new CommandInvoker();
         entityFactory = new EntityFactory(entityView);
@@ -113,7 +113,7 @@ public class GameManager : Singleton<GameManager>
     {
         infoMenuController = new InfoMenuController(infoMenuView);
         structuresController = new StructuresController(structuresMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, playerInteractionController, infoMenuController, structuresController);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController);
 
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }

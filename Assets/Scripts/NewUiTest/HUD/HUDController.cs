@@ -4,7 +4,8 @@ using UnityEngine;
 public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
-    private EntityModel playerModel;
+    private IEntityController entityController;
+    private EntityModel entityModel;
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
@@ -23,23 +24,38 @@ public class HUDController : IUIMenuController, IDisposable
         EventBus<GameStartEvent>.Register(gameStartBinding);
     }
 
-    public void HandleGameStart(GameStartEvent gameStartEvent)
+    private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        playerModel = gameStartEvent.PlayerModel;
-        Debug.Log("HUD recieved player");
-
+        SetController(gameStartEvent.PlayerController);
+        SetModel(gameStartEvent.PlayerModel);
         ConnectView();
+    }
+
+    public void SetController(IEntityController entityController)
+    {
+        this.entityController = entityController;
+        Debug.Log("HUD recieved entity controller");
+    }
+
+    public void SetModel(EntityModel entityModel)
+    {
+        this.entityModel = entityModel;
+        Debug.Log("HUD recieved entity model");
     }
 
     public void ConnectView()
     {
-        if (playerModel == null) return;
+        if (entityModel == null)
+        {
+            Debug.Log("HUD entityModel is null!");
+            return;
+        }
 
-        playerModel.OnResourcesChanged += HandleResourcesChanged;
+        entityModel.OnResourcesChanged += HandleResourcesChanged;
 
-        view.UpdateFaction(playerModel.FactionType);
+        view.UpdateFaction(entityModel.FactionType);
         view.HandleResources();
-        view.UpdateResources(playerModel.Resources);
+        view.UpdateResources(entityModel.Resources);
 
         view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
@@ -59,8 +75,8 @@ public class HUDController : IUIMenuController, IDisposable
 
     private void HandleResourcesChanged()
     {
-        if (playerModel == null) return;
-        view.UpdateResources(playerModel?.Resources);
+        if (entityModel == null) return;
+        view.UpdateResources(entityModel?.Resources);
     }
 
     private void HandleSettingsButtonClicked()
@@ -75,19 +91,20 @@ public class HUDController : IUIMenuController, IDisposable
 
     private void HandleHomeShipButtonClicked()
     {
-        cameraController.MoveCamera(playerModel.CurrentHex.WorldPosition);
+        cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
     }
 
     private void HandleEndTurnButtonClicked()
     {
-        
+        if (entityController == null) return;
+        entityController.TryEndTurn();
     }
 
     public void Dispose()
     {
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
 
-        if (playerModel == null) return;
-        playerModel.OnResourcesChanged -= HandleResourcesChanged;
+        if (entityModel == null) return;
+        entityModel.OnResourcesChanged -= HandleResourcesChanged;
     }
 }

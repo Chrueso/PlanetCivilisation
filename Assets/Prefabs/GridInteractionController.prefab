@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3426260797840996413}
   - component: {fileID: 3703111139695340559}
   m_Layer: 0
-  m_Name: PlayerInteractionController
+  m_Name: GridInteractionController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -162,7 +162,7 @@ public class CameraController : MonoBehaviour
     }
     #endregion
 
-    public void HandleGameStart(GameStartEvent gameStartEvent)
+    private void HandleGameStart(GameStartEvent gameStartEvent)
     {
         MoveCamera(gameStartEvent.PlayerModel.CurrentHex.WorldPosition);
     }

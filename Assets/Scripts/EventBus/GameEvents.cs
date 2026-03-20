@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public struct GameStartEvent : IEvent
 {
     public CommandInvoker CommandInvoker;
+    public TurnManager TurnManager;
 
     public MapGrid MapGrid;
 

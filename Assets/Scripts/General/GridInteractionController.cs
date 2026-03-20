@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
 
-public class PlayerInteractionController : MonoBehaviour
+public class GridInteractionController : MonoBehaviour
 {
     private CameraController cameraController;
     private Camera cam;
@@ -33,10 +33,15 @@ public class PlayerInteractionController : MonoBehaviour
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 
-    public void HandleGameStart(GameStartEvent gameStartEvent)
+    private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        mapGrid = gameStartEvent.MapGrid;
-        Debug.Log("PlayerInteractionController received game context");
+        SetMap(gameStartEvent.MapGrid);
+    }
+
+    public void SetMap(MapGrid mapGrid)
+    {
+        this.mapGrid = mapGrid;
+        Debug.Log("GridInteractionController received game map");
     }
 
     public void OnFingerDown(object sender, TouchInfo touchInfo)
@@ -46,7 +51,11 @@ public class PlayerInteractionController : MonoBehaviour
 
     private void OnSelectGrid(object sender, TouchInfo touchInfo)
     {
-        if (mapGrid == null) return;
+        if (mapGrid == null)
+        {
+            Debug.Log(this + "Map grid is null!");
+            return;
+        }
         if (cameraController.CameraMoving) return;
         if (touchStartedOnUI) return;
 
