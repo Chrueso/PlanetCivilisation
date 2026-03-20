@@ -64,7 +64,7 @@ public class TurnManager
         var prevTurnFaction = currentTurnFaction;
         currentTurnFaction = turnOrder[turnIndex];
 
-        Debug.Log("Current turn: " + currentTurnFaction);
+        Debug.Log($"Current turn: [{currentTurnFaction}]");
 
         EventBus<TurnChangeEvent>.Raise(new TurnChangeEvent
         {
