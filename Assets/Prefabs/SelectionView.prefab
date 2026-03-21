@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4120725781904804079}
-  - component: {fileID: -5925719617849203074}
   - component: {fileID: 3892350228008545311}
   - component: {fileID: 3361636415721059849}
+  - component: {fileID: 3418403815981322962}
   m_Layer: 0
-  m_Name: GridHex
+  m_Name: SelectionView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,24 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5925719617849203074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7388687197073879789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6ea04f23437d0d4d9a3143b58a6e87d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridHexVisual
-  material: {fileID: 2100000, guid: 54b3a64d6d5c9984d980a0ae41439a57, type: 2}
-  fogMaterial: {fileID: 0}
-  defaultColor: {r: 1, g: 1, b: 1, a: 0.011764706}
-  selectedColor: {r: 0, g: 0.980809, b: 1, a: 1}
-  hexColor: {r: 0, g: 0, b: 0, a: 0}
-  EnableUpEdge: 1
 --- !u!33 &3892350228008545311
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -109,3 +91,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3418403815981322962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7388687197073879789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb37520dfe45cb24ea94867ec8999e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridHexSelectionView
+  material: {fileID: 2100000, guid: 54b3a64d6d5c9984d980a0ae41439a57, type: 2}
+  outlineThickness: 0.1
+  outlineColor: {r: 0, g: 1, b: 1, a: 1}
+  hexColor: {r: 0, g: 0, b: 0, a: 0}

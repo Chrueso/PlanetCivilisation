@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public enum GridHexNeighbourDir
+{
+    LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT
+}
+
 public class GridHex 
 {
     public float CellSize { get; private set; }

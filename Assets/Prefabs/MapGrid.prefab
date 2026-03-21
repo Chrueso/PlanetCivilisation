@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6994631598678088294}
   - component: {fileID: 7126611557689938711}
+  - component: {fileID: 8652962980293622457}
   m_Layer: 0
   m_Name: MapGrid
   m_TagString: Untagged
@@ -44,4 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63e6a23cebaaec43a98b8f0126c0ad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGrid
-  hexPrefab: {fileID: 7388687197073879789, guid: 3cd6203ec76519843b3074c8c4a284a3, type: 3}
+  hexViewPrefab: {fileID: 6583522690455519380, guid: 3cd6203ec76519843b3074c8c4a284a3, type: 3}
+--- !u!65 &8652962980293622457
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3026090376523810154}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

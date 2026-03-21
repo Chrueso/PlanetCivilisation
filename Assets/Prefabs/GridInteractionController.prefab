@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d1356a8ed2dae44863135fbd37e968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionController
+  selectionViewPrefab: {fileID: 3418403815981322962, guid: 622cdfe29096af64db8a1a5ea062bf7d, type: 3}

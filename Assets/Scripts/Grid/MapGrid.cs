@@ -5,10 +5,15 @@ public class MapGrid : MonoBehaviour
     public HexGridXZ<GridHex> Grid { get; private set; }
     public BoxCollider Col { get; private set; }
 
-    [SerializeField] private GameObject hexPrefab;
+    [SerializeField] private GridHexView hexViewPrefab;
+
+    public GridHexView HexView => hexViewPrefab;
+    public float CellSize {  get; private set; }
 
     public void GenerateGrid(int width, int height, float cellSize)
     {
+        CellSize = cellSize;
+
         Grid = new HexGridXZ<GridHex>(
             width,
             height,
@@ -41,12 +46,10 @@ public class MapGrid : MonoBehaviour
             for (int z = 0; z < height; z++)
             {
                 GridHex hex = Grid.GetGridObject(x, z);
-                GameObject obj = Instantiate(hexPrefab, Grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
-                obj.name = ("Hex " + x + ", " + z);
-
-                GridHexView hexVisual = obj.GetComponent<GridHexView>();
-                hexVisual.Init(hex);
-                hex.View = hexVisual;
+                GridHexView hexView = Instantiate(hexViewPrefab, Grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
+                hexView.name = ("Hex " + x + ", " + z);
+                hexView.Init(hex.CellSize);
+                hex.View = hexView;
             }
         }
     }

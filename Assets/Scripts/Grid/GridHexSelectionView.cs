@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 
-public class GridHexView : MonoBehaviour
+public class GridHexSelectionView : MonoBehaviour
 {
-    private float cellSize = 1;
+    private float cellSize;
     private MeshFilter meshFilter;
     private MeshRenderer meshRenderer;
     private MaterialPropertyBlock propertyBlock;
 
     [SerializeField] private Material material;
-    [SerializeField] private Material fogMaterial;
     [SerializeField] private float outlineThickness = 0.1f;
     [SerializeField] private Color outlineColor = Color.cyan;
     [SerializeField] private Color hexColor = Color.black;
-
-    public float OutlineThickness => outlineThickness;
 
     private Dictionary<string, bool> edgeBoolValues = new Dictionary<string, bool>()
     {
@@ -30,11 +28,13 @@ public class GridHexView : MonoBehaviour
         { "_Edge5", true } // bottom left
     };
 
-    public void Init(float cellSize)
+    public void Init(float cellSize, float gridHexOutlineThickness)
     {
         this.cellSize = cellSize;
+        this.cellSize += gridHexOutlineThickness;
+        outlineThickness += gridHexOutlineThickness;
         meshFilter = GetComponent<MeshFilter>();
-        meshRenderer = GetComponent<MeshRenderer>();    
+        meshRenderer = GetComponent<MeshRenderer>();
         meshFilter.mesh = new Mesh();
         propertyBlock = new MaterialPropertyBlock();
 
@@ -46,7 +46,7 @@ public class GridHexView : MonoBehaviour
     {
         if (cellSize < 0)
         {
-            Debug.Log("Grid hex view cannot generate cellsize less than 0");
+            Debug.Log("Selected grid hex view cannot generate cellsize less than 0");
             return;
         }
         Mesh mesh = meshFilter.mesh;
@@ -67,7 +67,7 @@ public class GridHexView : MonoBehaviour
             );
         }
 
-        Vector2[] uvs = new Vector2[7]; 
+        Vector2[] uvs = new Vector2[7];
 
         uvs[0] = new Vector2(0.5f, 0.5f);
 
@@ -97,7 +97,7 @@ public class GridHexView : MonoBehaviour
         mesh.RecalculateBounds();
     }
 
-    public void UpdateMaterial() 
+    public void UpdateMaterial()
     {
         if (material != null) meshRenderer.material = material;
 
@@ -121,5 +121,4 @@ public class GridHexView : MonoBehaviour
             propertyBlock.SetFloat(key, value ? 1f : 0f);
         }
     }
-
 }

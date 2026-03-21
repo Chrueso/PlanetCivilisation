@@ -1,15 +1,20 @@
-using UnityEngine;
+using DG.Tweening;
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class GridInteractionController : MonoBehaviour
 {
+    [SerializeField] private GridHexSelectionView selectionViewPrefab;
     private CameraController cameraController;
     private Camera cam;
     private MapGrid mapGrid;
     private GridHex selectedHex;
 
     private bool touchStartedOnUI = false;
+
+    private GridHexSelectionView selectionView;
+    Tween selectionTween;
 
     public event Action<GridHex> OnHexSelected;
     private EventBinding<GameStartEvent> gameStartBinding;
@@ -36,12 +41,25 @@ public class GridInteractionController : MonoBehaviour
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
         SetMap(gameStartEvent.MapGrid);
+        CreateSelectionHexView();
     }
 
     public void SetMap(MapGrid mapGrid)
     {
         this.mapGrid = mapGrid;
         Debug.Log("GridInteractionController received game map");
+    }
+
+    private void CreateSelectionHexView()
+    {
+        if (mapGrid == null)
+        {
+            Debug.Log(this + "Failed to create selection view map grid is null");
+            return;
+        }
+        selectionView = Instantiate(selectionViewPrefab, this.transform);
+        selectionView.Init(mapGrid.CellSize, mapGrid.HexView.OutlineThickness);
+        selectionView.gameObject.SetActive(false);
     }
 
     public void OnFingerDown(object sender, TouchInfo touchInfo)
@@ -59,8 +77,6 @@ public class GridInteractionController : MonoBehaviour
         if (cameraController.CameraMoving) return;
         if (touchStartedOnUI) return;
 
-        UnselectHex();
-
         Ray ray = cam.ScreenPointToRay(touchInfo.ScreenPos);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -69,8 +85,15 @@ public class GridInteractionController : MonoBehaviour
 
             if (hex != null)
             {
+                if (hex == selectedHex)
+                {
+                    UnselectHex(); // same hex toggle off
+                    return;
+                }
+
+                UnselectHex(); // diff hex swap
                 selectedHex = hex;
-                selectedHex.View.OnSelected();
+                ShowSelectionView();
 
                 OnHexSelected?.Invoke(selectedHex);
 
@@ -79,9 +102,33 @@ public class GridInteractionController : MonoBehaviour
             }
             else
             {
-                GameScreenManager.Pop();
+                UnselectHex();
             }
 
+        }
+    }
+
+    public void ShowSelectionView()
+    {
+        if (selectedHex != null && selectionView != null)
+        {
+            selectionView.transform.position = selectedHex.WorldPosition;
+            selectionView.gameObject.SetActive(true);
+
+            selectionTween?.Kill(true);
+            selectionView.transform.localScale = Vector3.one;
+            selectionTween = selectionView.transform
+                .DOPunchScale(Vector3.one * 0.2f, 0.25f);
+        }
+    }
+
+    public void HideSelectionView()
+    {
+        if (selectionView != null)
+        {
+            selectionTween?.Kill(true);
+            selectionView.transform.localScale = Vector3.one;
+            selectionView.gameObject.SetActive(false);
         }
     }
 
@@ -89,8 +136,9 @@ public class GridInteractionController : MonoBehaviour
     {
         if (selectedHex != null)
         {
-            selectedHex.View.OnSelected();
+            HideSelectionView();
             selectedHex = null;
+            GameScreenManager.Pop();
         }
     }
 }
