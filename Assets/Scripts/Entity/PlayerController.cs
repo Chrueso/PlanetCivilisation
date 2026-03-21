@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : IEntityController, IDisposable
 {
-    private EntityModel model;
+    private EntityData model;
     private EntityView view;
     private MapGrid mapGrid;
     private CommandInvoker commandInvoker;
@@ -17,7 +17,7 @@ public class PlayerController : IEntityController, IDisposable
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    public PlayerController(EntityModel model, EntityView view)
+    public PlayerController(EntityData model, EntityView view)
     {
         this.model = model;
         this.view = view;
@@ -43,6 +43,7 @@ public class PlayerController : IEntityController, IDisposable
     private void HandleTurnChange(TurnChangeEvent turnChangeEvent)
     {
         IsCurrentTurn = turnChangeEvent.CurrentTurnFaction == model.FactionType;
+        model.CalculateResourceGain();
     }
 
     private void ConnectModel()

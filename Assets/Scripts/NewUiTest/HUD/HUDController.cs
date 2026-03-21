@@ -5,7 +5,7 @@ public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
     private IEntityController entityController;
-    private EntityModel entityModel;
+    private EntityData entityModel;
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
@@ -37,7 +37,7 @@ public class HUDController : IUIMenuController, IDisposable
         Debug.Log("HUD recieved entity controller");
     }
 
-    public void SetModel(EntityModel entityModel)
+    public void SetModel(EntityData entityModel)
     {
         this.entityModel = entityModel;
         Debug.Log("HUD recieved entity model");

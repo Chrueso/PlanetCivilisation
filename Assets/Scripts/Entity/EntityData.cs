@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-public class EntityModel 
+public class EntityData 
 {
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
@@ -29,7 +29,7 @@ public class EntityModel
     public event Action OnDiscoveredPlanetsChanged;
     public event Action OnCurrentHexChanged;
     
-    public EntityModel(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30)
+    public EntityData(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);

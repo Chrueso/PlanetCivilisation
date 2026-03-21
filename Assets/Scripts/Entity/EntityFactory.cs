@@ -19,9 +19,9 @@ public class EntityFactory
         // if home plannet and faction type return
     }
 
-    public PlayerController CreatePlayer(PlanetData homePlanet, FactionType factionType, Vector3 position, out EntityModel model, out EntityView view) //replace with preset 
+    public PlayerController CreatePlayer(PlanetData homePlanet, FactionType factionType, Vector3 position, out EntityData model, out EntityView view) //replace with preset 
     {
-        model = new EntityModel(homePlanet, factionType);
+        model = new EntityData(homePlanet, factionType);
         view = Object.Instantiate(entityView);
         Vector3 spawnPos = position;
         spawnPos.y = model.yValue;

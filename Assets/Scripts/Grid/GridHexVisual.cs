@@ -10,6 +10,7 @@ public class GridHexVisual : MonoBehaviour
     private MeshRenderer meshRenderer;
   
     [SerializeField] private Material material;
+    [SerializeField] private Material fogMaterial;
     private MaterialPropertyBlock propertyBlock;
 
     private bool isSelected = false;
@@ -94,6 +95,5 @@ public class GridHexVisual : MonoBehaviour
         isSelected = !isSelected;
         UpdateMaterial();
     }
-
 
 }

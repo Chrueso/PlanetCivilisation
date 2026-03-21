@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class MoveCommand : ICommand
 {
-    private EntityModel entityModel;
+    private EntityData entityModel;
     private EntityView entityView;
     private GridHex originHex;
     private GridHex targetHex;
     
-    public MoveCommand(EntityModel entityModel, EntityView entityView, GridHex targetHex)
+    public MoveCommand(EntityData entityModel, EntityView entityView, GridHex targetHex)
     {
         this.entityModel = entityModel;
         this.entityView = entityView;

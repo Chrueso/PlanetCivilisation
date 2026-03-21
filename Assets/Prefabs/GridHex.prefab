@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ea04f23437d0d4d9a3143b58a6e87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridHexVisual
-  material: {fileID: 2100000, guid: 9adba80ad54986a46bffaeff9aefd0ce, type: 2}
+  material: {fileID: 2100000, guid: 6b8dd227b87cf9f4b9dd36ebf09e8d62, type: 2}
+  fogMaterial: {fileID: 0}
   defaultColor: {r: 1, g: 1, b: 1, a: 0.011764706}
   selectedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!33 &3892350228008545311

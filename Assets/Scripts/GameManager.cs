@@ -66,7 +66,7 @@ public class GameManager : Singleton<GameManager>
         mapGenerator.GenerateMap(mapSettings, out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG);
         MapGrid = mapGrid;
 
-        CreatePlayer(homePlanet, out EntityModel playerModel, out EntityView playerView, out PlayerController playerController);
+        CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController);
         //Create ai here
 
         EventBus<GameStartEvent>.Raise(new GameStartEvent
@@ -76,7 +76,7 @@ public class GameManager : Singleton<GameManager>
             MapGrid = mapGrid,
             PlayerController = playerController,
             PlayerModel = playerModel,
-            AIEntities = new List<EntityModel>()
+            AIEntities = new List<EntityData>()
         });
     }
 
@@ -118,7 +118,7 @@ public class GameManager : Singleton<GameManager>
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }
 
-    private void CreatePlayer(PlanetData homePlanet, out EntityModel playerModel, out EntityView playerView, out PlayerController playerController)
+    private void CreatePlayer(PlanetData homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController)
     {
         playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
            out playerModel, out playerView);
