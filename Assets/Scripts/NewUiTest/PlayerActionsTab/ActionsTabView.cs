@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class ActionsTabView : ScreenBase
 {
+    public override bool ShouldShowScreenRaycastBlocker => false;
     public override bool ShouldHonorBackButton => false;
-    public override bool ShouldUnfocusPrevScreen => false;
 
     public Button InfoButton;
     public Button MoveButton;
@@ -19,11 +19,11 @@ public class ActionsTabView : ScreenBase
     public TMP_Text additionalInfoText;
 
     private GridHex selectedHex;
-    private PlayerController playerController;
+    private IEntityController entityController;
 
-    public void Init(PlayerController playerController)
+    public void Init(IEntityController entityController)
     {
-        this.playerController = playerController;
+        this.entityController = entityController;
     }
 
     public void UpdateCurrentHex(GridHex selectedHex)
@@ -33,12 +33,12 @@ public class ActionsTabView : ScreenBase
 
     public void HandleButtons()
     {
-        if (selectedHex == null || playerController == null) return;
+        if (selectedHex == null || entityController == null) return;
 
         HideAllButtons();
 
-        bool isCurrentHex = selectedHex == playerController.CurrentHex;
-        bool inMoveRange = playerController.HexesInMoveRadius.Contains(selectedHex);
+        bool isCurrentHex = selectedHex == entityController.GetCurrentHex();
+        bool inMoveRange = entityController.CheckIfHexIsInMoveRadius(selectedHex);
 
         // Move — not current hex and in range
         if (!isCurrentHex && inMoveRange)
@@ -53,7 +53,7 @@ public class ActionsTabView : ScreenBase
         // Not on current hex — only info
         if (!isCurrentHex) return;
 
-        bool isOwnedByMe = planet.FactionType == playerController.Faction;
+        bool isOwnedByMe = planet.FactionType == entityController.GetFaction();
         bool isOwnedByEnemy = planet.FactionType != FactionType.Nothing && !isOwnedByMe;
         bool isUninhabited = planet.FactionType == FactionType.Nothing;
 
@@ -94,7 +94,7 @@ public class ActionsTabView : ScreenBase
                 {
                     additionalInfoText.text = $"Colonized by {planet.FactionType}";
 
-                    if (planet.FactionType == playerController.Faction)
+                    if (planet.FactionType == entityController.GetFaction())
                     {
                         additionalInfoText.text = $"Colonized by {planet.FactionType} (You)";
                     }

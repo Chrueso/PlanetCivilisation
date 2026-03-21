@@ -1,7 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface IEntityController
 {
+    public FactionType GetFaction();
+
+    public GridHex GetCurrentHex();
+
+    public bool CheckIfHexIsInMoveRadius(GridHex hex);
+
+    public void UpdateHexesInMoveRadius();
+
+    public bool CanExecuteAction();
+
+    public bool IsCurrentTurn { get; }
+
+    public bool TryEndTurn();
+
     public bool TryMove(GridHex hex);
 
     public bool TryColonize(PlanetData planet);

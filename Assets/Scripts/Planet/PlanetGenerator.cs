@@ -74,13 +74,13 @@ public class PlanetGenerator
     // Randomize faction type this is temp change later idk wtf factions do
     private FactionType PickFactionType(System.Random rng) // should use the plannet name as seed
     {
-        var values = System.Enum.GetValues(typeof(FactionType));
+        //var values = System.Enum.GetValues(typeof(FactionType));
 
         // Pick a random index
-        int index = rng.Next(values.Length);
+        int index = rng.Next(FactionDatabase.factions.Length);
 
         // Return the enum value
-        return (FactionType)values.GetValue(index);
+        return (FactionType)FactionDatabase.factions.GetValue(index);
     }
 
     private PlanetNoiseSettings GenerateNoiseSettings(System.Random rng, PlanetNoiseSettingsPreset presetNoiseSettings)
@@ -204,6 +204,11 @@ public class PlanetGenerator
         Dictionary<ResourceClass, ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
         
         FactionType factionType = PickFactionType(planetRNG);
+        //List<ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
+
+        //FactionType factionType = PickFactionType(planetRNG);
+
+        FactionType factionType = FactionType.Nothing;
 
         PlanetVisualTypesSO preset = ChooseVisualPreset(planetRNG);   
 

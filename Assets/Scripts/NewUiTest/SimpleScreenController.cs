@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class SimpleScreenController : MonoBehaviour
 {
@@ -12,12 +13,16 @@ public class SimpleScreenController : MonoBehaviour
     // If true, the starting screen will instantly be shown
     [SerializeField] private bool instantlyShowStartingScreen = false;
 
+    // Semi transparent black panel behind menu to block raycast
+    [SerializeField] CanvasGroup screenRaycastBlocker; 
+
     private InputAction backAction;
 
     private void Awake()
     {
         GameScreenManager.Register(this);
         backAction = InputSystem.actions.FindAction("Back");
+        screenRaycastBlocker.gameObject.SetActive(false);
     }
 
     private void OnDestroy() => GameScreenManager.Unregister(this);
@@ -52,6 +57,14 @@ public class SimpleScreenController : MonoBehaviour
             screens[^1].Unfocus();
         }
 
+        if (newScreen.ShouldShowScreenRaycastBlocker)
+        {
+            screenRaycastBlocker.transform.SetParent(newScreen.transform);
+            screenRaycastBlocker.transform.SetAsFirstSibling();
+            screenRaycastBlocker.gameObject.SetActive(true);
+            screenRaycastBlocker.alpha = 1.0f;
+        }
+
         // Push new screen
         screens.Add(newScreen);
 
@@ -78,6 +91,9 @@ public class SimpleScreenController : MonoBehaviour
         {
             screens[^1].Focus();
         }
+
+        screenRaycastBlocker.gameObject.SetActive(false);
+        screenRaycastBlocker.alpha = 0.0f;
     }
 
     private void Update()

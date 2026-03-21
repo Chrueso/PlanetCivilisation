@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class HUDView : ScreenBase
 {
+    public override bool ShouldShowScreenRaycastBlocker => false;
     public override bool ShouldHonorBackButton => false;
-    public override bool ShouldUnfocusPrevScreen => false;
 
     public Button SettingsButton;
     public Button PlanetListButton;

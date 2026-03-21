@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
@@ -17,8 +18,15 @@ public class CameraController : MonoBehaviour
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
+    private bool touchStartedOnUI = false;
+
+    private EventBinding<GameStartEvent> gameStartBinding;
+
     public void Init()
     {
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+
         CameraInstance = Camera.main;
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
     }
@@ -39,6 +47,7 @@ public class CameraController : MonoBehaviour
         TouchscreenHandler.FingerDownCallback += OnPlayerFingerDown;
         TouchscreenHandler.FingerMoveCallback += OnPlayerFingerMove;
         TouchscreenHandler.FingerUpCallback += OnPlayerFingerRelease;
+       
     }
 
     private void OnDisable()
@@ -57,6 +66,8 @@ public class CameraController : MonoBehaviour
         TouchscreenHandler.FingerMoveCallback -= OnPlayerFingerMove;
         TouchscreenHandler.FingerUpCallback -= OnPlayerFingerRelease;
 
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
+
     }
     #region PERSPECTIVE
     private void OnPlayerFingerRelease(object sender, TouchInfo e)
@@ -66,6 +77,8 @@ public class CameraController : MonoBehaviour
         startingPos = GetWorldPos(z, e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
 
+        touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
+
     }
 
     private void OnPlayerFingerMove(object sender, TouchInfo e)
@@ -73,6 +86,7 @@ public class CameraController : MonoBehaviour
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         if (waitForReset) return;
+        if (touchStartedOnUI) return;   
 
         Vector3 direction = startingPos - GetWorldPos(z, e.ScreenPos);
         direction.y = 0f;
@@ -80,8 +94,6 @@ public class CameraController : MonoBehaviour
         Vector3 nextPos = CameraInstance.transform.position + direction;
         Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), nextPos.y, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
         CameraInstance.transform.position = boundedPos;
-
-
     }
 
     private Vector3 GetWorldPos(float z, Vector3 pos)
@@ -99,30 +111,10 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = GetWorldPos(z, e.ScreenPos);
         if (waitForReset) waitForReset = false;
+
+        touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
     #endregion
-
-    public void CenterToHomeShip(Vector3 position)
-    {
-        Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y , position.z);
-    }
-
-    private void DisableMovement()
-    {
-        if (!eventsEnabled) return;
-        eventsEnabled = false;
-        waitForReset = true;
-    }
-
-    private void EnableMovement()
-    {
-        if (eventsEnabled) return;
-        
-        eventsEnabled = true;
-    }
-
-    
-
 
     #region ORTHO CAM
     private void PlayerFingerDown(object sender, TouchInfo e)
@@ -131,6 +123,8 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (waitForReset) waitForReset = false;
+
+        touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
 
     private void PlayerFingerMove(object sender, TouchInfo e)
@@ -138,6 +132,7 @@ public class CameraController : MonoBehaviour
         if (e.Index != 0) return;
         if (!eventsEnabled) return;
         if (waitForReset) return;
+        if (touchStartedOnUI) return;
         Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
         Vector3 nextPos = startingPos - diff;
         Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), 55, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
@@ -162,8 +157,34 @@ public class CameraController : MonoBehaviour
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
         CameraMoving = false;
+
+        touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
     #endregion
+
+    private void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        MoveCamera(gameStartEvent.PlayerModel.CurrentHex.WorldPosition);
+    }
+
+    public void MoveCamera(Vector3 position)
+    {
+        Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y, position.z);
+    }
+
+    private void DisableMovement()
+    {
+        if (!eventsEnabled) return;
+        eventsEnabled = false;
+        waitForReset = true;
+    }
+
+    private void EnableMovement()
+    {
+        if (eventsEnabled) return;
+
+        eventsEnabled = true;
+    }
 
     public void Disable() => DisableMovement();
     public void Enable() => EnableMovement();

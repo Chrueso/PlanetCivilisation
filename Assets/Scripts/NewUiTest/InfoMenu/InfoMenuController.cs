@@ -7,20 +7,27 @@ public class InfoMenuController : IUIMenuController
     public InfoMenuController(InfoMenuView view)
     {
         this.view = view;
+
+        ConnectView();
     }
 
     public void ConnectView()
     {
-       
+        view.CloseButton.onClick.AddListener(CloseView);
+    }
+
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
-        
+        GameScreenManager.Pop();
     }
 
-    public void ShowInfo(IGridHexOccupant hexOccupant)
+    public void UpdateView(IGridHexOccupant hexOccupant)
     {
-
+       
     }
 }

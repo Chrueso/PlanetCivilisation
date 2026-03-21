@@ -24,7 +24,7 @@ public class OldPlayerInteractionController : MonoBehaviour
         if (PlayerCam.CameraMoving) return;
         if (CurrentGridHex != null)
         {
-            CurrentGridHex.GridHexVisual.OnSelected();
+            CurrentGridHex.View.OnSelected();
             CurrentGridHex = null;
         }
         Ray ray = cameraInstance.ScreenPointToRay(e.ScreenPos);
@@ -33,7 +33,7 @@ public class OldPlayerInteractionController : MonoBehaviour
             var grid = GameManager.Instance.MapGrid.Grid.GetGridObject(hit.point);
             if (grid != null)
             {
-                grid.GridHexVisual.OnSelected();
+                grid.View.OnSelected();
                 CurrentGridHex = grid;
 
                 var planetData = (PlanetData)grid.Occupant;

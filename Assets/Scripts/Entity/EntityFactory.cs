@@ -3,17 +3,13 @@ using UnityEngine;
 
 public class EntityFactory 
 {
-    private MapGrid mapGrid;
     private EntityView entityView;
-    private CommandInvoker commandInvoker;
 
     private List<FactionType> avaliableFactions;
 
-    public EntityFactory(MapGrid mapGrid, EntityView entityView, CommandInvoker commandInvoker)
+    public EntityFactory(EntityView entityView)
     {
-        this.mapGrid = mapGrid;
         this.entityView = entityView;
-        this.commandInvoker = commandInvoker;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
     }
@@ -23,17 +19,18 @@ public class EntityFactory
         // if home plannet and faction type return
     }
 
-    public PlayerController CreatePlayer(PlanetData homePlanet, FactionType factionType, Vector3 position, out EntityModel model, out EntityView view) //replace with preset 
+    public PlayerController CreatePlayer(PlanetData homePlanet, FactionType factionType, Vector3 position, out EntityData model, out EntityView view) //replace with preset 
     {
-        model = new EntityModel(homePlanet, factionType);
+        model = new EntityData(homePlanet, factionType);
         view = Object.Instantiate(entityView);
         Vector3 spawnPos = position;
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
-        PlayerController controller = new PlayerController(model, view, mapGrid, commandInvoker);
+        PlayerController controller = new PlayerController(model, view);
         model.CurrentHex = homePlanet.CurrentHex;
 
         avaliableFactions.Remove(factionType);
+
         return controller;
     }
 }

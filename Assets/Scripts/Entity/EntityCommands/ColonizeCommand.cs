@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ColonizeCommand : ICommand
 {
-    private EntityModel entityModel;
+    private EntityData entityModel;
     private PlanetData targetPlanet; 
 
-    public ColonizeCommand(EntityModel entityModel, PlanetData planet)
+    public ColonizeCommand(EntityData entityModel, PlanetData planet)
     {
         this.entityModel = entityModel;
         this.targetPlanet = planet;

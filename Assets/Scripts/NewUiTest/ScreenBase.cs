@@ -27,7 +27,10 @@ public class ScreenBase : MonoBehaviour
     public virtual bool ShouldHonorBackButton => true;
 
     // Unfocuses previously open screen if this is true
-    public virtual bool ShouldUnfocusPrevScreen => true;
+    public virtual bool ShouldUnfocusPrevScreen => false;
+
+    // Semi transparent black panel behind menu to block raycasts if true
+    public virtual bool ShouldShowScreenRaycastBlocker => true;
 
     private void Awake()
     {

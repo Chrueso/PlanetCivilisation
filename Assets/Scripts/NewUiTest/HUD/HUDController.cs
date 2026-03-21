@@ -1,62 +1,110 @@
 using System;
 using UnityEngine;
 
-public class HUDController : IUIMenuController
+public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
-    private EntityModel playerModel;
-    CameraController cameraController;
+    private IEntityController entityController;
+    private EntityData entityModel;
+    private CameraController cameraController;
+    private PlanetListController planetListController;
+    private SettingsController settingsController;
 
-    public HUDController(HUDView view, EntityModel playerModel, CameraController cameraController) //Needs model when model resources update then this updates
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
     {
         this.view = view;
-        this.playerModel = playerModel;
-        this.cameraController = cameraController;
 
+        this.cameraController = cameraController;
+        this.planetListController = planetListController;
+        this.settingsController = settingsController;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+    }
+
+    private void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        SetController(gameStartEvent.PlayerController);
+        SetModel(gameStartEvent.PlayerModel);
         ConnectView();
+    }
+
+    public void SetController(IEntityController entityController)
+    {
+        this.entityController = entityController;
+        Debug.Log("HUD recieved entity controller");
+    }
+
+    public void SetModel(EntityData entityModel)
+    {
+        this.entityModel = entityModel;
+        Debug.Log("HUD recieved entity model");
     }
 
     public void ConnectView()
     {
+        if (entityModel == null)
+        {
+            Debug.Log("HUD entityModel is null!");
+            return;
+        }
+
+        entityModel.OnResourcesChanged += HandleResourcesChanged;
+
+        view.UpdateFaction(entityModel.FactionType);
+        view.HandleResources();
+        view.UpdateResources(entityModel.Resources);
+
         view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
         view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
-        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
+        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked); 
+    }
 
-        playerModel.OnResourcesChanged += HandleResourcesChanged;
-
-        view.UpdateFaction(playerModel.FactionType);
-        view.HandleResources();
-        view.UpdateResources(playerModel.Resources);
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
-       //Should u be able to close hud idk???
-    }
-
-    private void HandleSettingsButtonClicked()
-    {
-       
-    }
-
-    private void HandlePlanetListButtonClicked()
-    {
-        
-    }
-
-    private void HandleHomeShipButtonClicked()
-    {
-        cameraController.CenterToHomeShip(playerModel.CurrentHex.WorldPosition);
-    }
-
-    private void HandleEndTurnButtonClicked()
-    {
-        
+        GameScreenManager.Pop();
     }
 
     private void HandleResourcesChanged()
     {
-        view.UpdateResources(playerModel.Resources);
+        if (entityModel == null) return;
+        view.UpdateResources(entityModel?.Resources);
+    }
+
+    private void HandleSettingsButtonClicked()
+    {
+       settingsController.OpenView();
+    }
+
+    private void HandlePlanetListButtonClicked()
+    {
+        planetListController.OpenView();
+    }
+
+    private void HandleHomeShipButtonClicked()
+    {
+        cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
+    }
+
+    private void HandleEndTurnButtonClicked()
+    {
+        if (entityController == null) return;
+        entityController.TryEndTurn();
+    }
+
+    public void Dispose()
+    {
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
+
+        if (entityModel == null) return;
+        entityModel.OnResourcesChanged -= HandleResourcesChanged;
     }
 }

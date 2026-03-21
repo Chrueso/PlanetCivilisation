@@ -1,16 +1,28 @@
 using UnityEngine;
 
-public class PlanetListController : MonoBehaviour
+public class PlanetListController : IUIMenuController
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private PlanetListView view;
+
+    public PlanetListController(PlanetListView view)
     {
-        
+        this.view = view;
+
+        ConnectView();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ConnectView()
     {
-        
+        view.CloseButton.onClick.AddListener(CloseView);
+    }
+
+    public void OpenView()
+    {
+        GameScreenManager.Push(view);
+    }
+
+    public void CloseView()
+    {
+        GameScreenManager.Pop();
     }
 }

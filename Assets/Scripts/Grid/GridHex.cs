@@ -8,7 +8,7 @@ public class GridHex
     public Vector3 WorldPosition { get; private set; }
     public bool IsOccupied;
     public IGridHexOccupant Occupant;
-    public GridHexVisual GridHexVisual;
+    public GridHexView View;
 
     public GridHex(float cellSize, Vector2Int gridPosition, Vector3Int gridPositionCube, Vector3 worldPosition, bool isOccupied = false, IGridHexOccupant occupant = null)
     {

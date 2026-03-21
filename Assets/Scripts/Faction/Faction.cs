@@ -1,97 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class Faction
-{
-    public FactionType FactionType { get; private set; }
-    public float Money { get; private set; }
-    public Dictionary<ShipDataSO, int> shipCounts = new Dictionary<ShipDataSO, int>();
-    public List<PlanetData> ownedPlanets = new List<PlanetData>();
+//public class Faction
+//{
+//    public FactionType FactionType { get; private set; }
+//    public float Money { get; private set; }
+//    public Dictionary<ShipDataSO, int> shipCounts = new Dictionary<ShipDataSO, int>();
+//    public List<PlanetData> ownedPlanets = new List<PlanetData>();
 
-    //added by ysaac
-    public bool IsPlayer { get; private set; }
-    public int ActionPoints { get; private set; }
-    private int baseActionPoints;
-    private int maxActionPoints;
+//    //added by ysaac
+//    public bool IsPlayer { get; private set; }
+//    public int ActionPoints { get; private set; }
+//    private int baseActionPoints;
+//    private int maxActionPoints;
 
-    public event System.Action OnTurnFinished;
+//    public event System.Action OnTurnFinished;
 
-    public Faction(FactionDataSO factionData)
-    {
-        FactionType = factionData.FactionType;
-        Money = factionData.Money;
-        IsPlayer = factionData.IsPlayer;
+//    public Faction(FactionDataSO factionData)
+//    {
+//        FactionType = factionData.FactionType;
+//        Money = factionData.Money;
+//        IsPlayer = factionData.IsPlayer;
 
-        baseActionPoints = factionData.BaseActionPoints;
-        maxActionPoints = baseActionPoints;
-        ActionPoints = maxActionPoints;
+//        baseActionPoints = factionData.BaseActionPoints;
+//        maxActionPoints = baseActionPoints;
+//        ActionPoints = maxActionPoints;
 
-        foreach (var shipData in factionData.startingShipDatas)
-        {
-            shipCounts[shipData.ShipType] = shipData.Amount;
-        }
-    }
+//        foreach (var shipData in factionData.startingShipDatas)
+//        {
+//            shipCounts[shipData.ShipType] = shipData.Amount;
+//        }
+//    }
 
-    public void BeginTurn(TurnManager turnManager)
-    {
-        ActionPoints = maxActionPoints;
-        Debug.Log($"{FactionType} starts turn with {ActionPoints} AP");
-    }
+//    public void BeginTurn(TurnManager turnManager)
+//    {
+//        ActionPoints = maxActionPoints;
+//        Debug.Log($"{FactionType} starts turn with {ActionPoints} AP");
+//    }
 
-    public void RunAIAction()
-    {
-        if (ActionPoints <= 0) return;
-        ActionPoints --;
-        Debug.Log($"{FactionType} did something. {ActionPoints} AP Remaining");
-    }
+//    public void RunAIAction()
+//    {
+//        if (ActionPoints <= 0) return;
+//        ActionPoints --;
+//        Debug.Log($"{FactionType} did something. {ActionPoints} AP Remaining");
+//    }
 
-    public void FinishTurn()
-    {
-        Debug.Log($"{FactionType} finished turn");
-        OnTurnFinished?.Invoke();
-    }
+//    public void FinishTurn()
+//    {
+//        Debug.Log($"{FactionType} finished turn");
+//        OnTurnFinished?.Invoke();
+//    }
 
-    public bool DecreaseActionPoint(int amount)
-    {
-        if (ActionPoints-amount < 0)
-        {
-            return false;
-        }
-        ActionPoints -= amount;
-        if (ActionPoints <= 0) OnTurnFinished?.Invoke();
-        return true;
-    }
+//    public bool DecreaseActionPoint(int amount)
+//    {
+//        if (ActionPoints-amount < 0)
+//        {
+//            return false;
+//        }
+//        ActionPoints -= amount;
+//        if (ActionPoints <= 0) OnTurnFinished?.Invoke();
+//        return true;
+//    }
 
-    //public virtual void StartPlayerTurn()
-    //{
-    //    Debug.Log($"{FactionType} is beginning");
-    //    //ActionPoints = maxActionPoints;
-    //    // Enable player controls here
-    //    RunAiTurn();
-    //}
+//    //public virtual void StartPlayerTurn()
+//    //{
+//    //    Debug.Log($"{FactionType} is beginning");
+//    //    //ActionPoints = maxActionPoints;
+//    //    // Enable player controls here
+//    //    RunAiTurn();
+//    //}
 
-    //public virtual void StartAITurn()
-    //{
-    //    Debug.Log($"{FactionType} is beginning");
-    //    //ActionPoints = maxActionPoints;
-    //    RunAiTurn();
-    //}
+//    //public virtual void StartAITurn()
+//    //{
+//    //    Debug.Log($"{FactionType} is beginning");
+//    //    //ActionPoints = maxActionPoints;
+//    //    RunAiTurn();
+//    //}
 
-    //public virtual void RunAiTurn()
-    //{
-    //    while(ActionPoints > 0)
-    //    {
-    //        //do ai stuff here
-    //        ActionPoints--;
-    //        Debug.Log($"{FactionType} did an action");
-    //    }
-    //    TurnManager.Instance.EndTurn();
-    //}
+//    //public virtual void RunAiTurn()
+//    //{
+//    //    while(ActionPoints > 0)
+//    //    {
+//    //        //do ai stuff here
+//    //        ActionPoints--;
+//    //        Debug.Log($"{FactionType} did an action");
+//    //    }
+//    //    TurnManager.Instance.EndTurn();
+//    //}
 
-    //public virtual void EndTurn()
-    //{
-    //    Debug.Log($"{FactionType} has finished doing stuff");
-    //    OnTurnFinished?.Invoke();
-    //}
-}
+//    //public virtual void EndTurn()
+//    //{
+//    //    Debug.Log($"{FactionType} has finished doing stuff");
+//    //    OnTurnFinished?.Invoke();
+//    //}
+//}

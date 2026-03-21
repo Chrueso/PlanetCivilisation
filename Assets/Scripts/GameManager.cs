@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,22 +13,23 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
 
-    public TurnManager turnManager { get; private set; }
-
-    [Header("Prefabs")]
-    [SerializeField] private GameObject planetPrefab;
-    [SerializeField] private EntityView entityViewPrefab;
-    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
-
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
-    [SerializeField] private PlayerInteractionController playerInteractionController;
+    [SerializeField] private GridInteractionController gridInteractionController;
     //[SerializeField] private DiplomacySystem diplomacySystem;
 
-    [Header("UI")]
+    [Header("Views")]
+    [SerializeField] private GameObject planetPrefab;
+    [SerializeField] private EntityView entityView;
+    [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
+
+    [Header("UI Views")]
     [SerializeField] private InfoMenuView infoMenuView;
     [SerializeField] private ActionsTabView actionsTabView;
     [SerializeField] private HUDView hudView;
+    [SerializeField] private PlanetListView planetListView;
+    [SerializeField] private StructuresMenuView structuresMenuView;
+    [SerializeField] private SettingsView settingsView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -38,54 +40,95 @@ public class GameManager : Singleton<GameManager>
     private InfoMenuController infoMenuController;
     private ActionsTabController actionsTabController;
     private HUDController hudController;
+    private PlanetListController planetListController;
+    private StructuresController structuresController;
+    private SettingsController settingsController;
+    private TurnManager turnManager;
 
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
-    public MapGrid MapGrid { get; private set; }
-    public Player Player { get; private set; }
+    public MapGrid MapGrid { get; private set; } // not used
+    public Player Player { get; private set; } // not used
 
-    [SerializeField] private FactionManager factionManagerRef;
+    private readonly List<IDisposable> disposables = new(); // for cleanup
 
     protected override void Awake()
     {
         base.Awake();
 
+        CreateSystems();
+        CreateHUD();
+        CreateActionTab();
+
+        // Game context
         GenerateSeed();
 
-        cameraController.Init();
-
-        planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
-        mapGenerator = new MapGenerator(mapSettings, planetGenerator);
-        mapGenerator.GenerateMap(out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG); // MapGrid.GenerateGrid(50, 50, 6);
+        mapGenerator.GenerateMap(mapSettings, out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG);
         MapGrid = mapGrid;
 
-        turnManager = new TurnManager(factionManagerRef);
-        battleManager = new BattleManager(shipDatabase);
+        CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController);
+        //Create ai here
 
-        commandInvoker = new CommandInvoker();
-        entityFactory = new EntityFactory(mapGrid, entityViewPrefab, commandInvoker);
-
-        playerInteractionController.Init(cameraController, mapGrid);
-
-        PlayerController playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
-            out EntityModel playerModel, out EntityView playerView);
-
-        //UI
-        infoMenuController = new InfoMenuController(infoMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, infoMenuController, playerController, playerInteractionController);
-        hudController = new HUDController(hudView, playerModel, cameraController);    
-       
-
-        Vector3 homeplanetPos = homePlanet.CurrentHex.WorldPosition;
-        Camera.main.transform.position = new Vector3(homeplanetPos.x, 55, homeplanetPos.z);
-
-
+        EventBus<GameStartEvent>.Raise(new GameStartEvent
+        {
+            CommandInvoker = commandInvoker,
+            TurnManager = turnManager,
+            MapGrid = mapGrid,
+            PlayerController = playerController,
+            PlayerModel = playerModel,
+            AIEntities = new List<EntityData>()
+        });
     }
 
-    private void Start()
+    private void CreateSystems()
     {
-        //temporary to make the turns start, ideally you want somehting else like pressing the play game button or something
-        turnManager.StartTurn();
+        cameraController.Init();
+        gridInteractionController.Init(cameraController);
+        planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
+        mapGenerator = new MapGenerator(planetGenerator);
+        turnManager = new TurnManager();
+        battleManager = new BattleManager(shipDatabase);
+        commandInvoker = new CommandInvoker();
+        entityFactory = new EntityFactory(entityView);
+
+        TryRegisterDisposable(
+            planetGenerator,
+            mapGenerator,
+            battleManager,
+            commandInvoker,
+            entityFactory
+        );
+    }
+
+    private void CreateHUD()
+    {
+        settingsController = new SettingsController(settingsView); //maybe should be mono persistant from main menu
+        planetListController = new PlanetListController(planetListView);
+        hudController = new HUDController(hudView, cameraController, planetListController, settingsController);
+
+        TryRegisterDisposable(settingsController, planetListController, hudController);
+    }
+
+    private void CreateActionTab()
+    {
+        infoMenuController = new InfoMenuController(infoMenuView);
+        structuresController = new StructuresController(structuresMenuView);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController);
+
+        TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
+    }
+
+    private void CreatePlayer(PlanetData homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController)
+    {
+        playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
+           out playerModel, out playerView);
+
+        TryRegisterDisposable(playerController);
+    }
+
+    private void CreateAI()
+    {
+
     }
 
     private void GenerateSeed()
@@ -104,6 +147,24 @@ public class GameManager : Singleton<GameManager>
         SeedRNG = new System.Random(SeedInt);
 
         Debug.Log($"Generated Galaxy Name: {GalaxyName} with Seed: {SeedInt}");
+    }
+
+    private void TryRegisterDisposable(params object[] objects)
+    {
+        foreach (object obj in objects)
+        {
+            if (obj is IDisposable disposable)
+                disposables.Add(disposable);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var disposable in disposables)
+        {
+            disposable.Dispose();
+        }
+        disposables.Clear();
     }
 
 }

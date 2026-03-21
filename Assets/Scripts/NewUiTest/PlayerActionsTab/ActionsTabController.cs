@@ -1,28 +1,53 @@
 using System;
+using UnityEngine;
 
-public class ActionsTabController : IUIMenuController
+public class ActionsTabController : IUIMenuController, IDisposable
 {
     private ActionsTabView view;
+    private IEntityController entityController;
+    private GridInteractionController gridInteractionController;
     private InfoMenuController infoMenuController;
-    private PlayerController playerController;
-    private PlayerInteractionController playerInteractionController;
+    private StructuresController structuresController;
     private GridHex selectedHex;
 
-    public ActionsTabController(ActionsTabView view, InfoMenuController infoMenuController, PlayerController playerController, PlayerInteractionController playerInteractionController)
+    private EventBinding<GameStartEvent> gameStartBinding;
+
+    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController,
+        InfoMenuController infoMenuController, StructuresController structuresController)
     {
         this.view = view;
 
+        this.gridInteractionController = gridInteractionController;
         this.infoMenuController = infoMenuController;
-        this.playerController = playerController;
-        this.playerInteractionController = playerInteractionController;
+        this.structuresController = structuresController;
 
-        playerInteractionController.OnHexSelected += HandleHexSelected;
+        gridInteractionController.OnHexSelected += HandleHexSelected;
+
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+    }
+
+    private void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        SetController(gameStartEvent.PlayerController);
         ConnectView();
+    }
+
+    public void SetController(IEntityController entityController)
+    {
+        this.entityController = entityController;
+        Debug.Log("ActionTabController recieved entity controller");
     }
 
     public void ConnectView()
     {
-        view.Init(playerController);
+        if (entityController == null)
+        {
+            Debug.Log("ActionTab entityController is null!");
+            return;
+        }
+        
+        view.Init(entityController);
 
         view.CloseButton.onClick.AddListener(CloseView);
         view.InfoButton.onClick.AddListener(HandleInfoButtonClicked);
@@ -33,30 +58,38 @@ public class ActionsTabController : IUIMenuController
         view.BuildStructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
     }
 
+    public void OpenView()
+    {
+        view.UpdateCurrentHex(selectedHex);
+        GameScreenManager.Push(view);
+    }
+
     public void CloseView()
     {
         GameScreenManager.Pop();
-        playerInteractionController.UnselectHex();
+        gridInteractionController.UnselectHex();
     }
 
     public void HandleHexSelected(GridHex selectedHex)
     {
         this.selectedHex = selectedHex;
-        view.UpdateCurrentHex(selectedHex);
-        GameScreenManager.Push(view);
+        OpenView();
     }
 
     public void HandleInfoButtonClicked()
     {
         if (selectedHex.Occupant != null)
         {
-            infoMenuController.ShowInfo(selectedHex.Occupant);
+            infoMenuController.UpdateView(selectedHex.Occupant);
+            infoMenuController.OpenView();
         }
     }
 
     private void HandleMoveButtonClicked()
     {
-        if (playerController.TryMove(selectedHex))
+        if (entityController == null) return;
+
+        if (entityController.TryMove(selectedHex))
         {
             CloseView();
         }
@@ -64,9 +97,11 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleColonizeButtonClicked()
     {
+        if (entityController == null) return;
+
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (playerController.TryColonize(planet))
+            if (entityController.TryColonize(planet))
             {
                 //CloseView();
                 view.Show(true); // updates after colonize
@@ -76,9 +111,11 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleAttackButtonClicked()
     {
+        if (entityController == null) return; 
+
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (playerController.TryAttack(planet))
+            if (entityController.TryAttack(planet))
             {
                 CloseView();
             }
@@ -93,8 +130,13 @@ public class ActionsTabController : IUIMenuController
 
     private void HandleBuildStructuresButtonClicked()
     {
-
+        structuresController.OpenView();
     }
     
+    public void Dispose()
+    {
+        gridInteractionController.OnHexSelected -= HandleHexSelected;
+        EventBus<GameStartEvent>.Deregister(gameStartBinding);
+    }
     
 }

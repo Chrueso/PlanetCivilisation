@@ -1,94 +1,76 @@
-using System.Collections;
-using TMPro;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class TurnManager
 {
-    public bool playerTurn { get { return currentFaction.IsPlayer; } } 
-    private int currentFactionIndex = 0;
+    private int currentTurn = 0;
+    private FactionType currentTurnFaction = FactionType.Nothing;
+    private int turnIndex = -1; 
+    private List<FactionType> turnOrder = new List<FactionType>();
 
-    private FactionManager factionManager;
-    public Faction currentFaction { get { return factionManager.FactionsInUse[currentFactionIndex]; } }
+    private EventBinding<GameStartEvent> gameStartBinding;
 
-    public event System.Action OnTurnEnd;
-    public event System.Action OnTurnStart;
-
-    public TurnManager(FactionManager factionManager)
+    public TurnManager()
     {
-        this.factionManager = factionManager;
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
     }
 
-    //make something call this at the start of the game
-    public void StartTurn()
+    public void HandleGameStart(GameStartEvent gameStartEvent)
     {
-
-        currentFaction.BeginTurn(this);
-        currentFaction.OnTurnFinished += EndTurn;
-
-        OnTurnStart?.Invoke();
-
-        if (currentFaction.ActionPoints > 0)
+        FactionType playerFaction = gameStartEvent.PlayerModel.FactionType;
+        List<FactionType> AIfactions = new List<FactionType>();
+        foreach (var ai in gameStartEvent.AIEntities)
         {
-            Debug.Log($"Starting turn for {currentFaction.FactionType}");
-            if (!playerTurn)
-            {
-               RunAiTurn();
-            }
-            else
-            {
-               StartPlayerTurn();
-            }
+            AIfactions.Add(ai.FactionType);
         }
+
+        SetupTurnOrder(playerFaction, AIfactions);
+        ChangeTurn();
     }
 
-    public void EndTurn()
+    private void SetupTurnOrder(FactionType playerFaction, List<FactionType> AIfactions)
     {
-        Debug.Log($"Ending turn for {currentFaction.FactionType}");
+        turnOrder.Clear();
 
-        currentFaction.OnTurnFinished -= EndTurn;
-        OnTurnEnd?.Invoke();
-
-        if (playerTurn)
+        if (!turnOrder.Contains(playerFaction))
         {
-            EndPlayerTurn();
+            turnOrder.Add(playerFaction);
         }
         else
         {
-            //do Faction stuff here ig
-            
-        }
-        currentFactionIndex = (currentFactionIndex + 1) % factionManager.FactionsInUse.Count;
-        StartTurn();
-    }
-
-    private void RunAiTurn()
-    {
-        while (currentFaction.ActionPoints > 0)
-        {
-            currentFaction.RunAIAction();
+            Debug.LogError("Duplicate player faction in turn order!");
+            return;
         }
 
-        currentFaction.FinishTurn();
-    }
-
-    public void StartPlayerTurn()
-    {
-
-    }
-
-    public void EndPlayerTurn()
-    {
-        if (playerTurn)
+        foreach (var faction in AIfactions)
         {
-            GameManager.Instance.Player.CalculateResourceGain();
-            if (GameManager.Instance.Player.OwnedPlanets.Count >= 5 && GameManager.Instance.Player.Resources[ResourceType.Metals] > 30)
+            if (!turnOrder.Contains(faction))
             {
-                SceneManager.LoadScene("MainMenu");
+                turnOrder.Add(faction);
+            }
+            else
+            {
+                Debug.LogError("Duplicate AI faction in turn order!");
             }
         }
     }
 
+    public void ChangeTurn()
+    {
+        currentTurn++;
+        turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 
+        var prevTurnFaction = currentTurnFaction;
+        currentTurnFaction = turnOrder[turnIndex];
+
+        Debug.Log($"Current turn: [{currentTurnFaction}]");
+
+        EventBus<TurnChangeEvent>.Raise(new TurnChangeEvent
+        {
+            CurrentTurn = currentTurn,
+            PrevTurnFaction = prevTurnFaction,
+            CurrentTurnFaction = currentTurnFaction
+        });
+    }
 }
