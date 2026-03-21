@@ -91,6 +91,20 @@
             },
             "m_InputSlot": {
                 "m_Node": {
+                    "m_Id": "5212706036c64216a4a0ab55242aae42"
+                },
+                "m_SlotId": 3
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "7b8fd58dccbe452aaf3a06ab1afa20a1"
+                },
+                "m_SlotId": 1
+            },
+            "m_InputSlot": {
+                "m_Node": {
                     "m_Id": "53301bcb97d14a968891849ba6d279f7"
                 },
                 "m_SlotId": 0
@@ -325,15 +339,18 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 275.0,
-            "y": -29.99999237060547,
-            "width": 167.99993896484376,
-            "height": 76.99998474121094
+            "x": 309.0,
+            "y": -37.0,
+            "width": 168.0,
+            "height": 101.0
         }
     },
     "m_Slots": [
         {
             "m_Id": "9eb9a42859f949638123cf4e48950225"
+        },
+        {
+            "m_Id": "a5066598aa2542a2b1ed6c0b0fa08134"
         }
     ],
     "synonyms": [],
@@ -359,10 +376,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 108.5,
-            "y": -58.99998474121094,
+            "x": 123.0,
+            "y": -165.0,
             "width": 126.0,
-            "height": 117.99998474121094
+            "height": 118.0
         }
     },
     "m_Slots": [
@@ -504,6 +521,22 @@
         "z": 0.0,
         "w": 0.0
     },
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "a5066598aa2542a2b1ed6c0b0fa08134",
+    "m_Id": 3,
+    "m_DisplayName": "Value",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Value",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
     "m_LiteralMode": false
 }
 

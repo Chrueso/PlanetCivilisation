@@ -11,7 +11,7 @@ public class GridHexVisual : MonoBehaviour
   
     [SerializeField] private Material material;
     [SerializeField] private Material fogMaterial;
-    private MaterialPropertyBlock propertyBlock;
+    //private MaterialPropertyBlock propertyBlock;
 
     private bool isSelected = false;
     [SerializeField] private Color defaultColor = Color.cyan;
@@ -23,7 +23,7 @@ public class GridHexVisual : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();    
         meshFilter.mesh = new Mesh();
-        propertyBlock = new MaterialPropertyBlock();
+        //propertyBlock = new MaterialPropertyBlock();
 
         GenerateMesh();
         UpdateMaterial();
@@ -84,10 +84,10 @@ public class GridHexVisual : MonoBehaviour
     {
         if (material != null) meshRenderer.material = material;
 
-        meshRenderer.GetPropertyBlock(propertyBlock);
-        Color currentColor = isSelected ? selectedColor : defaultColor;
-        propertyBlock.SetColor("_OutlineColor", currentColor);
-        meshRenderer.SetPropertyBlock(propertyBlock);   
+        //meshRenderer.GetPropertyBlock(propertyBlock);
+        //Color currentColor = isSelected ? selectedColor : defaultColor;
+        //propertyBlock.SetColor("_OutlineColor", currentColor);
+        //meshRenderer.SetPropertyBlock(propertyBlock);   
     }
 
     public void OnSelected()
