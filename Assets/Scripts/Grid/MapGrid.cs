@@ -44,9 +44,9 @@ public class MapGrid : MonoBehaviour
                 GameObject obj = Instantiate(hexPrefab, Grid.GetWorldPosition(x, z), Quaternion.identity, this.transform);
                 obj.name = ("Hex " + x + ", " + z);
 
-                GridHexVisual hexVisual = obj.GetComponent<GridHexVisual>();
+                GridHexView hexVisual = obj.GetComponent<GridHexView>();
                 hexVisual.Init(hex);
-                hex.GridHexVisual = hexVisual;
+                hex.View = hexVisual;
             }
         }
     }

@@ -70,7 +70,7 @@ public class GridInteractionController : MonoBehaviour
             if (hex != null)
             {
                 selectedHex = hex;
-                selectedHex.GridHexVisual.OnSelected();
+                selectedHex.View.OnSelected();
 
                 OnHexSelected?.Invoke(selectedHex);
 
@@ -89,7 +89,7 @@ public class GridInteractionController : MonoBehaviour
     {
         if (selectedHex != null)
         {
-            selectedHex.GridHexVisual.OnSelected();
+            selectedHex.View.OnSelected();
             selectedHex = null;
         }
     }

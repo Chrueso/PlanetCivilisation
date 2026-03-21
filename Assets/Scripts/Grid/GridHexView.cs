@@ -1,21 +1,41 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 
-public class GridHexVisual : MonoBehaviour
+public class GridHexView : MonoBehaviour
 {
+    private enum NeighbourDir
+    {
+        LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT
+    }
+
+    private Dictionary<string, bool> edgeBoolValues = new Dictionary<string, bool>()
+    {
+        { "_Edge0", true }, // left
+        { "_Edge1", true }, // top left
+        { "_Edge2", true }, // top right
+        { "_Edge3", true }, // right
+        { "_Edge4", true }, // bottom right
+        { "_Edge5", true } // bottom left
+    };
+
     private GridHex gridHex;
     private MeshFilter meshFilter;
     private MeshRenderer meshRenderer;
   
     [SerializeField] private Material material;
     [SerializeField] private Material fogMaterial;
-    //private MaterialPropertyBlock propertyBlock;
+    private MaterialPropertyBlock propertyBlock;
 
     private bool isSelected = false;
     [SerializeField] private Color defaultColor = Color.cyan;
     [SerializeField] private Color selectedColor = Color.green;
+    [SerializeField] private Color hexColor = Color.black;
+
+    [SerializeField] private bool EnableUpEdge = true;
 
     public void Init(GridHex gridHex)
     {
@@ -23,7 +43,7 @@ public class GridHexVisual : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();    
         meshFilter.mesh = new Mesh();
-        //propertyBlock = new MaterialPropertyBlock();
+        propertyBlock = new MaterialPropertyBlock();
 
         GenerateMesh();
         UpdateMaterial();
@@ -84,10 +104,22 @@ public class GridHexVisual : MonoBehaviour
     {
         if (material != null) meshRenderer.material = material;
 
-        //meshRenderer.GetPropertyBlock(propertyBlock);
-        //Color currentColor = isSelected ? selectedColor : defaultColor;
-        //propertyBlock.SetColor("_OutlineColor", currentColor);
-        //meshRenderer.SetPropertyBlock(propertyBlock);   
+        meshRenderer.GetPropertyBlock(propertyBlock);
+        Color currentColor = isSelected ? selectedColor : defaultColor;
+        propertyBlock.SetColor("_OutlineColor", currentColor);
+        propertyBlock.SetColor("_HexColor", hexColor);
+
+        EnableEdges(propertyBlock, true);
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void EnableEdges(MaterialPropertyBlock propertyBlock, bool value)
+    {
+        foreach (var key in edgeBoolValues.Keys.ToList()) // ToList() snapshots the keys
+        {
+            edgeBoolValues[key] = value;
+            propertyBlock.SetFloat(key, value ? 1f : 0f);
+        }
     }
 
     public void OnSelected()
