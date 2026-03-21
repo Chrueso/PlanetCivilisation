@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager> 
+public class GameManager : MonoBehaviour
 {
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
@@ -45,17 +45,12 @@ public class GameManager : Singleton<GameManager>
     private SettingsController settingsController;
     private TurnManager turnManager;
 
-    //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
-    public MapGrid MapGrid { get; private set; } // not used
-    public Player Player { get; private set; } // not used
 
     private readonly List<IDisposable> disposables = new(); // for cleanup
 
-    protected override void Awake()
+    public void Awake()
     {
-        base.Awake();
-
         CreateSystems();
         CreateHUD();
         CreateActionTab();
@@ -64,7 +59,6 @@ public class GameManager : Singleton<GameManager>
         GenerateSeed();
 
         mapGenerator.GenerateMap(mapSettings, out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG);
-        MapGrid = mapGrid;
 
         CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController);
         //Create ai here

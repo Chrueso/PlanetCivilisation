@@ -6,8 +6,9 @@ public class EntityData
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
     public FactionType FactionType { get; private set; }
-    public List<PlanetData> OwnedPlanets { get; private set; } = new List<PlanetData>();
-    public List<PlanetData> DiscoveredPlanets { get; private set; } = new List<PlanetData>();
+    public HashSet<PlanetData> OwnedPlanets { get; private set; } = new HashSet<PlanetData>();
+    public HashSet<PlanetData> DiscoveredPlanets { get; private set; } = new HashSet<PlanetData>();
+    public HashSet<GridHex> DiscoveredHexes { get; private set; } = new HashSet<GridHex>();
     public PlanetData HomePlanet { get; private set; }
     private GridHex currentHex;
     public GridHex CurrentHex
@@ -51,7 +52,10 @@ public class EntityData
         OnDiscoveredPlanetsChanged?.Invoke();
     }
 
-
+    public void AddDiscoveredHex(GridHex hex)
+    {
+        DiscoveredHexes.Add(hex);
+    }
 
     public void CalculateResourceGain()
     {

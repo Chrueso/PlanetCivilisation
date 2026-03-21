@@ -122,4 +122,15 @@ public class GridHexView : MonoBehaviour
         }
     }
 
+    public void ShowFog()
+    {
+        if (fogMaterial != null) meshRenderer.material = fogMaterial;
+    }
+
+    public void HideFog()
+    {
+        UpdateMaterial();
+        Debug.Log("as");
+    }
+
 }

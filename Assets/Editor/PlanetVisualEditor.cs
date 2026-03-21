@@ -1,14 +1,14 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(PlanetVisual))]
+[CustomEditor(typeof(PlanetView))]
 public class PlanetVisualEditor : Editor
 {
-    private PlanetVisual planetVisual;
+    private PlanetView planetVisual;
 
     private void OnEnable()
     {
-        planetVisual = (PlanetVisual)target;
+        planetVisual = (PlanetView)target;
     }
 
     public override void OnInspectorGUI()

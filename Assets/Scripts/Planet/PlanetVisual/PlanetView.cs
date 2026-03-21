@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class PlanetVisual : MonoBehaviour
+public class PlanetView : MonoBehaviour, IHideable
 {
+    private PlanetData planetData;
+
     [Range(2, 256)] // 256^2 is max amount vertices a mesh can have in unity
     public int Resolution = 30;
 
@@ -19,13 +21,24 @@ public class PlanetVisual : MonoBehaviour
     private TerrainFace[] terrainFaces;
     private MeshRenderer[] renderers;
 
-    private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    private void Init(PlanetData planetData, PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
+        this.planetData = planetData;
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
 
+        planetData.OnHidden += SetHidden;
         InitMeshComponents();
     }
+
+    public void SetHidden(bool hidden)
+    {
+        if (hidden) Hide();
+        else Hide();
+    }
+
+    public void Show() => gameObject.SetActive(true);
+    public void Hide() => gameObject.SetActive(false);
 
     public void InitMeshComponents()
     {
@@ -68,9 +81,9 @@ public class PlanetVisual : MonoBehaviour
         }
     }
 
-    public void GeneratePlanetVisual(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    public void GeneratePlanetView(PlanetData planetData, PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        Init(shapeSettings, colorSettings);
+        Init(planetData, shapeSettings, colorSettings);
         InitMeshComponents();
         GenerateMesh();
         GenerateColors();

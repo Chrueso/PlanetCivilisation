@@ -220,8 +220,8 @@ public class PlanetGenerator
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
-        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
-        planetVisual.GeneratePlanetVisual(shapeSettings, colorSettings);
+        PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
+        planetView.GeneratePlanetView(data, shapeSettings, colorSettings);
 
         return (planetObj, data);
     }
@@ -236,8 +236,8 @@ public class PlanetGenerator
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
-        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
-        planetVisual.GeneratePlanetVisual(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+        PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
+        planetView.GeneratePlanetView(data, customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
 
         return (planetObj, data);
     }

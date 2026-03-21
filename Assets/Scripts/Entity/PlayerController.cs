@@ -74,6 +74,15 @@ public class PlayerController : IEntityController, IDisposable
         }
     }
 
+    public void UpdateVision()
+    {
+        foreach (GridHex hex in hexesInMoveRadius)
+        {
+            hex.Show();
+            model.AddDiscoveredHex(hex);
+        }
+    }
+
     public bool CanExecuteAction()
     {
         if (!IsCurrentTurn)

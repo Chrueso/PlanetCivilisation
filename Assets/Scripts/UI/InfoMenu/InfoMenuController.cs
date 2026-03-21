@@ -26,7 +26,7 @@ public class InfoMenuController : IUIMenuController
         GameScreenManager.Pop();
     }
 
-    public void UpdateView(IGridHexOccupant hexOccupant)
+    public void UpdateView(IGridHexObject hexOccupant)
     {
        
     }

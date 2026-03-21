@@ -11,6 +11,8 @@ public interface IEntityController
 
     public void UpdateHexesInMoveRadius();
 
+    public void UpdateVision();
+
     public bool CanExecuteAction();
 
     public bool IsCurrentTurn { get; }
