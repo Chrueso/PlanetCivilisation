@@ -117,9 +117,4 @@ public class PlanetMapGenerator
             }
         }
     }
-
-    private void DebugPlanet()
-    {
-        PlanetData pd = new("DebugPlanet", FactionType.Human);
-    }
 }

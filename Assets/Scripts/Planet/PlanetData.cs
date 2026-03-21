@@ -30,6 +30,7 @@ public class PlanetData : IGridHexOccupant
         this.PlanetResource = resource;
         this.Resources = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
         this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals,0 }, { ResourceType.Rations, 0 } };
+        this.Relations = new();
         this.FactionType = faction;
 
         this.Structures = new List<StructureType>();
@@ -167,7 +168,7 @@ public class PlanetData : IGridHexOccupant
                 HasNAPact = true;
                 break;
             case PactType.FCP:
-                FactionType = GameManager.Instance.turnManager.currentFaction.FactionType;
+                //FactionType = GameManager.Instance.turnManager.currentFaction.FactionType;
                 break;
         }
     }

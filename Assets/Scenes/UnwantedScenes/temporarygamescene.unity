@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c1e8a85917e4c4fb4ad27876c580b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetListView
+  CloseButton: {fileID: 0}
 --- !u!114 &511016952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,7 +423,7 @@ PrefabInstance:
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: factionManagerRef
       value: 
-      objectReference: {fileID: 1284770641}
+      objectReference: {fileID: 0}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: playerInteractionController
       value: 
@@ -488,17 +489,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
---- !u!114 &1284770641 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6104197331305883487, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
-  m_PrefabInstance: {fileID: 1284770640}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89622f8d11a45af4ba6db472331c8856, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FactionManager
 --- !u!1 &1410098899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,6 +1282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3eec066e5640f44909b5735c56c19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfoMenuView
+  CloseButton: {fileID: 0}
 --- !u!222 &1117045272718024283
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2861,6 +2852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleScreenController
   startingScreen: {fileID: 4067002042346872420}
   instantlyShowStartingScreen: 1
+  screenRaycastBlocker: {fileID: 0}
 --- !u!224 &6085996000915503961
 RectTransform:
   m_ObjectHideFlags: 0

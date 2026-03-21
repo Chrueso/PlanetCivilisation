@@ -203,7 +203,7 @@ public class PlanetGenerator
 
         Dictionary<ResourceClass, ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
         
-        FactionType factionType = PickFactionType(planetRNG);
+        //FactionType factionType = PickFactionType(planetRNG);
         //List<ResourceType> additionalResources = GenerateResourceTypes(planetRNG);
 
         //FactionType factionType = PickFactionType(planetRNG);
