@@ -160,6 +160,15 @@ public class PlanetData : IGridHexOccupant
         }
     }
 
+    public void RemoveResource(ResourceType resource, int amount)
+    {
+        if (ResourceInventory.TryGetValue(resource, out var inventory))
+        {
+            if (inventory < amount) return;
+            ResourceInventory[resource] = Mathf.Max(inventory - amount, 0);
+        }
+    }
+
     public void AddPact(PactType pactType)
     {
         switch (pactType)

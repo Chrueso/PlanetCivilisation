@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEditor;
+using Mono.Cecil;
 
 public struct TradeDeal
 {
@@ -42,43 +43,52 @@ public enum RelationshipLevel
     FRIENDLY
 }
 
-public class DiplomacySystem : MonoBehaviour 
+public class DiplomacySystem 
 {
+    private EventBinding<GameStartEvent> gameStartBinding;
+    private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    private void Start()
+    private FactionType currentFactionTurn = FactionType.Nothing;
+    private PlayerController player = default;
+    public DiplomacySystem()
     {
-        Dictionary<TradeType, TradeDeal> tradeSimul = GetTradeDeals();
-
-        foreach(var trade in tradeSimul)
-        {
-            print($"Trade type: {trade.Key} | Demihuman Trade: {trade.Value.trade1_type} Amount: {trade.Value.trade1_amount} | Human Trade {trade.Value.trade2_type} Amount: {trade.Value.trade2_amount}");
-            Trade(trade.Value);
-        }
-
-        Gift(ResourceType.Metals, 10);
-        Gift(ResourceType.Rations, 100);
-        Gift(ResourceType.Credits, 1000);
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+        turnChangeEventBinding = new EventBinding<TurnChangeEvent>(OnTurnChanged);
+        EventBus<TurnChangeEvent>.Register(turnChangeEventBinding);
     }
+
+    private void OnTurnChanged(TurnChangeEvent turnChangeEvent)
+    {
+        Debug.Log("WOW U DID SOMETHING");
+        currentFactionTurn = turnChangeEvent.CurrentTurnFaction;
+    }
+
+    private void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        Debug.Log($"{gameStartEvent.PlayerController.GetFaction()}");
+        player = gameStartEvent.PlayerController;
+    }
+
     // trade can only be done by player for now
     // however pretty much this function should get the current person's turn's stuff and check with the PlanetData
-    public static void Trade(/*Some identifier here,PlanetData planetData,*/ TradeDeal trade)
+    public static void Trade(PlanetData planetData, TradeDeal trade)
     {
         // This function is invoked when player clicks on a trade option
-        // Get current person's turn and their identifier to get their data, for now i just hardcode Player from GameManager
-        Player player = GameManager.Instance.Player;
         //FactionType faction = planetData.FactionType; // who you're trading with
 
-        // i just noticed planet doesnt have inventory but we trading with them lol
+        // do checks here
 
+        // i just noticed planet doesnt have inventory but we trading with them lol
+        //player.RemoveResource(trade.trade2_type, trade.trade2_amount);
         //player.GainResource(trade.trade1_type/*, trade.trade1_amount*/); // change after merge
-                                                                         // factionGuy or PlanetData.GainResource(trade.trade2_type, trade.trade2_amount);
-        
+        // factionGuy or PlanetData.GainResource(trade.trade2_type, trade.trade2_amount);
+        planetData.RemoveResource(trade.trade1_type, trade.trade1_amount);
+        planetData.GainResource(trade.trade2_type, trade.trade2_amount);
 
 
         // increase affection based on receiving amount
         int affection = Mathf.RoundToInt(trade.trade2_amount * 0.5f);
-
-        print($"Demihuman Offer: {trade.trade1_type} with amount {trade.trade1_amount} | Human Offer: {trade.trade2_type} with amount {trade.trade2_amount} accepted | The planet gains {affection} affection");
         //planetData.RaiseAffection(player.FactionType, affection); // 90% of trade amount goes to affect for now? best to prolly just clamp it between 1-10
     }
 
@@ -102,10 +112,11 @@ public class DiplomacySystem : MonoBehaviour
 
     public static void Gift(/*PlanetData planetData,*/ ResourceType resource, int amount)
     {
+        // do checks here
         // pretty much just gift like depending on multiples of 10
-        // atm planet data no resource inventory or actually idek if it adds to planet or the person
+        
         int affection = Mathf.RoundToInt(amount * 0.5f);
-        print($"Human gifted {resource} with amount {amount} to Demihuman faction");
+        //planetData.GainResource(resource, amount);
         //planetData.RaiseAffection(GameManager.Instance.Player.FactionType, affection); // temporary formula
     }
 

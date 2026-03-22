@@ -25,18 +25,20 @@ public class TouchscreenHandler : MonoBehaviour
         var activeTouches = Touch.activeTouches;
         foreach (Touch touch in activeTouches) 
         {
+            
             TouchInfo touchInfo = new(
                 currentTouch: touch, 
                 touchIndex: touch.displayIndex, 
+                fingerIndex: touch.touchId,
                 lastTouch: touch, 
                 screenPos: touch.screenPosition, 
-                touch.phase);
+                touch.phase);    
             switch (touch.phase)
             {
                 case TouchPhase.Began: FingerDownCallback?.Invoke(this, touchInfo); break;
-                case TouchPhase.Moved: FingerMoveCallback?.Invoke(this, touchInfo); break;
-                case TouchPhase.Ended: FingerUpCallback?.Invoke(this, touchInfo); break;
-                case TouchPhase.Stationary: FingerMoveCallback?.Invoke(this, touchInfo); break;   
+                case TouchPhase.Moved: FingerMoveCallback?.Invoke(this, touchInfo);  break;
+                case TouchPhase.Ended: FingerUpCallback?.Invoke(this, touchInfo);  break;
+                case TouchPhase.Stationary: if (Time.unscaledTime - touch.startTime > 0.1f) continue; FingerMoveCallback?.Invoke(this, touchInfo); break;   
             }
         }
     }

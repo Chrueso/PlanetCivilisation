@@ -76,7 +76,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = GetWorldPos(z, e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
-
+        
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
 
     }
@@ -87,7 +87,10 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         if (waitForReset) return;
         if (touchStartedOnUI) return;   
-
+        if (e.Current.delta.sqrMagnitude < 0.01f)
+        {
+            print("U KINDA SLOW?");
+        }
         Vector3 direction = startingPos - GetWorldPos(z, e.ScreenPos);
         direction.y = 0f;
         //cameraInstance.transform.position += direction;
@@ -111,7 +114,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = GetWorldPos(z, e.ScreenPos);
         if (waitForReset) waitForReset = false;
-
+        
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
     #endregion
@@ -123,7 +126,6 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (waitForReset) waitForReset = false;
-
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
 
@@ -157,7 +159,6 @@ public class CameraController : MonoBehaviour
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
         CameraMoving = false;
-
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }
     #endregion

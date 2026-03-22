@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private GridInteractionController gridInteractionController;
+    [SerializeField] private AudioSystem audioSystem;
     //[SerializeField] private DiplomacySystem diplomacySystem;
 
     [Header("Views")]
@@ -44,7 +45,7 @@ public class GameManager : Singleton<GameManager>
     private StructuresController structuresController;
     private SettingsController settingsController;
     private TurnManager turnManager;
-
+    private DiplomacySystem diplomacySystem;
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
     public MapGrid MapGrid { get; private set; } // not used
@@ -90,6 +91,9 @@ public class GameManager : Singleton<GameManager>
         battleManager = new BattleManager(shipDatabase);
         commandInvoker = new CommandInvoker();
         entityFactory = new EntityFactory(entityView);
+        diplomacySystem = new();
+        AudioService.SetAudioInstance(audioSystem);
+        
 
         TryRegisterDisposable(
             planetGenerator,
