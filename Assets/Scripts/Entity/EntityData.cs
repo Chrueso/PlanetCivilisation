@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class EntityData 
 {
@@ -24,13 +25,17 @@ public class EntityData
     public int MoveRadius { get; private set; }
     public float yValue { get; private set; }
 
+    private int maxAP = 10;
+    public int CurrentAP { get; private set; }
+
     public event Action OnResourcesChanged;
     public event Action OnShipsChanged;
     public event Action OnOwnedPlanetsChanged;
     public event Action OnDiscoveredPlanetsChanged;
     public event Action OnCurrentHexChanged;
-    
-    public EntityData(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30)
+    public event Action OnAPChanged;
+
+    public EntityData(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);
@@ -46,10 +51,25 @@ public class EntityData
         MoveRadius = moveRadius;
         this.yValue = yValue;
 
+        this.maxAP = maxAP;
+        CurrentAP = maxAP;
+
         OnResourcesChanged?.Invoke();
         OnShipsChanged?.Invoke();
         OnOwnedPlanetsChanged?.Invoke();
         OnDiscoveredPlanetsChanged?.Invoke();
+    }
+
+    public void RemoveAP(int amount)
+    {
+        CurrentAP = Mathf.Max(0, CurrentAP - amount);
+        OnAPChanged?.Invoke();
+    }
+
+    public void RefreshAP()
+    {
+        CurrentAP = maxAP;
+        OnAPChanged?.Invoke();
     }
 
     public void AddDiscoveredHex(GridHex hex)

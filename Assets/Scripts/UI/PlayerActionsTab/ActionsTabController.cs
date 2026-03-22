@@ -66,7 +66,6 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     public void CloseView()
     {
-        GameScreenManager.Pop();
         gridInteractionController.UnselectHex();
     }
 

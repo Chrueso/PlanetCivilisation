@@ -139,6 +139,7 @@ public class GridInteractionController : MonoBehaviour
             HideSelectionView();
             selectedHex = null;
             GameScreenManager.Pop();
+
         }
     }
 }

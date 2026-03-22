@@ -37,7 +37,7 @@ public class PlayerController : IEntityController, IDisposable
         Debug.Log("Player recieved game context");
 
         ConnectModel();
-        UpdateHexesInMoveRadius();
+        HandleCurrrentHexChanged();
     }
 
     private void HandleTurnChange(TurnChangeEvent turnChangeEvent)
@@ -48,12 +48,18 @@ public class PlayerController : IEntityController, IDisposable
 
     private void ConnectModel()
     {
-        model.OnCurrentHexChanged += UpdateHexesInMoveRadius;
+        model.OnCurrentHexChanged += HandleCurrrentHexChanged;
     }
 
     public FactionType GetFaction() => model.FactionType;
 
     public GridHex GetCurrentHex() => model.CurrentHex;
+
+    public void HandleCurrrentHexChanged()
+    {
+        UpdateHexesInMoveRadius();
+        UpdateVision();
+    }
 
     public bool CheckIfHexIsInMoveRadius(GridHex hex) => hexesInMoveRadius.Contains(hex);
 
@@ -168,7 +174,7 @@ public class PlayerController : IEntityController, IDisposable
 
     public void Dispose()
     {
-        model.OnCurrentHexChanged -= UpdateHexesInMoveRadius;
+        model.OnCurrentHexChanged -= HandleCurrrentHexChanged;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
         EventBus<TurnChangeEvent>.Deregister(turnChangeEventBinding);
     }

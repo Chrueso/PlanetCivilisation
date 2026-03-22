@@ -7,6 +7,8 @@ public interface IEntityController
 
     public GridHex GetCurrentHex();
 
+    public void HandleCurrrentHexChanged();
+
     public bool CheckIfHexIsInMoveRadius(GridHex hex);
 
     public void UpdateHexesInMoveRadius();

@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fog
+  m_Name: Nebulae
   m_Shader: {fileID: -6465566751694194690, guid: 75549e3e097a6ed4d99f948e7bfd7164, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -61,8 +61,14 @@ Material:
     - _Cull: 2
     - _DstBlend: 10
     - _DstBlendAlpha: 10
+    - _Layer1Intensity: 0.25
+    - _Layer1Roughnness: 3
+    - _Layer2Intensity: 0.1
+    - _Layer2Roughness: 8
+    - _NebulaHue: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Scale: -0.02
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
@@ -72,5 +78,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 0.12575647, g: 0.14194676, b: 0.16981125, a: 1}
+    - _NebulaeColor: {r: 0.9772317, g: 0.9669811, b: 1, a: 1}
+    - _ScrollVelocity: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

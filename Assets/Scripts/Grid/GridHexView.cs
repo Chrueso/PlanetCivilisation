@@ -130,7 +130,6 @@ public class GridHexView : MonoBehaviour
     public void HideFog()
     {
         UpdateMaterial();
-        Debug.Log("as");
     }
 
 }

@@ -14,7 +14,7 @@ public class GridHex : IHideable
     public bool IsOccupied;
     public IGridHexObject Occupant;
     public GridHexView View;
-    public bool IsHidden = false;
+    public bool IsHiddenForPlayer = false;
 
     public GridHex(float cellSize, Vector2Int gridPosition, Vector3Int gridPositionCube, Vector3 worldPosition, bool isOccupied = false, IGridHexObject occupant = null)
     {
@@ -28,15 +28,16 @@ public class GridHex : IHideable
 
     public void Show()
     {
-        IsHidden = false;
+        IsHiddenForPlayer = false;
         View.HideFog();
-        Occupant.Show();
+
+        if (Occupant != null) Occupant.Show();
     }
 
     public void Hide()
     {
-        IsHidden = true;
+        IsHiddenForPlayer = true;
         View.ShowFog();
-        Occupant.Hide();
+        if (Occupant != null) Occupant.Hide();
     }
 }

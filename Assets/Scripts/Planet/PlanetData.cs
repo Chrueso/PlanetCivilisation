@@ -23,9 +23,9 @@ public class PlanetData : IGridHexObject
     public bool HasNAPact { get; private set; } = false;
 
     public GridHex CurrentHex { get; set; }
-    public bool IsHidden { get; private set; }
+    public bool IsHiddenForPlayer { get; private set; }
 
-    public event Action<bool> OnHidden;
+    public event Action<bool> OnHiddenForPlayer;
 
     public PlanetData(string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
     {
@@ -56,14 +56,14 @@ public class PlanetData : IGridHexObject
 
     public void Show()
     {
-        IsHidden = false;
-        OnHidden?.Invoke(false);
+        IsHiddenForPlayer = false;
+        OnHiddenForPlayer?.Invoke(false);
     }
 
     public void Hide()
     {
-        IsHidden = true;
-        OnHidden?.Invoke(true);
+        IsHiddenForPlayer = true;
+        OnHiddenForPlayer?.Invoke(true);
     }
     
     public void SetFaction(FactionType factionType)

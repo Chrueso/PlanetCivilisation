@@ -26,19 +26,17 @@ public class PlanetView : MonoBehaviour, IHideable
         this.planetData = planetData;
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
-
-        planetData.OnHidden += SetHidden;
-        InitMeshComponents();
+        planetData.OnHiddenForPlayer += HandleHiddenForPlayer;
     }
 
-    public void SetHidden(bool hidden)
+    public void HandleHiddenForPlayer(bool hidden)
     {
         if (hidden) Hide();
-        else Hide();
+        else Show();
     }
 
-    public void Show() => gameObject.SetActive(true);
-    public void Hide() => gameObject.SetActive(false);
+    public void Show() => this.gameObject.SetActive(true);
+    public void Hide() => this.gameObject.SetActive(false);
 
     public void InitMeshComponents()
     {
@@ -112,6 +110,7 @@ public class PlanetView : MonoBehaviour, IHideable
     private void OnDestroy()
     {
         colorGenerator.Cleanup();
+        planetData.OnHiddenForPlayer-= HandleHiddenForPlayer;
     }
 }
 
