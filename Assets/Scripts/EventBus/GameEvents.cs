@@ -8,7 +8,7 @@ public struct GameStartEvent : IEvent
 
     public MapGrid MapGrid;
 
-    public PlayerController PlayerController;
+    public EntityController PlayerController;
     public EntityData PlayerModel;
 
     public List<EntityData> AIEntities;

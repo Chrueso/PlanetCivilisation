@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : IEntityController, IDisposable
+public class EntityController : IEntityController, IDisposable
 {
     private EntityData model;
     private EntityView view;
@@ -17,7 +17,7 @@ public class PlayerController : IEntityController, IDisposable
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    public PlayerController(EntityData model, EntityView view)
+    public EntityController(EntityData model, EntityView view)
     {
         this.model = model;
         this.view = view;

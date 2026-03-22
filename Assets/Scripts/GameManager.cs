@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
         mapGenerator.GenerateMap(mapSettings, out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG);
 
-        CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController);
+        CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out EntityController playerController);
         //Create ai here
 
         EventBus<GameStartEvent>.Raise(new GameStartEvent
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }
 
-    private void CreatePlayer(PlanetData homePlanet, out EntityData playerModel, out EntityView playerView, out PlayerController playerController)
+    private void CreatePlayer(PlanetData homePlanet, out EntityData playerModel, out EntityView playerView, out EntityController playerController)
     {
         playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
            out playerModel, out playerView);
