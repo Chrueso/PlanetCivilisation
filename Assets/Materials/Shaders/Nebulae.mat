@@ -57,9 +57,10 @@ Material:
     - _Layer2Intensity: 0.1
     - _Layer2Roughness: 8
     - _NebulaHue: 0
+    - _NebulaSaturation: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Scale: 1
+    - _Scale: 0.02
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
@@ -68,7 +69,7 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _ScrollVelocity: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _ScrollVelocity: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6200246309415883168
