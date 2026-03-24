@@ -45,6 +45,7 @@ public enum RelationshipLevel
 
 public class DiplomacySystem 
 {
+    public static Dictionary<TradeType, TradeDeal> TradeDeal = new();
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
@@ -78,8 +79,7 @@ public class DiplomacySystem
         //FactionType faction = planetData.FactionType; // who you're trading with
 
         // do checks here
-
-        // i just noticed planet doesnt have inventory but we trading with them lol
+        // inventory class within entity maybe?
         //player.RemoveResource(trade.trade2_type, trade.trade2_amount);
         //player.GainResource(trade.trade1_type/*, trade.trade1_amount*/); // change after merge
         // factionGuy or PlanetData.GainResource(trade.trade2_type, trade.trade2_amount);
@@ -93,7 +93,7 @@ public class DiplomacySystem
     }
 
     // "AI" makes the 
-    public static Dictionary<TradeType, TradeDeal> GetTradeDeals(/*PlanetData planetData*/) // not really "DECIDED" by ai yet but add parameter for numbers maybe
+    private static Dictionary<TradeType, TradeDeal> GetTradeDeals(/*PlanetData planetData*/) // not really "DECIDED" by ai yet but add parameter for numbers maybe
     {
         // this function generates the trade deals that will then be display in the trade popup
         // Get current person's turn and their identifier to get their data, for now i just hardcode Player from GameManager
@@ -108,6 +108,11 @@ public class DiplomacySystem
         tradePayload[TradeType.UNFAIR] = unfairDeal;
 
         return tradePayload;
+    }
+
+    public static void GenerateTradeDeal()
+    {
+        TradeDeal = GetTradeDeals();
     }
 
     public static void Gift(/*PlanetData planetData,*/ ResourceType resource, int amount)
