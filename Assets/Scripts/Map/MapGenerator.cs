@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MapGenerator 
@@ -10,10 +11,11 @@ public class MapGenerator
         this.planetGenerator = planetGenerator;
     }
 
-    public void GenerateMap(MapSettings settings, out MapGrid mapGrid, out PlanetData homePlanet, System.Random rng)
+    public void GenerateMap(MapSettings settings, out MapGrid mapGrid, out PlanetData homePlanet, out HashSet<PlanetData> planets, System.Random rng)
     {
         mapGrid = null;
         homePlanet = null;
+        planets = null;
 
         if (settings == null)
         {
@@ -48,7 +50,7 @@ public class MapGenerator
         );
 
         // Generate planets and assign factions
-        planetMapGenerator.GeneratePlanets(out homePlanet);
+        planetMapGenerator.GeneratePlanets(out homePlanet, out planets);
         planetMapGenerator.AssignFactionToPlanets(homePlanet);
     }
 }

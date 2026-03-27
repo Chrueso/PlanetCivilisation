@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -5,12 +6,16 @@ public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
     private IEntityController entityController;
-    private EntityData entityModel;
+    private EntityModel entityModel;
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
 
     private EventBinding<GameStartEvent> gameStartBinding;
+
+    //Debug
+    private int currentEntityIndex = 0;
+    private List<IEntityController> allEntities;
 
     public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
     {
@@ -26,21 +31,19 @@ public class HUDController : IUIMenuController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        SetController(gameStartEvent.PlayerController);
-        SetModel(gameStartEvent.PlayerModel);
-        ConnectView();
-    }
-
-    public void SetController(IEntityController entityController)
-    {
-        this.entityController = entityController;
+        entityController = gameStartEvent.PlayerController;
+        entityModel = entityController.GetModel();
         Debug.Log("HUD recieved entity controller");
-    }
 
-    public void SetModel(EntityData entityModel)
-    {
-        this.entityModel = entityModel;
-        Debug.Log("HUD recieved entity model");
+        ConnectView();
+
+        //Debug setup
+        allEntities = new List<IEntityController>();
+        allEntities.Add(gameStartEvent.PlayerController);
+        foreach (var ai in gameStartEvent.AIControllers)
+        {
+            allEntities.Add(ai);
+        }
     }
 
     public void ConnectView()
@@ -60,7 +63,9 @@ public class HUDController : IUIMenuController, IDisposable
         view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
         view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
-        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked); 
+        view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
+
+        DisableDebug();
     }
 
     public void OpenView()
@@ -106,5 +111,38 @@ public class HUDController : IUIMenuController, IDisposable
 
         if (entityModel == null) return;
         entityModel.OnResourcesChanged -= HandleResourcesChanged;
+    }
+
+    //Debug
+    public void EnableDebug()
+    {
+        view.EnableDebug();
+        view.NextEntityButton.onClick.AddListener(HandleNextEntityButtonClicked);
+    }
+
+    public void DisableDebug()
+    {
+        view.NextEntityButton.onClick.RemoveListener(HandleNextEntityButtonClicked);
+        view.DisableDebug();
+    }
+
+    public void HandleNextEntityButtonClicked()
+    {
+        currentEntityIndex = (currentEntityIndex + 1) % allEntities.Count;
+
+        // Unsub the old model
+        entityModel.OnResourcesChanged -= HandleResourcesChanged;
+
+        // Update model
+        entityController = allEntities[currentEntityIndex];
+        entityModel = entityController.GetModel();
+
+        entityModel.OnResourcesChanged += HandleResourcesChanged;
+        view.UpdateFaction(entityModel.FactionType);
+        view.UpdateResources(entityModel.Resources);
+
+        cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
+      
+        Debug.Log("HUD Displaying " + entityController.GetFaction());
     }
 }

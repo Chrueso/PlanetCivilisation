@@ -7,27 +7,70 @@ public class EntityFactory
 
     private List<FactionType> avaliableFactions;
 
-    public EntityFactory(EntityView entityView)
+    public EntityFactory(EntityView entityView) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
         this.entityView = entityView;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
     }
 
-    public void CreateEntity(PlanetData homePlanet, FactionType factionType) //add entity preset as param then it makes the model
+    public EntityController CreateAI(out AIBrain brain, PlanetData homePlanet, List<AIAction> actions, FactionType factionType = FactionType.Nothing)
     {
-        // if home plannet and faction type return
-    }
+        brain = null;
 
-    public EntityController CreatePlayer(PlanetData homePlanet, FactionType factionType, Vector3 position, out EntityData model, out EntityView view) //replace with preset 
-    {
-        model = new EntityData(homePlanet, factionType);
-        view = Object.Instantiate(entityView);
-        Vector3 spawnPos = position;
+        if (homePlanet == null || homePlanet.FactionType != FactionType.Nothing)
+        {
+            Debug.Log(this + "Failed to create ai");
+            return null;
+        }
+
+        if (factionType == FactionType.Nothing)
+        {
+            if (avaliableFactions.Count == 0)
+            {
+                Debug.Log(this + "No available factions left!");
+                return null;
+            }
+            int index = Random.Range(0, avaliableFactions.Count);
+            factionType = avaliableFactions[index];
+        }
+
+        avaliableFactions.Remove(factionType);
+
+        EntityModel model = new EntityModel(homePlanet, factionType);
+        model.CurrentHex = homePlanet.CurrentHex;
+
+        EntityView view = Object.Instantiate(entityView);
+
+        Vector3 spawnPos = homePlanet.CurrentHex.WorldPosition;
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
+
         EntityController controller = new EntityController(model, view);
+
+        brain = new AIBrain(controller, actions);
+
+        return controller;
+    }
+
+    public EntityController CreatePlayer(PlanetData homePlanet, FactionType factionType) //replace with preset 
+    {
+        if (homePlanet == null || homePlanet.FactionType != FactionType.Nothing)
+        {
+            Debug.Log(this + "Failed to create player");
+            return null;
+        }
+
+        EntityModel model = new EntityModel(homePlanet, factionType);
         model.CurrentHex = homePlanet.CurrentHex;
+
+        EntityView view = Object.Instantiate(entityView);
+
+        Vector3 spawnPos = homePlanet.CurrentHex.WorldPosition;
+        spawnPos.y = model.yValue;
+        view.transform.position = spawnPos;
+
+        EntityController controller = new EntityController(model, view);
 
         avaliableFactions.Remove(factionType);
 

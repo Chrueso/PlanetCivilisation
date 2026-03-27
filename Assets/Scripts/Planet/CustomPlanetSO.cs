@@ -8,7 +8,7 @@ public class CustomPlanetSO : ScriptableObject
 
     //public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
 
-    public FactionType FactionType;
+    //public FactionType FactionType;
 
     //public List<Structure> Structures { get; private set; }
 

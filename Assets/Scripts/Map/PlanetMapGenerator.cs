@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlanetMapGenerator
 {
@@ -20,8 +21,9 @@ public class PlanetMapGenerator
         this.rng = rng;
     }
 
-    public void GeneratePlanets(out PlanetData homePlanet, Transform parent = default)
+    public void GeneratePlanets(out PlanetData homePlanet, out HashSet<PlanetData> planets, Transform parent = default)
     {
+        planets = new HashSet<PlanetData>();
         // For random index and fast deletion look at AvaliablePool.cs
         AvailablePool<GridHex> avaliableHexes = new AvailablePool<GridHex>();
 
@@ -55,12 +57,14 @@ public class PlanetMapGenerator
                 planetData.CurrentHex = hex;
                 homePlanet = planetData;
                 hasSpawnedHomePlanet = true;
-                
+                planets.Add(planetData);
+
             }
             else
             {
                 (planetObject, planetData) = planetGenerator.GeneratePlanet(rng, hex.WorldPosition, Quaternion.identity, parent);
                 planetData.CurrentHex = hex;
+                planets.Add(planetData);
             }
 
             planetObject.name = $"Planet{iter} {planetData.PlanetName}";
@@ -91,6 +95,8 @@ public class PlanetMapGenerator
         // Choose random hex then check for planets in a radius around that hex if have planet assign faction to that planet then remove checked radius from avalible hex 
         // delegates 1 portion of grid to that faction
         int radiusBetweenFactions = mapGrid.Grid.Width / 2;
+        if (radiusBetweenFactions < 0) radiusBetweenFactions = 1;
+
         var factionTypeValues = System.Enum.GetValues(typeof(FactionType));
 
         // Remove hexes in radius around homeplanet from avaliable hexes
@@ -115,6 +121,7 @@ public class PlanetMapGenerator
                     }
 
                 }
+                avaliableHexes.Remove(hexesToCheck);
             }
         }
     }

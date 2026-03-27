@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class MoveCommand : ICommand
 {
-    private EntityData entityModel;
+    private EntityModel entityModel;
     private EntityView entityView;
     private GridHex originHex;
     private GridHex targetHex;
     
-    public MoveCommand(EntityData entityModel, EntityView entityView, GridHex targetHex)
+    public MoveCommand(EntityModel entityModel, EntityView entityView, GridHex targetHex)
     {
         this.entityModel = entityModel;
         this.entityView = entityView;
@@ -33,7 +33,7 @@ public class MoveCommand : ICommand
 
     //For logging overrides ToString
     public override string ToString() => 
-        $"[{entityModel.FactionType}] Command Ship | " +
+        $"{entityModel.FactionType} moved | " +
         $"Hex: {originHex.GridPosition} to {targetHex.GridPosition} | " +
         $"World: {originHex.WorldPosition} to {targetHex.WorldPosition}";
 }

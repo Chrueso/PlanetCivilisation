@@ -232,7 +232,7 @@ public class PlanetGenerator
             {ResourceClass.Abundant, ResourceType.Metals },
             {ResourceClass.Scarce, ResourceType.Rations},
         };
-        PlanetData data = new PlanetData(customPlanetData.PlanetName, customPlanetData.FactionType, resource); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(customPlanetData.PlanetName, FactionType.Nothing, resource); // Check out PlanetData.cs
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 

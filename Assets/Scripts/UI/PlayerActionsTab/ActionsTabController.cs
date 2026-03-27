@@ -29,14 +29,10 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        SetController(gameStartEvent.PlayerController);
-        ConnectView();
-    }
-
-    public void SetController(IEntityController entityController)
-    {
-        this.entityController = entityController;
+        entityController = gameStartEvent.PlayerController;
         Debug.Log("ActionTabController recieved entity controller");
+
+        ConnectView();
     }
 
     public void ConnectView()

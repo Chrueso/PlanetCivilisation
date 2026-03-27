@@ -8,10 +8,9 @@ public struct GameStartEvent : IEvent
 
     public MapGrid MapGrid;
 
-    public EntityController PlayerController;
-    public EntityData PlayerModel;
+    public IEntityController PlayerController;
 
-    public List<EntityData> AIEntities;
+    public HashSet<IEntityController> AIControllers;
 }
 
 public struct TurnChangeEvent : IEvent

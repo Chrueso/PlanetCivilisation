@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityData 
+public class EntityModel 
 {
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
@@ -35,7 +35,7 @@ public class EntityData
     public event Action OnCurrentHexChanged;
     public event Action OnAPChanged;
 
-    public EntityData(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
+    public EntityModel(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);

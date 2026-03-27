@@ -23,6 +23,8 @@ public class HUDView : ScreenBase
     [SerializeField] private List<ResourcesWidget> resourcesWidgets = new List<ResourcesWidget>();
     private Dictionary<ResourceType, ResourcesWidget> resourceWidgetDict = new Dictionary<ResourceType, ResourcesWidget>();
 
+    public Button NextEntityButton;
+
     public void HandleResources()
     {
         foreach (var widget in resourcesWidgets)
@@ -48,6 +50,16 @@ public class HUDView : ScreenBase
         {
             resourceWidgetDict[kvp.Key].AmountText.text = kvp.Value.ToString();
         }
+    }
+
+    public void EnableDebug()
+    {
+        NextEntityButton.gameObject.SetActive(true);
+    }
+
+    public void DisableDebug()
+    {
+        NextEntityButton.gameObject.SetActive(false);
     }
 
 }

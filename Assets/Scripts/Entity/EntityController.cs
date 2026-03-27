@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EntityController : IEntityController, IDisposable
 {
-    private EntityData model;
+    private EntityModel model;
     private EntityView view;
     private MapGrid mapGrid;
     private CommandInvoker commandInvoker;
@@ -13,11 +13,12 @@ public class EntityController : IEntityController, IDisposable
     public bool IsCurrentTurn { get; private set; }
 
     private HashSet<GridHex> hexesInMoveRadius = new HashSet<GridHex>();
+    public HashSet<GridHex> HexesInMoveRadius => hexesInMoveRadius;
 
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    public EntityController(EntityData model, EntityView view)
+    public EntityController(EntityModel model, EntityView view)
     {
         this.model = model;
         this.view = view;
@@ -51,8 +52,9 @@ public class EntityController : IEntityController, IDisposable
         model.OnCurrentHexChanged += HandleCurrrentHexChanged;
     }
 
+    public EntityModel GetModel() => model;
+    public EntityView GetView() => view;
     public FactionType GetFaction() => model.FactionType;
-
     public GridHex GetCurrentHex() => model.CurrentHex;
 
     public void HandleCurrrentHexChanged()

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] bool isDebug = false;
+
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
 
@@ -12,6 +15,7 @@ public class GameManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
+    [SerializeField] private List<AIAction> AIactions; //I think factions have their own behavior later so store actions there?
 
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -49,6 +53,13 @@ public class GameManager : MonoBehaviour
 
     private readonly List<IDisposable> disposables = new(); // for cleanup
 
+    //Game context
+    private MapGrid mapGrid;
+    private PlanetData homePlanet;
+    private HashSet<PlanetData> planets = new HashSet<PlanetData>();
+    private IEntityController player;
+    private Dictionary<AIBrain, IEntityController> AIEntities = new Dictionary<AIBrain, IEntityController>();
+
     public void Awake()
     {
         CreateSystems();
@@ -58,19 +69,25 @@ public class GameManager : MonoBehaviour
         // Game context
         GenerateSeed();
 
-        mapGenerator.GenerateMap(mapSettings, out MapGrid mapGrid, out PlanetData homePlanet, SeedRNG);
+        mapGenerator.GenerateMap(mapSettings, out mapGrid, out homePlanet, out planets, SeedRNG);
 
-        CreatePlayer(homePlanet, out EntityData playerModel, out EntityView playerView, out EntityController playerController);
-        //Create ai here
+        CreatePlayer(homePlanet, out player);
+        CreateAI(FactionDatabase.factions.Length - 2, planets.ToList(), out AIEntities);
+
+        HashSet<IEntityController> aiControllers = new HashSet<IEntityController>();
+        foreach (var kvp in AIEntities)
+        {
+            aiControllers.Add(kvp.Value);
+        }
 
         EventBus<GameStartEvent>.Raise(new GameStartEvent
         {
             CommandInvoker = commandInvoker,
             TurnManager = turnManager,
             MapGrid = mapGrid,
-            PlayerController = playerController,
-            PlayerModel = playerModel,
-            AIEntities = new List<EntityData>()
+            PlayerController = player,
+
+            AIControllers = aiControllers
         });
     }
 
@@ -112,17 +129,39 @@ public class GameManager : MonoBehaviour
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }
 
-    private void CreatePlayer(PlanetData homePlanet, out EntityData playerModel, out EntityView playerView, out EntityController playerController)
+    private void CreatePlayer(PlanetData homePlanet, out IEntityController player)
     {
-        playerController = entityFactory.CreatePlayer(homePlanet, FactionType.Human, homePlanet.CurrentHex.WorldPosition,
-           out playerModel, out playerView);
-
-        TryRegisterDisposable(playerController);
+        player = entityFactory.CreatePlayer(homePlanet, FactionType.Human);
+        TryRegisterDisposable(player);
     }
 
-    private void CreateAI()
+    private void CreateAI(int amount, List<PlanetData> planets, out Dictionary<AIBrain, IEntityController> entities)
     {
+        entities = new Dictionary<AIBrain, IEntityController>();
+        if (planets == null || planets.Count == 0) return;
 
+        List<PlanetData> availablePlanets = planets.FindAll(p => p.FactionType == FactionType.Nothing);
+        if (availablePlanets.Count == 0) return;
+
+        amount = Mathf.Min(amount, availablePlanets.Count);
+
+        //Fisher yates
+        for (int i = 0; i < amount; i++)
+        {
+            //shuffled to front?
+            int j = UnityEngine.Random.Range(i, availablePlanets.Count);
+            (availablePlanets[i], availablePlanets[j]) = (availablePlanets[j], availablePlanets[i]);
+        }
+
+        for (int i = 0; i < amount; i++)
+        {
+            EntityController entity = entityFactory.CreateAI(out AIBrain brain, availablePlanets[i], AIactions);
+            if (entity != null)
+            {
+                entities.Add(brain, entity);
+                TryRegisterDisposable(entity);
+            }
+        }
     }
 
     private void GenerateSeed()
@@ -159,6 +198,20 @@ public class GameManager : MonoBehaviour
             disposable.Dispose();
         }
         disposables.Clear();
+    }
+
+    private void OnValidate()
+    {
+        if (hudController == null) return;
+
+        if (isDebug)
+        {
+            hudController.EnableDebug();
+        }
+        else
+        {
+            hudController.DisableDebug();
+        }
     }
 
 }

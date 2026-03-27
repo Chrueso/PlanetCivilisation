@@ -19,11 +19,11 @@ public class TurnManager
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        FactionType playerFaction = gameStartEvent.PlayerModel.FactionType;
+        FactionType playerFaction = gameStartEvent.PlayerController.GetModel().FactionType;
         List<FactionType> AIfactions = new List<FactionType>();
-        foreach (var ai in gameStartEvent.AIEntities)
+        foreach (var ai in gameStartEvent.AIControllers)
         {
-            AIfactions.Add(ai.FactionType);
+            AIfactions.Add(ai.GetModel().FactionType);
         }
 
         SetupTurnOrder(playerFaction, AIfactions);
@@ -64,7 +64,7 @@ public class TurnManager
         var prevTurnFaction = currentTurnFaction;
         currentTurnFaction = turnOrder[turnIndex];
 
-        Debug.Log($"Current turn: [{currentTurnFaction}]");
+        Debug.Log($"Current turn: {currentTurnFaction}");
 
         EventBus<TurnChangeEvent>.Raise(new TurnChangeEvent
         {
