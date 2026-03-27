@@ -55,10 +55,12 @@ public class HUDController : IUIMenuController, IDisposable
         }
 
         entityModel.OnResourcesChanged += HandleResourcesChanged;
+        entityModel.OnAPChanged += HandleAPChanged;
 
         view.UpdateFaction(entityModel.FactionType);
         view.HandleResources();
         view.UpdateResources(entityModel.Resources);
+        view.UpdateAP(entityModel.CurrentAP, entityModel.MaxAP);
 
         view.SettingsButton.onClick.AddListener(HandleSettingsButtonClicked);
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
@@ -81,7 +83,13 @@ public class HUDController : IUIMenuController, IDisposable
     private void HandleResourcesChanged()
     {
         if (entityModel == null) return;
-        view.UpdateResources(entityModel?.Resources);
+        view.UpdateResources(entityModel.Resources);
+    }
+
+    private void HandleAPChanged()
+    {
+        if (entityModel == null) return;
+        view.UpdateAP(entityModel.CurrentAP, entityModel.MaxAP);
     }
 
     private void HandleSettingsButtonClicked()
@@ -111,6 +119,7 @@ public class HUDController : IUIMenuController, IDisposable
 
         if (entityModel == null) return;
         entityModel.OnResourcesChanged -= HandleResourcesChanged;
+        entityModel.OnAPChanged -= HandleAPChanged;
     }
 
     //Debug
@@ -140,6 +149,7 @@ public class HUDController : IUIMenuController, IDisposable
         entityModel.OnResourcesChanged += HandleResourcesChanged;
         view.UpdateFaction(entityModel.FactionType);
         view.UpdateResources(entityModel.Resources);
+        view.UpdateAP(entityModel.CurrentAP, entityModel.MaxAP);
 
         cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
       

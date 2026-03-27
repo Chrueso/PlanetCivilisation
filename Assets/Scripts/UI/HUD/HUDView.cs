@@ -13,17 +13,20 @@ public class HUDView : ScreenBase
     public Button HomeShipButton;
     public Button EndTurnButton;
 
-    public TMP_Text CurrentTurnText;
-
-    public FactionWidget FactionWidget;
-
-    //private List<Sprite> resourceIcons;
-    //private ResourcesWidget resourceWidgetPrefab;
+    //public TMP_Text CurrentTurnText;
+    //public FactionWidget FactionWidget;
 
     [SerializeField] private List<ResourcesWidget> resourcesWidgets = new List<ResourcesWidget>();
     private Dictionary<ResourceType, ResourcesWidget> resourceWidgetDict = new Dictionary<ResourceType, ResourcesWidget>();
 
+    public TMP_Text CurrentAPText;
+
     public Button NextEntityButton;
+
+    public void UpdateAP(int currentAP, int maxAP)
+    {
+        CurrentAPText.text = $"{currentAP}/{maxAP} AP";
+    }
 
     public void HandleResources()
     {

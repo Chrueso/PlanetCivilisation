@@ -45,6 +45,7 @@ public class EntityController : IEntityController, IDisposable
     {
         IsCurrentTurn = turnChangeEvent.CurrentTurnFaction == model.FactionType;
         model.CalculateResourceGain();
+        model.RefreshAP();
     }
 
     private void ConnectModel()
@@ -69,7 +70,7 @@ public class EntityController : IEntityController, IDisposable
     {
         if (mapGrid == null)
         {
-            Debug.Log(this + "Map grid is null!");
+            Debug.Log(this + " Map grid is null!");
             return;
         }
 
@@ -95,16 +96,26 @@ public class EntityController : IEntityController, IDisposable
     {
         if (!IsCurrentTurn)
         {
-            Debug.Log(this + "Not your turn!");
+            Debug.Log(this + " Not your turn!");
             return false;
         }
 
         if (commandInvoker == null) 
         {
-            Debug.Log(this + "CommandInvoker is null!");
+            Debug.Log(this + " CommandInvoker is null!");
             return false;
         }
 
+        return true;
+    }
+
+    public bool HasAP()
+    {
+        if (model.CurrentAP <= 0)
+        {
+            Debug.Log(model.FactionType + " No AP");
+            return false;
+        }
         return true;
     }
 
@@ -118,7 +129,7 @@ public class EntityController : IEntityController, IDisposable
 
     public bool TryMove(GridHex targetHex)
     {
-        if (!CanExecuteAction()) return false;
+        if (!CanExecuteAction() || !HasAP()) return false;
 
         if (hexesInMoveRadius.Contains(targetHex))
         {
@@ -133,7 +144,7 @@ public class EntityController : IEntityController, IDisposable
 
     public bool TryColonize(PlanetData planet)
     {
-        if (!CanExecuteAction()) return false;
+        if (!CanExecuteAction() || !HasAP()) return false;
 
         if (planet.FactionType == FactionType.Nothing)
         {
@@ -148,7 +159,7 @@ public class EntityController : IEntityController, IDisposable
 
     public bool TryAttack(PlanetData planet)
     {
-        if (!CanExecuteAction()) return false;
+        if (!CanExecuteAction() || !HasAP()) return false;
         return true;
     }
 

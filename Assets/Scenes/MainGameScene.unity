@@ -700,6 +700,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1625426510 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5646390184427725601, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
+  m_PrefabInstance: {fileID: 6771100286378107535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1698070666 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5805633844693602110, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
@@ -826,6 +837,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 137102486908454494, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
+      propertyPath: CurrentAPText
+      value: 
+      objectReference: {fileID: 1625426510}
+    - target: {fileID: 137102486908454494, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
       propertyPath: NextEntityButton
       value: 
       objectReference: {fileID: 511369467}
@@ -892,6 +907,14 @@ PrefabInstance:
     - target: {fileID: 198120802606462875, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 539340605654809945, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576943586722176704, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 835
       objectReference: {fileID: 0}
     - target: {fileID: 581299227392713220, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1173,6 +1196,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5646390184427725601, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6411415249109820067, guid: 374405b9b3f8eed4f9c4355b80d4ab80, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1340,6 +1367,14 @@ PrefabInstance:
       propertyPath: structuresMenuView
       value: 
       objectReference: {fileID: 6766604234346000141}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: aIActions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'aIActions.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ba5e58cd2ab07e4d806f086cc9584f6, type: 2}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: gridInteractionController
       value: 

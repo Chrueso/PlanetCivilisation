@@ -15,6 +15,7 @@ public class ColonizeCommand : ICommand
     {
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
+        entityModel.RemoveAP(1);
 
         Debug.Log(this.ToString());
     }
@@ -23,6 +24,7 @@ public class ColonizeCommand : ICommand
     {
         targetPlanet.SetFaction(FactionType.Nothing);
         entityModel.RemoveOwnedPlanets(targetPlanet);
+        entityModel.AddAP(1);
 
         Debug.Log($"{targetPlanet.PlanetName} is now uninhabited");
     }

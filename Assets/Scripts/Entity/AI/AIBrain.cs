@@ -36,6 +36,8 @@ public class AIBrain
     {
         while (currentAP > 0)
         {
+            Debug.Log(context.Model.FactionType + " started thinking...");
+
             AIAction bestAction = null;
             float highestUtility = float.MinValue;
 
@@ -53,6 +55,8 @@ public class AIBrain
             if (bestAction != null)
             {
                 bestAction.Execute(context);
+
+                Debug.Log(context.Model.FactionType + " Best Action: " + bestAction.ToString() + " | Utility: " + highestUtility.ToString());
             }
         }
 

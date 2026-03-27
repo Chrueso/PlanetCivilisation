@@ -19,6 +19,7 @@ public class MoveCommand : ICommand
     {
         entityModel.CurrentHex = targetHex;
         entityView.Move(targetHex.WorldPosition, entityModel.yValue);
+        entityModel.RemoveAP(1);
 
         Debug.Log(this.ToString());
     }
@@ -27,6 +28,7 @@ public class MoveCommand : ICommand
     {
         entityModel.CurrentHex = originHex;    
         entityView.Move(originHex.WorldPosition, entityModel.yValue);
+        entityModel.AddAP(1);
 
         Debug.Log(this.ToString());
     }

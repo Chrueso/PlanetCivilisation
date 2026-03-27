@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
-    [SerializeField] private List<AIAction> AIactions; //I think factions have their own behavior later so store actions there?
+    [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
 
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     private void CreateAI(int amount, List<PlanetData> planets, out Dictionary<AIBrain, IEntityController> entities)
     {
         entities = new Dictionary<AIBrain, IEntityController>();
-        if (planets == null || planets.Count == 0) return;
+        if (planets == null || planets.Count == 0 || aIActions.Count == 0) return;
 
         List<PlanetData> availablePlanets = planets.FindAll(p => p.FactionType == FactionType.Nothing);
         if (availablePlanets.Count == 0) return;
@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            EntityController entity = entityFactory.CreateAI(out AIBrain brain, availablePlanets[i], AIactions);
+            EntityController entity = entityFactory.CreateAI(out AIBrain brain, availablePlanets[i], aIActions);
             if (entity != null)
             {
                 entities.Add(brain, entity);

@@ -25,7 +25,7 @@ public class EntityModel
     public int MoveRadius { get; private set; }
     public float yValue { get; private set; }
 
-    private int maxAP = 10;
+    public int MaxAP { get; private set; } = 10;
     public int CurrentAP { get; private set; }
 
     public event Action OnResourcesChanged;
@@ -51,13 +51,19 @@ public class EntityModel
         MoveRadius = moveRadius;
         this.yValue = yValue;
 
-        this.maxAP = maxAP;
+        MaxAP = maxAP;
         CurrentAP = maxAP;
 
         OnResourcesChanged?.Invoke();
         OnShipsChanged?.Invoke();
         OnOwnedPlanetsChanged?.Invoke();
         OnDiscoveredPlanetsChanged?.Invoke();
+    }
+
+    public void AddAP(int amount)
+    {
+        CurrentAP = Mathf.Clamp(CurrentAP + amount, 0, MaxAP);
+        OnAPChanged?.Invoke();
     }
 
     public void RemoveAP(int amount)
@@ -68,7 +74,7 @@ public class EntityModel
 
     public void RefreshAP()
     {
-        CurrentAP = maxAP;
+        CurrentAP = MaxAP;
         OnAPChanged?.Invoke();
     }
 
