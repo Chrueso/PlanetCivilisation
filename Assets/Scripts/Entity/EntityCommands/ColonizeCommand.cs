@@ -13,18 +13,18 @@ public class ColonizeCommand : ICommand
 
     public void Execute()
     {
+        entityModel.RemoveAP(1);
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
-        entityModel.RemoveAP(1);
 
         Debug.Log(this.ToString());
     }
 
     public void Undo()
     {
+        entityModel.AddAP(1);
         targetPlanet.SetFaction(FactionType.Nothing);
         entityModel.RemoveOwnedPlanets(targetPlanet);
-        entityModel.AddAP(1);
 
         Debug.Log($"{targetPlanet.PlanetName} is now uninhabited");
     }

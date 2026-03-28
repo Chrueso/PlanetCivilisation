@@ -41,7 +41,8 @@ public class AIBrain
 
     public void Think()
     {
-        while (currentAP > 0)
+        int safetyLimit = 100;
+        while (currentAP > 0 && safetyLimit-- > 0)
         {
             Debug.Log(context.Model.FactionType + " started thinking...");
 
@@ -66,6 +67,9 @@ public class AIBrain
                 Debug.Log(context.Model.FactionType + " Best Action: " + bestAction.ToString() + " | Utility: " + highestUtility.ToString());
             }
         }
+
+        if (safetyLimit <= 0)
+            Debug.LogError(context.Model.FactionType + " Think() hit safety limit — possible infinite loop.");
 
         // No ap left
         controller.TryEndTurn();
