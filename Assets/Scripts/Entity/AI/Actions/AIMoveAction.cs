@@ -1,21 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
 public class AIMoveAction : AIAction
 {
     Dictionary<int, GridHex> hexScores;
 
-    EntityModel model;
-    EntityController controller;
-
     AnimationCurve curve;
 
     public override void Init(AIContext context)
     {
-        model = context.Model;
-        controller = context.Controller;
-
         curve = new AnimationCurve(
             new Keyframe(0, 1),  // at normalized distance 0 utility is 1
             new Keyframe(1, 0)); // at normalized distance 1 utility is 0
@@ -23,6 +18,9 @@ public class AIMoveAction : AIAction
 
     public override float CalculateUtility(AIContext context)
     {
+        EntityModel model = context.Model;
+        EntityController controller = context.Controller;
+
         GridHex currentHex = model.CurrentHex;
         var planet = currentHex.Occupant as PlanetData;
         bool isOnPlanet = planet != null;
@@ -46,6 +44,8 @@ public class AIMoveAction : AIAction
 
     public override void Execute(AIContext context)
     {
+        EntityModel model = context.Model;
+        EntityController controller = context.Controller;
         GridHex currentHex = model.CurrentHex;
         GridHex bestHex = null;
         float highestHexScore = float.MinValue;

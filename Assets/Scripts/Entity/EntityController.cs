@@ -18,6 +18,8 @@ public class EntityController : IEntityController, IDisposable
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
+    public event Action OnCurrentTurn;
+
     public EntityController(EntityModel model, EntityView view)
     {
         this.model = model;
@@ -44,8 +46,13 @@ public class EntityController : IEntityController, IDisposable
     private void HandleTurnChange(TurnChangeEvent turnChangeEvent)
     {
         IsCurrentTurn = turnChangeEvent.CurrentTurnFaction == model.FactionType;
-        model.CalculateResourceGain();
-        model.RefreshAP();
+        
+        if (IsCurrentTurn)
+        {
+            model.CalculateResourceGain();
+            model.RefreshAP();
+            OnCurrentTurn?.Invoke();
+        }
     }
 
     private void ConnectModel()

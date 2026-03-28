@@ -39,6 +39,7 @@ public class EntityFactory
         }
 
         avaliableFactions.Remove(factionType);
+        homePlanet.SetFaction(factionType);
 
         EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType);
         model.CurrentHex = homePlanet.CurrentHex;
@@ -63,6 +64,8 @@ public class EntityFactory
             Debug.Log(this + "Failed to create player");
             return null;
         }
+        avaliableFactions.Remove(factionType);
+        homePlanet.SetFaction(factionType);
 
         EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType);
         model.CurrentHex = homePlanet.CurrentHex;
@@ -74,8 +77,6 @@ public class EntityFactory
         view.transform.position = spawnPos;
 
         EntityController controller = new EntityController(model, view);
-
-        avaliableFactions.Remove(factionType);
 
         return controller;
     }

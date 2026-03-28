@@ -4,7 +4,7 @@ using UnityEngine;
 public class ActionsTabController : IUIMenuController, IDisposable
 {
     private ActionsTabView view;
-    private IEntityController entityController;
+    private IEntityController playerController;
     private GridInteractionController gridInteractionController;
     private InfoMenuController infoMenuController;
     private StructuresController structuresController;
@@ -29,7 +29,7 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        entityController = gameStartEvent.PlayerController;
+        playerController = gameStartEvent.PlayerController;
         Debug.Log("ActionTabController recieved entity controller");
 
         ConnectView();
@@ -37,13 +37,13 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     public void ConnectView()
     {
-        if (entityController == null)
+        if (playerController == null)
         {
             Debug.Log("ActionTab entityController is null!");
             return;
         }
         
-        view.Init(entityController);
+        view.Init(playerController);
 
         view.CloseButton.onClick.AddListener(CloseView);
         view.InfoButton.onClick.AddListener(HandleInfoButtonClicked);
@@ -82,9 +82,9 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleMoveButtonClicked()
     {
-        if (entityController == null) return;
+        if (playerController == null) return;
 
-        if (entityController.TryMove(selectedHex))
+        if (playerController.TryMove(selectedHex))
         {
             CloseView();
         }
@@ -92,11 +92,11 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleColonizeButtonClicked()
     {
-        if (entityController == null) return;
+        if (playerController == null) return;
 
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (entityController.TryColonize(planet))
+            if (playerController.TryColonize(planet))
             {
                 //CloseView();
                 view.Show(true); // updates after colonize
@@ -106,11 +106,11 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleAttackButtonClicked()
     {
-        if (entityController == null) return; 
+        if (playerController == null) return; 
 
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (entityController.TryAttack(planet))
+            if (playerController.TryAttack(planet))
             {
                 CloseView();
             }

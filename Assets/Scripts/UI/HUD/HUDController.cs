@@ -6,6 +6,7 @@ public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
     private IEntityController entityController;
+    private IEntityController playerController;
     private EntityModel entityModel;
     private CameraController cameraController;
     private PlanetListController planetListController;
@@ -32,6 +33,7 @@ public class HUDController : IUIMenuController, IDisposable
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
         entityController = gameStartEvent.PlayerController;
+        playerController = gameStartEvent.PlayerController;
         entityModel = entityController.GetModel();
         Debug.Log("HUD recieved entity controller");
 
@@ -109,8 +111,11 @@ public class HUDController : IUIMenuController, IDisposable
 
     private void HandleEndTurnButtonClicked()
     {
-        if (entityController == null) return;
-        entityController.TryEndTurn();
+        //if (entityController == null) return;
+        //entityController.TryEndTurn();
+
+        if (playerController == null) return;
+        playerController.TryEndTurn();
     }
 
     public void Dispose()
