@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum ResourceClass
@@ -13,7 +11,7 @@ public class PlanetData : IGridHexObject
 {
     public string PlanetName { get; private set; }
     public Dictionary<ResourceClass, ResourceType> PlanetResource {  get; private set; }
-    public Dictionary<ResourceType, int> Resources { get; private set; } // resources it generates
+    public Dictionary<ResourceType, int> GeneratedResource { get; private set; } // resources it generates
     public Dictionary<ResourceType, int> ResourceInventory { get; private set; } // Resource in inv, how many they have
     public FactionType FactionType { get; private set; }
     public List<StructureType> Structures { get; private set; }
@@ -35,7 +33,7 @@ public class PlanetData : IGridHexObject
 
         this.PlanetName = planetName;
         this.PlanetResource = resource;
-        this.Resources = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
+        this.GeneratedResource = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
         this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals,0 }, { ResourceType.Rations, 0 } };
         this.Relations = new();
         this.FactionType = faction;
