@@ -11,13 +11,10 @@ public class AIMoveAction : AIAction
 
     AnimationCurve curve;
 
-    GridHex currentHex;
-
     public override void Init(AIContext context)
     {
         model = context.Model;
         controller = context.Controller;
-        currentHex = context.Model.CurrentHex;
 
         curve = new AnimationCurve(
             new Keyframe(0, 1),  // at normalized distance 0 utility is 1
@@ -26,6 +23,7 @@ public class AIMoveAction : AIAction
 
     public override float CalculateUtility(AIContext context)
     {
+        GridHex currentHex = model.CurrentHex;
         var planet = currentHex.Occupant as PlanetData;
         bool isOnPlanet = planet != null;
         bool isUninhabited = isOnPlanet && planet.FactionType == FactionType.Nothing;

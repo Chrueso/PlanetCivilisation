@@ -5,18 +5,17 @@ public class AIColonizeAction : AIAction
 {
     EntityModel model;
     EntityController controller;
-    GridHex currentHex;
     PlanetData planet;  
 
     public override void Init(AIContext context)
     {
         model = context.Model;
         controller = context.Controller;
-        currentHex = context.Model.CurrentHex;
     }
 
     public override float CalculateUtility(AIContext context)
     {
+        GridHex currentHex = model.CurrentHex;
         planet = currentHex.Occupant as PlanetData;
         bool isOnPlanet = planet != null;
         bool isUninhabited = isOnPlanet && planet.FactionType == FactionType.Nothing;
