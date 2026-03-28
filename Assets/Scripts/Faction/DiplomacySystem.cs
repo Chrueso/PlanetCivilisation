@@ -50,7 +50,7 @@ public class DiplomacySystem
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
     private FactionType currentFactionTurn = FactionType.Nothing;
-    private PlayerController player = default;
+    private IEntityController player = default;
     public DiplomacySystem()
     {
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);

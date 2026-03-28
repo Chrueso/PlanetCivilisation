@@ -102,7 +102,6 @@ public class GameManager : MonoBehaviour
         turnManager = new TurnManager();
         battleManager = new BattleManager(shipDatabase);
         commandInvoker = new CommandInvoker();
-        entityFactory = new EntityFactory(entityView);
         diplomacySystem = new();
         AudioService.SetAudioInstance(audioSystem);
         
