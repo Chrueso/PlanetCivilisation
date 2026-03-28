@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1fb3c44aaaf3c048a89b92eed2f1440, type: 3}
-  m_Name: IdleConsideration
-  m_EditorClassIdentifier: Assembly-CSharp::AIConstantConsideration
-  Value: 1
+  m_Script: {fileID: 11500000, guid: 157d8ad61737d674181ec0ffbba3fc86, type: 3}
+  m_Name: New AI Colonize Action
+  m_EditorClassIdentifier: Assembly-CSharp::AIColonizeAction
+  Consideration: {fileID: 0}

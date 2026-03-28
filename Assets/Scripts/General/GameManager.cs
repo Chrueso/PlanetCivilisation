@@ -95,12 +95,12 @@ public class GameManager : MonoBehaviour
     {
         cameraController.Init();
         gridInteractionController.Init(cameraController);
-        planetGenerator = new PlanetGenerator(planetVisualPresets, planetPrefab);
+        planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(planetGenerator);
         turnManager = new TurnManager();
         battleManager = new BattleManager(shipDatabase);
         commandInvoker = new CommandInvoker();
-        entityFactory = new EntityFactory(entityView);
+        entityFactory = new EntityFactory(shipDatabase, entityView);
 
         TryRegisterDisposable(
             planetGenerator,

@@ -9,7 +9,10 @@ public abstract class AIAction : ScriptableObject
         // Optional setup
     }
 
-    public float CalculateUtility(AIContext context) => Consideration.Evaluate(context);
+    public virtual float CalculateUtility(AIContext context)
+    {
+        return 0;
+    }
 
     public abstract void Execute(AIContext context);    
 }

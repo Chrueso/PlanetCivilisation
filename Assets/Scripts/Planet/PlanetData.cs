@@ -27,8 +27,12 @@ public class PlanetData : IGridHexObject
 
     public event Action<bool> OnHiddenForPlayer;
 
-    public PlanetData(string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
+    private ShipDatabaseSO shipDatabase;
+
+    public PlanetData(ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
     {
+        this.shipDatabase = shipDatabase;
+
         this.PlanetName = planetName;
         this.PlanetResource = resource;
         this.Resources = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
@@ -96,18 +100,18 @@ public class PlanetData : IGridHexObject
         return StationedShips.ContainsKey(shipType) ? StationedShips[shipType] : 0;
     }
 
-    // For attack and defense calculations, like Risk
-    public int GetTotalAssaultShips()
+    public int CalculateDefensePower()
     {
-        int total = 0;
-        foreach (var ship in StationedShips)
+        int defensePower = 0;
+        foreach (var kvp in StationedShips)
         {
-            if (ship.Key == ShipType.Attacker)
-            {
-                total += ship.Value;
-            }
+            ShipType shipType = kvp.Key;
+            int count = kvp.Value;
+            ShipDataSO shipData = shipDatabase.GetShip(shipType);
+            defensePower += shipData.AttackPower * count;
         }
-        return total;
+
+        return defensePower;
     }
 
     //public void DebugPurposes()

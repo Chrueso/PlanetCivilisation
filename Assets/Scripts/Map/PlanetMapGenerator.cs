@@ -72,7 +72,6 @@ public class PlanetMapGenerator
             // Assign planet to hex
             hex.Occupant = planetData;
             if (hex.IsHiddenForPlayer) planetData.Hide(); 
-            hex.IsOccupied = true;
 
             // Mark all hexes within a radius as unable to spawn
             List<GridHex> hexesToRemove = mapGrid.Grid.GetGridObjectsInRadius(hex.GridPositionCube, radiusBetweenPlanets);

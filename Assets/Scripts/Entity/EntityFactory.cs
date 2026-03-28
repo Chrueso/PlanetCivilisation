@@ -7,8 +7,11 @@ public class EntityFactory
 
     private List<FactionType> avaliableFactions;
 
-    public EntityFactory(EntityView entityView) //We want different ship view for player and the ai so maybe a database of SOs later?
+    ShipDatabaseSO shipDatabase;
+
+    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
+        this.shipDatabase = shipDatabase;
         this.entityView = entityView;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
@@ -37,7 +40,7 @@ public class EntityFactory
 
         avaliableFactions.Remove(factionType);
 
-        EntityModel model = new EntityModel(homePlanet, factionType);
+        EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);
@@ -61,7 +64,7 @@ public class EntityFactory
             return null;
         }
 
-        EntityModel model = new EntityModel(homePlanet, factionType);
+        EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);

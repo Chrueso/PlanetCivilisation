@@ -11,7 +11,6 @@ public class GridHex : IHideable
     public Vector2Int GridPosition { get; private set; }
     public Vector3Int GridPositionCube { get; private set; }
     public Vector3 WorldPosition { get; private set; }
-    public bool IsOccupied;
     public IGridHexObject Occupant;
     public GridHexView View;
     public bool IsHiddenForPlayer = false;
@@ -22,7 +21,6 @@ public class GridHex : IHideable
         GridPosition = gridPosition;
         GridPositionCube = gridPositionCube;
         WorldPosition = worldPosition;
-        IsOccupied = isOccupied;
         Occupant = occupant;
     }
 

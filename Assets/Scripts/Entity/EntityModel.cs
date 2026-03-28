@@ -35,7 +35,9 @@ public class EntityModel
     public event Action OnCurrentHexChanged;
     public event Action OnAPChanged;
 
-    public EntityModel(PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
+    private ShipDatabaseSO shipDatabase;
+
+    public EntityModel(ShipDatabaseSO shipDatabase, PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);
@@ -58,6 +60,8 @@ public class EntityModel
         OnShipsChanged?.Invoke();
         OnOwnedPlanetsChanged?.Invoke();
         OnDiscoveredPlanetsChanged?.Invoke();
+
+        this.shipDatabase = shipDatabase;
     }
 
     public void AddAP(int amount)
@@ -103,6 +107,15 @@ public class EntityModel
         }
 
         OnResourcesChanged?.Invoke();
+    }
+
+    public int CalculateAttackPower()
+    {
+        if (!Ships.TryGetValue(ShipType.Attacker, out int count))
+            return 0;
+
+        var data = shipDatabase.GetShip(ShipType.Attacker);
+        return count * data.AttackPower;
     }
 
     public void AddShips(ShipType shipType, int amount)
