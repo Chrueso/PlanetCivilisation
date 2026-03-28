@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Threading.Tasks;
 
 public class AIBrain
 {
     private List<AIAction> actions = new List<AIAction>();
     private AIContext context;
-
     private EntityController controller;
     private EntityModel model;
 
@@ -27,7 +29,7 @@ public class AIBrain
         controller.OnCurrentTurn += Think;
     }
 
-    public void Think()
+    private async void Think()
     {
         int safetyLimit = 100;
         while (currentAP > 0 && safetyLimit-- > 0)
@@ -50,13 +52,22 @@ public class AIBrain
 
             if (bestAction != null)
             {
-                Debug.Log(context.Model.FactionType + " Best Action: " + bestAction.ToString() + " | Utility: " + highestUtility.ToString());
+                // Fix my chungus code someone
+
+                var tcs = new TaskCompletionSource<bool>();
+                Action onComplete = () => tcs.TrySetResult(true);
+                controller.OnActionComplete += onComplete;
+
+                Debug.Log(context.Model.FactionType + " Best Action: " + bestAction + " | Utility: " + highestUtility);
                 bestAction.Execute(context);
+
+                await tcs.Task;
+                controller.OnActionComplete -= onComplete; 
             }
         }
 
         if (safetyLimit <= 0)
-            Debug.LogError(context.Model.FactionType + " Think() hit safety limit — possible infinite loop.");
+            Debug.LogError(context.Model.FactionType + " Think() hit safety limit possible infinite loop");
 
         // No ap left
         controller.TryEndTurn();
