@@ -46,6 +46,7 @@ public class AIMoveAction : AIAction
 
     public override void Execute(AIContext context)
     {
+        GridHex currentHex = model.CurrentHex;
         GridHex bestHex = null;
         float highestHexScore = float.MinValue;
 
