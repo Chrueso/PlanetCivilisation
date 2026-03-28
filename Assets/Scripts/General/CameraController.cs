@@ -165,7 +165,7 @@ public class CameraController : MonoBehaviour
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        MoveCamera(gameStartEvent.PlayerModel.CurrentHex.WorldPosition);
+        MoveCamera(gameStartEvent.PlayerController.GetModel().CurrentHex.WorldPosition);
     }
 
     public void MoveCamera(Vector3 position)

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum ResourceClass
@@ -9,26 +7,33 @@ public enum ResourceClass
     Abundant,
     Scarce
 }
-public class PlanetData : IGridHexOccupant
+public class PlanetData : IGridHexObject
 {
     public string PlanetName { get; private set; }
     public Dictionary<ResourceClass, ResourceType> PlanetResource {  get; private set; }
-    public Dictionary<ResourceType, int> Resources { get; private set; } // resources it generates
+    public Dictionary<ResourceType, int> GeneratedResource { get; private set; } // resources it generates
     public Dictionary<ResourceType, int> ResourceInventory { get; private set; } // Resource in inv, how many they have
     public FactionType FactionType { get; private set; }
     public List<StructureType> Structures { get; private set; }
-    public Dictionary<ShipType, int> StationedShips { get; private set; } = new Dictionary<ShipType, int>();
+    public Dictionary<ShipType, int> StationedShips { get; private set; } 
     public Dictionary<FactionType, int> Affection {  get; private set; }
     public Dictionary<FactionType, RelationshipLevel> Relations {  get; private set; }
     public bool HasNAPact { get; private set; } = false;
-    public GridHex CurrentHex { get; set; }
-    
 
-    public PlanetData(string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
+    public GridHex CurrentHex { get; set; }
+    public bool IsHiddenForPlayer { get; private set; }
+
+    public event Action<bool> OnHiddenForPlayer;
+
+    private ShipDatabaseSO shipDatabase;
+
+    public PlanetData(ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
     {
+        this.shipDatabase = shipDatabase;
+
         this.PlanetName = planetName;
         this.PlanetResource = resource;
-        this.Resources = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
+        this.GeneratedResource = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
         this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals,0 }, { ResourceType.Rations, 0 } };
         this.Relations = new();
         this.FactionType = faction;
@@ -51,26 +56,18 @@ public class PlanetData : IGridHexOccupant
         UpdateRelations();
     }
 
-    //public PlanetData(string planetName, Dictionary<ResourceType,int> resourceTypes, FactionType factionType, List<StructureType> structure, GridHex hex)
-    //{
-    //    this.PlanetName = planetName;
+    public void Show()
+    {
+        IsHiddenForPlayer = false;
+        OnHiddenForPlayer?.Invoke(false);
+    }
 
-    //    foreach (KeyValuePair<ResourceType, int> kvp in resourceTypes)
-    //    {
-    //        this.Resources[kvp.Key] = kvp.Value;
-    //    }
-
-    //    //this.FactionType = factionType; // assign later since planets not owned
-    //    this.Structures = structure.ToList();
-    //    this.StationedShips = new Dictionary<ShipTypeSO, int>();
-    //    this.Affection = new Dictionary<FactionType, int>() {
-    //        {FactionType.Human, 0 },
-    //        {FactionType.DemiHuman, 0},
-    //        {FactionType.IntelligentConstruct, 0 },
-    //    };
-    //    this.CurrentHex = hex;
-    //}
-
+    public void Hide()
+    {
+        IsHiddenForPlayer = true;
+        OnHiddenForPlayer?.Invoke(true);
+    }
+    
     public void SetFaction(FactionType factionType)
     {
         this.FactionType = factionType;
@@ -101,18 +98,18 @@ public class PlanetData : IGridHexOccupant
         return StationedShips.ContainsKey(shipType) ? StationedShips[shipType] : 0;
     }
 
-    // For attack and defense calculations, like Risk
-    public int GetTotalAssaultShips()
+    public int CalculateDefensePower()
     {
-        int total = 0;
-        foreach (var ship in StationedShips)
+        int defensePower = 0;
+        foreach (var kvp in StationedShips)
         {
-            if (ship.Key == ShipType.Attacker)
-            {
-                total += ship.Value;
-            }
+            ShipType shipType = kvp.Key;
+            int count = kvp.Value;
+            ShipDataSO shipData = shipDatabase.GetShip(shipType);
+            defensePower += shipData.AttackPower * count;
         }
-        return total;
+
+        return defensePower;
     }
 
     //public void DebugPurposes()

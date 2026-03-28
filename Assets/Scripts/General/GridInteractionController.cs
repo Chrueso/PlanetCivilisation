@@ -112,7 +112,9 @@ public class GridInteractionController : MonoBehaviour
     {
         if (selectedHex != null && selectionView != null)
         {
-            selectionView.transform.position = selectedHex.WorldPosition;
+            Vector3 pos = selectedHex.WorldPosition;
+            pos.y = selectedHex.WorldPosition.y + 0.1f;
+            selectionView.transform.position = pos;
             selectionView.gameObject.SetActive(true);
 
             selectionTween?.Kill(true);
@@ -139,6 +141,7 @@ public class GridInteractionController : MonoBehaviour
             HideSelectionView();
             selectedHex = null;
             GameScreenManager.Pop();
+
         }
     }
 }

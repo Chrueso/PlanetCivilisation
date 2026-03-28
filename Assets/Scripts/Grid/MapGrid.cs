@@ -50,6 +50,7 @@ public class MapGrid : MonoBehaviour
                 hexView.name = ("Hex " + x + ", " + z);
                 hexView.Init(hex.CellSize);
                 hex.View = hexView;
+                hex.Hide();
             }
         }
     }

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ColonizeCommand : ICommand
 {
-    private EntityData entityModel;
+    private EntityModel entityModel;
     private PlanetData targetPlanet; 
 
-    public ColonizeCommand(EntityData entityModel, PlanetData planet)
+    public ColonizeCommand(EntityModel entityModel, PlanetData planet)
     {
         this.entityModel = entityModel;
         this.targetPlanet = planet;
@@ -13,6 +13,7 @@ public class ColonizeCommand : ICommand
 
     public void Execute()
     {
+        entityModel.RemoveAP(1);
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
 
@@ -21,6 +22,7 @@ public class ColonizeCommand : ICommand
 
     public void Undo()
     {
+        entityModel.AddAP(1);
         targetPlanet.SetFaction(FactionType.Nothing);
         entityModel.RemoveOwnedPlanets(targetPlanet);
 
@@ -29,5 +31,5 @@ public class ColonizeCommand : ICommand
 
     //For logging overrides ToString
     public override string ToString() =>
-        $"[{entityModel.FactionType}] Has colonized planet {targetPlanet.PlanetName}";
+        $"{entityModel.FactionType} has colonized planet {targetPlanet.PlanetName}";
 }

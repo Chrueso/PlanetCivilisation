@@ -4,11 +4,13 @@ using static PlanetShapeSettings;
 
 public class PlanetGenerator 
 {
+    private ShipDatabaseSO shipDatabase;
     private List<PlanetVisualTypesSO> presets;
     private GameObject planetPrefab;
 
-    public PlanetGenerator(List<PlanetVisualTypesSO> presets, GameObject planetPrefab)
+    public PlanetGenerator(ShipDatabaseSO shipDatabase, List<PlanetVisualTypesSO> presets, GameObject planetPrefab)
     {
+        this.shipDatabase = shipDatabase;
         this.presets = presets;
         this.planetPrefab = planetPrefab;
     }
@@ -216,12 +218,12 @@ public class PlanetGenerator
 
         PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
-        PlanetData data = new PlanetData(planetName, factionType, additionalResources); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(shipDatabase, planetName, factionType, additionalResources); // Check out PlanetData.cs
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
-        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
-        planetVisual.GeneratePlanetVisual(shapeSettings, colorSettings);
+        PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
+        planetView.GeneratePlanetView(data, shapeSettings, colorSettings);
 
         return (planetObj, data);
     }
@@ -232,12 +234,12 @@ public class PlanetGenerator
             {ResourceClass.Abundant, ResourceType.Metals },
             {ResourceClass.Scarce, ResourceType.Rations},
         };
-        PlanetData data = new PlanetData(customPlanetData.PlanetName, customPlanetData.FactionType, resource); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource); // Check out PlanetData.cs
 
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
-        PlanetVisual planetVisual = planetObj.GetComponentInChildren<PlanetVisual>();
-        planetVisual.GeneratePlanetVisual(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+        PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
+        planetView.GeneratePlanetView(data, customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
 
         return (planetObj, data);
     }

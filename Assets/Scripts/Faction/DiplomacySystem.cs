@@ -99,7 +99,7 @@ public class DiplomacySystem
         // Get current person's turn and their identifier to get their data, for now i just hardcode Player from GameManager
         Dictionary<TradeType, TradeDeal> tradePayload = new();
         List<ResourceType> resources = new List<ResourceType>() { ResourceType.Metals, ResourceType.Rations, ResourceType.Credits };
-        int rand = UnityEngine.Random.Range(0, resources.Count-1);
+        int rand = UnityEngine.Random.Range(0, resources.Count - 1);
         ResourceType getResource = resources[rand];
         resources.Remove(getResource);
         TradeDeal fairDeal = new TradeDeal(getResource, 10, resources[rand], 10); // amount should be decided by amount in inventory / 10 maybe but for now just like this
@@ -131,7 +131,8 @@ public class DiplomacySystem
         {
             //if (planetData.HasNAPact) return;
 
-        } else if (pactType == PactType.FCP)
+        }
+        else if (pactType == PactType.FCP)
         {
             //GameManager.Instance.Player.AddOwnedPlanets(planetData);
             //planetData.SetFaction(GameManager.Instance.Player.FactionType);

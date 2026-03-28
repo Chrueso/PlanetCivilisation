@@ -3,17 +3,23 @@ using UnityEngine;
 
 public interface IEntityController
 {
+    public EntityModel GetModel();
+
+    public EntityView GetView();
+
     public FactionType GetFaction();
 
     public GridHex GetCurrentHex();
+
+    public void HandleCurrrentHexChanged();
 
     public bool CheckIfHexIsInMoveRadius(GridHex hex);
 
     public void UpdateHexesInMoveRadius();
 
-    public bool CanExecuteAction();
+    public void UpdateVision();
 
-    public bool IsCurrentTurn { get; }
+    public bool CanExecuteAction();
 
     public bool TryEndTurn();
 
@@ -25,7 +31,6 @@ public interface IEntityController
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure);
 
-    
     // Diplomacy
     public void Trade(PlanetData planet);
 
