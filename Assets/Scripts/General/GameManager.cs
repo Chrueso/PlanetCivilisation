@@ -129,6 +129,8 @@ public class GameManager : MonoBehaviour
     {
         player = entityFactory.CreatePlayer(homePlanet, FactionType.Human);
         TryRegisterDisposable(player);
+
+        player.GetModel().AddShips(ShipType.Attacker, 3);
     }
 
     //This is ugly i want change later

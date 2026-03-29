@@ -34,7 +34,7 @@ public class ShipBattleView : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 position, float modelYValue)
+    public void Move(Vector3 position, float modelYValue = 30)
     {
         Vector3 targetPos = new Vector3(position.x, modelYValue, position.z);
 
