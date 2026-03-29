@@ -1,15 +1,17 @@
 using UnityEngine;
 using System;
 
-public class ColonizeCommand : ICommand
+public class AttackCommand : ICommand
 {
+    private BattleManager battleManager;
     private EntityController entityController;
     private EntityModel entityModel;
     private PlanetData targetPlanet;
     private Action onComplete;
 
-    public ColonizeCommand(EntityController entityController, EntityModel entityModel, PlanetData planet, Action onComplete)
+    public AttackCommand(BattleManager battleManager, EntityController entityController, EntityModel entityModel, PlanetData planet, Action onComplete)
     {
+        this.battleManager = battleManager;
         this.entityController = entityController;
         this.entityModel = entityModel;
         this.targetPlanet = planet;
@@ -21,24 +23,20 @@ public class ColonizeCommand : ICommand
         entityController.IsPerformingAction = true;
 
         entityModel.RemoveAP(1);
-        targetPlanet.SetFaction(entityModel.FactionType);
-        entityModel.AddOwnedPlanets(targetPlanet);
+
+        BattleResult result = battleManager.Battle(entityModel.Ships, targetPlanet);
+        if (result.AttackerWon)
+        {
+            targetPlanet.SetFaction(entityModel.FactionType);
+            entityModel.AddOwnedPlanets(targetPlanet);
+        }
 
         entityController.IsPerformingAction = false;
         onComplete?.Invoke();
         Debug.Log(this.ToString());
     }
 
-    //public void Undo()
-    //{
-    //    entityModel.AddAP(1);
-    //    targetPlanet.SetFaction(FactionType.Nothing);
-    //    entityModel.RemoveOwnedPlanets(targetPlanet);
-
-    //    Debug.Log($"{targetPlanet.PlanetName} is now uninhabited");
-    //}
-
     //For logging overrides ToString
     public override string ToString() =>
-        $"{entityModel.FactionType} has colonized planet {targetPlanet.PlanetName}";
+        $"{entityModel.FactionType} has taken over planet {targetPlanet.FactionType}'s planet {targetPlanet.PlanetName}";
 }

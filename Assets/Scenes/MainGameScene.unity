@@ -4568,7 +4568,7 @@ PrefabInstance:
       objectReference: {fileID: 6081837356046383971}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: aIActions.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: 'aIActions.Array.data[0]'
@@ -4578,6 +4578,10 @@ PrefabInstance:
       propertyPath: 'aIActions.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 18c9a78ed3e5c5f4abadef58a7bc56a2, type: 2}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'aIActions.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 1ab8df29f49d71040a07e3bb46e40b20, type: 2}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: gridInteractionController
       value: 

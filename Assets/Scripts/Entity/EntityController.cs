@@ -178,7 +178,16 @@ public class EntityController : IEntityController, IDisposable
     public bool TryAttack(PlanetData planet)
     {
         if (!CanExecuteAction() || !HasAP()) return false;
-        return true;
+
+        if (planet.FactionType != model.FactionType && planet.FactionType != FactionType.Nothing)
+        {
+            ICommand command = new AttackCommand(battleManager, this, model, planet, () => OnActionComplete?.Invoke());
+            commandInvoker.ExecuteCommand(command);
+            return true;
+        }
+
+        Debug.Log(this + " Cannot attack idk");
+        return false;
     }
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure)

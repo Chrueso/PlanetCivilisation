@@ -41,14 +41,14 @@ public class MoveCommand : ICommand
         Debug.Log(this.ToString());
     }
 
-    public void Undo()
-    {
-        entityModel.AddAP(1);
-        entityModel.CurrentHex = originHex;    
-        entityView.Move(originHex.WorldPosition, entityModel.yValue);
+    //public void Undo()
+    //{
+    //    entityModel.AddAP(1);
+    //    entityModel.CurrentHex = originHex;    
+    //    entityView.Move(originHex.WorldPosition, entityModel.yValue);
 
-        Debug.Log(this.ToString());
-    }
+    //    Debug.Log(this.ToString());
+    //}
 
     //For logging overrides ToString
     public override string ToString() => 
