@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlanetView : MonoBehaviour, IHideable
 {
-    private PlanetData planetData;
 
     [Range(2, 256)] // 256^2 is max amount vertices a mesh can have in unity
     public int Resolution = 30;
@@ -21,18 +20,10 @@ public class PlanetView : MonoBehaviour, IHideable
     private TerrainFace[] terrainFaces;
     private MeshRenderer[] renderers;
 
-    private void Init(PlanetData planetData, PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        this.planetData = planetData;
         ShapeSettings = shapeSettings;
         ColorSettings = colorSettings;
-        planetData.OnHiddenForPlayer += HandleHiddenForPlayer;
-    }
-
-    public void HandleHiddenForPlayer(bool hidden)
-    {
-        if (hidden) Hide();
-        else Show();
     }
 
     public void Show() => this.gameObject.SetActive(true);
@@ -79,9 +70,9 @@ public class PlanetView : MonoBehaviour, IHideable
         }
     }
 
-    public void GeneratePlanetView(PlanetData planetData, PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    public void GeneratePlanetView( PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
-        Init(planetData, shapeSettings, colorSettings);
+        Init(shapeSettings, colorSettings);
         InitMeshComponents();
         GenerateMesh();
         GenerateColors();
@@ -110,7 +101,6 @@ public class PlanetView : MonoBehaviour, IHideable
     private void OnDestroy()
     {
         colorGenerator.Cleanup();
-        planetData.OnHiddenForPlayer-= HandleHiddenForPlayer;
     }
 }
 

@@ -10,6 +10,7 @@ public class GridInteractionController : MonoBehaviour
     private Camera cam;
     private MapGrid mapGrid;
     private GridHex selectedHex;
+    private EntityModel player;
 
     private bool touchStartedOnUI = false;
 
@@ -40,14 +41,11 @@ public class GridInteractionController : MonoBehaviour
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        SetMap(gameStartEvent.MapGrid);
-        CreateSelectionHexView();
-    }
+        this.mapGrid = gameStartEvent.MapGrid;
+        this.player = gameStartEvent.PlayerController.GetModel();
 
-    public void SetMap(MapGrid mapGrid)
-    {
-        this.mapGrid = mapGrid;
         Debug.Log("GridInteractionController received game map");
+        CreateSelectionHexView();
     }
 
     private void CreateSelectionHexView()
@@ -90,15 +88,13 @@ public class GridInteractionController : MonoBehaviour
                     UnselectHex(); // same hex toggle off
                     return;
                 }
-
+ 
                 UnselectHex(); // diff hex swap
                 selectedHex = hex;
                 ShowSelectionView();
-
                 OnHexSelected?.Invoke(selectedHex);
 
-                //cameraInstance.transform.position = new(grid.WorldPosition.x, 55, grid.WorldPosition.z);
-                //PlayerCam.Disable();
+                //Debug.Log(HexGridXZ<GridHex>.Distance(player.CurrentHex.GridPositionCube, hex.GridPositionCube)); //show distance from current hex
             }
             else
             {

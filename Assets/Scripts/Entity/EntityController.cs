@@ -19,7 +19,7 @@ public class EntityController : IEntityController, IDisposable
     public bool IsPerformingAction;
     public event Action OnActionComplete;
 
-    private MapGrid mapGrid;
+    public MapGrid MapGrid { get; private set; }
     public HashSet<GridHex> HexesInMoveRadius { get; private set; } = new HashSet<GridHex>();
 
     private EventBinding<GameStartEvent> gameStartBinding;
@@ -43,7 +43,7 @@ public class EntityController : IEntityController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        mapGrid = gameStartEvent.MapGrid;
+        MapGrid = gameStartEvent.MapGrid;
         Debug.Log("Entity recieved game context");
 
         ConnectModel();
@@ -80,14 +80,14 @@ public class EntityController : IEntityController, IDisposable
 
     public void UpdateHexesInMoveRadius()
     {
-        if (mapGrid == null)
+        if (MapGrid == null)
         {
             Debug.Log(this + " Map grid is null!");
             return;
         }
 
         HexesInMoveRadius.Clear();
-        List<GridHex> list = mapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
+        List<GridHex> list = MapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
 
         foreach (GridHex hex in list)
         {

@@ -9,9 +9,11 @@ public class AIContext
     public EntityModel Model => Controller.GetModel();
     public int AttackPower => Model.CalculateAttackPower();
 
+    public MapGrid MapGrid => Controller.MapGrid;
     public HashSet<GridHex> HexesInMoveRadius => Controller.HexesInMoveRadius;
     public GridHex CurrentHex => Model.CurrentHex;
     public HashSet<GridHex> VisitedHexes = new HashSet<GridHex>();
+    public GridHex LastVisitedHex;
 
     // Planet state
     public PlanetData CurrentPlanet => CurrentHex.Occupant as PlanetData; //doing it this way makes it so i never have to null check in the actions
@@ -24,5 +26,7 @@ public class AIContext
     {
         Brain = brain;
         this.Controller = controller;
+        VisitedHexes.Add(CurrentHex);
+        LastVisitedHex = CurrentHex;
     }
 }
