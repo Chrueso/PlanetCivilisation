@@ -44,7 +44,7 @@ public class EntityController : IEntityController, IDisposable
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
         mapGrid = gameStartEvent.MapGrid;
-        Debug.Log("Player recieved game context");
+        Debug.Log("Entity recieved game context");
 
         ConnectModel();
         HandleCurrrentHexChanged();
@@ -69,8 +69,6 @@ public class EntityController : IEntityController, IDisposable
 
     public EntityModel GetModel() => model;
     public EntityView GetView() => view;
-    public FactionType GetFaction() => model.FactionType;
-    public GridHex GetCurrentHex() => model.CurrentHex;
 
     public void HandleCurrrentHexChanged()
     {

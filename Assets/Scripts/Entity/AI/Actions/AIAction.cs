@@ -2,8 +2,6 @@ using UnityEngine;
 
 public abstract class AIAction : ScriptableObject
 {
-    public AIConsideration Consideration;
-
     public virtual void Init(AIContext context)
     {
         // Optional setup

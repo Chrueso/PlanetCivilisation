@@ -5,8 +5,6 @@ using UnityEngine.InputSystem.XR;
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
 public class AIMoveAction : AIAction
 {
-    Dictionary<int, GridHex> hexScores;
-
     AnimationCurve curve;
 
     public override void Init(AIContext context)
@@ -18,28 +16,7 @@ public class AIMoveAction : AIAction
 
     public override float CalculateUtility(AIContext context)
     {
-        EntityModel model = context.Model;
-        EntityController controller = context.Controller;
-
-        GridHex currentHex = model.CurrentHex;
-        var planet = currentHex.Occupant as PlanetData;
-        bool isOnPlanet = planet != null;
-        bool isUninhabited = isOnPlanet && planet.FactionType == FactionType.Nothing;
-        bool isOwnedByMe = isOnPlanet && planet.FactionType == controller.GetFaction();
-        bool isOwnedByEnemy = isOnPlanet && !isUninhabited && !isOwnedByMe;
-
-        if (!isOnPlanet) return 1;
-        else if (isUninhabited) return 0; 
-        else if (isOwnedByMe) return 1;
-        else if (isOwnedByEnemy)
-        {
-            int defensePower = planet.CalculateDefensePower();
-            int attackPower = model.CalculateAttackPower();
-
-            return curve.Evaluate((float)attackPower / defensePower); //if attack 1 defense 0 return 1 so move
-        }
-
-        return 0;
+        return 0.5f;
     }
 
     public override void Execute(AIContext context)
@@ -50,6 +27,7 @@ public class AIMoveAction : AIAction
         GridHex bestHex = null;
         float highestHexScore = float.MinValue;
 
+        //Calculate score for each hex in move radius and pick the one with highest score
         foreach (GridHex hex in controller.HexesInMoveRadius)
         {
             if (hex == currentHex) continue;
@@ -59,18 +37,19 @@ public class AIMoveAction : AIAction
             if (hex.Occupant is PlanetData planet)
             {
                 bool isUninhabited = planet.FactionType == FactionType.Nothing;
-                bool isOwnedByMe = planet.FactionType == controller.GetFaction();
+                bool isOwnedByMe = planet.FactionType == model.FactionType;
                 bool isOwnedByEnemy = !isUninhabited && !isOwnedByMe;
                 if (isUninhabited)
                 {
-                    hexScore = 1; // prefer uninhabited or owned by me
+                    //Check resource
+                    hexScore = 1; 
                 }
                 else if (isOwnedByEnemy)
                 {
                     int defensePower = planet.CalculateDefensePower();
                     int attackPower = model.CalculateAttackPower();
                     hexScore = curve.Evaluate((float)attackPower / defensePower); // prefer if I have higher attack power
-                }
+                }  
             }
             else
             {

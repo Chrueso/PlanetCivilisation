@@ -161,6 +161,6 @@ public class HUDController : IUIMenuController, IDisposable
 
         cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
       
-        Debug.Log("HUD Displaying " + entityController.GetFaction());
+        Debug.Log("HUD Displaying " + entityModel.FactionType);
     }
 }

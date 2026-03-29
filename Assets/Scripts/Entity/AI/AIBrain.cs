@@ -19,7 +19,7 @@ public class AIBrain
         this.controller = controller;
         this.model = controller.GetModel();
 
-        context = new AIContext(this, model, controller);
+        context = new AIContext(this, controller);
 
         foreach (var action in actions)
         {
@@ -34,7 +34,7 @@ public class AIBrain
         int safetyLimit = 100;
         while (currentAP > 0 && safetyLimit-- > 0)
         {
-            Debug.Log(context.Model.FactionType + " started thinking...");
+            Debug.Log(model.FactionType + " started thinking...");
 
             AIAction bestAction = null;
             float highestUtility = float.MinValue;
@@ -58,11 +58,12 @@ public class AIBrain
                 Action onComplete = () => tcs.TrySetResult(true);
                 controller.OnActionComplete += onComplete;
 
-                Debug.Log(context.Model.FactionType + " Best Action: " + bestAction + " | Utility: " + highestUtility);
+                Debug.Log("Best action: " + bestAction + " | Utility: " + highestUtility);
                 bestAction.Execute(context);
 
-                await tcs.Task;
+                await tcs.Task; //for actions/commands which have animation/duration/delay
                 controller.OnActionComplete -= onComplete; 
+                await Awaitable.WaitForSecondsAsync(0.5f); //so the ai doesnt look like its fking sicko doing actions back to back with no delay
             }
         }
 
