@@ -67,7 +67,7 @@ public class DiplomacySystem
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        Debug.Log($"{gameStartEvent.PlayerController.GetFaction()}");
+        Debug.Log($"{gameStartEvent.PlayerController.GetModel().FactionType}");
         player = gameStartEvent.PlayerController;
     }
 

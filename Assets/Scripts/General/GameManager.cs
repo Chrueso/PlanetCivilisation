@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
-
     public System.Random SeedRNG;
 
     [Header("Settings")]
@@ -17,11 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ShipDatabaseSO shipDatabase;
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
 
-    [Header("Controllers")]
+    [Header("Mono Controllers")]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private GridInteractionController gridInteractionController;
     [SerializeField] private AudioSystem audioSystem;
-    //[SerializeField] private DiplomacySystem diplomacySystem;
 
     [Header("Views")]
     [SerializeField] private GameObject planetPrefab;
@@ -50,10 +48,6 @@ public class GameManager : MonoBehaviour
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
-    //TO CHANGE
-    //public DiplomacySystem DiplomacyInstance => diplomacySystem;
-
-    private readonly List<IDisposable> disposables = new(); // for cleanup
 
     //Game context
     private MapGrid mapGrid;
@@ -62,13 +56,14 @@ public class GameManager : MonoBehaviour
     private IEntityController player;
     private Dictionary<AIBrain, IEntityController> AIEntities = new Dictionary<AIBrain, IEntityController>();
 
+    private readonly List<IDisposable> disposables = new(); // for cleanup
+
     public void Awake()
     {
         CreateSystems();
         CreateHUD();
         CreateActionTab();
 
-        // Game context
         GenerateSeed();
 
         mapGenerator.GenerateMap(mapSettings, out mapGrid, out homePlanet, out planets, SeedRNG);
@@ -84,11 +79,8 @@ public class GameManager : MonoBehaviour
 
         EventBus<GameStartEvent>.Raise(new GameStartEvent
         {
-            CommandInvoker = commandInvoker,
-            TurnManager = turnManager,
             MapGrid = mapGrid,
             PlayerController = player,
-
             AIControllers = aiControllers
         });
     }
@@ -104,8 +96,7 @@ public class GameManager : MonoBehaviour
         commandInvoker = new CommandInvoker();
         diplomacySystem = new();
         AudioService.SetAudioInstance(audioSystem);
-        
-        entityFactory = new EntityFactory(shipDatabase, entityView);
+        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem);
 
         TryRegisterDisposable(
             planetGenerator,
@@ -140,6 +131,7 @@ public class GameManager : MonoBehaviour
         TryRegisterDisposable(player);
     }
 
+    //This is ugly i want change later
     private void CreateAI(int amount, List<PlanetData> planets, out Dictionary<AIBrain, IEntityController> entities)
     {
         entities = new Dictionary<AIBrain, IEntityController>();
@@ -165,6 +157,7 @@ public class GameManager : MonoBehaviour
             {
                 entities.Add(brain, entity);
                 TryRegisterDisposable(entity);
+                TryRegisterDisposable(brain);
             }
         }
     }

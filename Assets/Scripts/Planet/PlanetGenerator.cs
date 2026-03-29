@@ -218,12 +218,12 @@ public class PlanetGenerator
 
         PlanetColorSettings colorSettings = GeneratePlanetColorSettings(planetRNG, preset);
 
-        PlanetData data = new PlanetData(shipDatabase, planetName, factionType, additionalResources); // Check out PlanetData.cs
-
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
-        planetView.GeneratePlanetView(data, shapeSettings, colorSettings);
+        planetView.GeneratePlanetView(shapeSettings, colorSettings);
+
+        PlanetData data = new PlanetData(planetView, shipDatabase, planetName, factionType, additionalResources); // Check out PlanetData.cs
 
         return (planetObj, data);
     }
@@ -234,12 +234,13 @@ public class PlanetGenerator
             {ResourceClass.Abundant, ResourceType.Metals },
             {ResourceClass.Scarce, ResourceType.Rations},
         };
-        PlanetData data = new PlanetData(shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource); // Check out PlanetData.cs
-
+       
         GameObject planetObj = Object.Instantiate(planetPrefab, position, rotation, parent);
 
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
-        planetView.GeneratePlanetView(data, customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+        planetView.GeneratePlanetView(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+
+        PlanetData data = new PlanetData(planetView, shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource); // Check out PlanetData.cs
 
         return (planetObj, data);
     }

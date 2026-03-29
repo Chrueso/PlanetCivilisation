@@ -1,22 +1,31 @@
 using UnityEngine;
+using System;
 
 public class ColonizeCommand : ICommand
 {
+    private EntityController entityController;
     private EntityModel entityModel;
-    private PlanetData targetPlanet; 
+    private PlanetData targetPlanet;
+    private Action onComplete;
 
-    public ColonizeCommand(EntityModel entityModel, PlanetData planet)
+    public ColonizeCommand(EntityController entityController, EntityModel entityModel, PlanetData planet, Action onComplete)
     {
+        this.entityController = entityController;
         this.entityModel = entityModel;
         this.targetPlanet = planet;
+        this.onComplete = onComplete;
     }
 
     public void Execute()
     {
+        entityController.IsPerformingAction = true;
+
         entityModel.RemoveAP(1);
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
 
+        entityController.IsPerformingAction = false;
+        onComplete?.Invoke();
         Debug.Log(this.ToString());
     }
 

@@ -244,6 +244,11 @@ public class HexGridXZ<TGridObject>
         return AxialToCube(axial.x, axial.y);
     }
 
+    public static int Distance(Vector3Int cubea, Vector3Int cubeb)
+    {
+        return (Mathf.Abs(cubea.x - cubeb.x) + Mathf.Abs(cubea.y - cubeb.y) + Mathf.Abs(cubea.z - cubeb.z)) / 2;
+    }
+
     private void ShowDebug()
     {
         debugTextArray = new TextMeshPro[Width, Height];
@@ -256,8 +261,6 @@ public class HexGridXZ<TGridObject>
                     10, Color.white, TextAlignmentOptions.Center);
             }
         }
-
- 
     }
 
 }

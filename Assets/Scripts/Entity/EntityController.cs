@@ -4,26 +4,35 @@ using UnityEngine;
 
 public class EntityController : IEntityController, IDisposable
 {
+    //Components
     private EntityModel model;
     private EntityView view;
-    private MapGrid mapGrid;
     private CommandInvoker commandInvoker;
     private TurnManager turnManager;
+    private BattleManager battleManager;
+    private DiplomacySystem diplomacySystem;
 
+    //Context
     public bool IsCurrentTurn { get; private set; }
+    public event Action OnCurrentTurn;
 
-    private HashSet<GridHex> hexesInMoveRadius = new HashSet<GridHex>();
-    public HashSet<GridHex> HexesInMoveRadius => hexesInMoveRadius;
+    public bool IsPerformingAction;
+    public event Action OnActionComplete;
+
+    public MapGrid MapGrid { get; private set; }
+    public HashSet<GridHex> HexesInMoveRadius { get; private set; } = new HashSet<GridHex>();
 
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    public event Action OnCurrentTurn;
-
-    public EntityController(EntityModel model, EntityView view)
+    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem)
     {
         this.model = model;
         this.view = view;
+        this.commandInvoker = commandInvoker;
+        this.turnManager = turnManager;
+        this.battleManager = battleManager;
+        this.diplomacySystem = diplomacySystem;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -34,10 +43,8 @@ public class EntityController : IEntityController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        commandInvoker = gameStartEvent.CommandInvoker;
-        turnManager = gameStartEvent.TurnManager;
-        mapGrid = gameStartEvent.MapGrid;
-        Debug.Log("Player recieved game context");
+        MapGrid = gameStartEvent.MapGrid;
+        Debug.Log("Entity recieved game context");
 
         ConnectModel();
         HandleCurrrentHexChanged();
@@ -62,8 +69,6 @@ public class EntityController : IEntityController, IDisposable
 
     public EntityModel GetModel() => model;
     public EntityView GetView() => view;
-    public FactionType GetFaction() => model.FactionType;
-    public GridHex GetCurrentHex() => model.CurrentHex;
 
     public void HandleCurrrentHexChanged()
     {
@@ -71,28 +76,28 @@ public class EntityController : IEntityController, IDisposable
         UpdateVision();
     }
 
-    public bool CheckIfHexIsInMoveRadius(GridHex hex) => hexesInMoveRadius.Contains(hex);
+    public bool CheckIfHexIsInMoveRadius(GridHex hex) => HexesInMoveRadius.Contains(hex);
 
     public void UpdateHexesInMoveRadius()
     {
-        if (mapGrid == null)
+        if (MapGrid == null)
         {
             Debug.Log(this + " Map grid is null!");
             return;
         }
 
-        hexesInMoveRadius.Clear();
-        List<GridHex> list = mapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
+        HexesInMoveRadius.Clear();
+        List<GridHex> list = MapGrid.Grid.GetGridObjectsInRadius(model.CurrentHex.GridPositionCube, model.MoveRadius);
 
         foreach (GridHex hex in list)
         {
-            hexesInMoveRadius.Add(hex);
+            HexesInMoveRadius.Add(hex);
         }
     }
 
     public void UpdateVision()
     {
-        foreach (GridHex hex in hexesInMoveRadius)
+        foreach (GridHex hex in HexesInMoveRadius)
         {
             hex.Show();
             model.AddDiscoveredHex(hex);
@@ -104,6 +109,12 @@ public class EntityController : IEntityController, IDisposable
         if (!IsCurrentTurn)
         {
             Debug.Log(this + " Not your turn!");
+            return false;
+        }
+
+        if (IsPerformingAction)
+        {
+            Debug.Log(this + " Currently performing action");
             return false;
         }
 
@@ -138,14 +149,14 @@ public class EntityController : IEntityController, IDisposable
     {
         if (!CanExecuteAction() || !HasAP()) return false;
 
-        if (hexesInMoveRadius.Contains(targetHex))
+        if (HexesInMoveRadius.Contains(targetHex))
         {
-            ICommand command = new MoveCommand(model, view, targetHex);
+            ICommand command = new MoveCommand(this, model, view, targetHex, () => OnActionComplete?.Invoke());
             commandInvoker.ExecuteCommand(command);
             return true;
         }
 
-        Debug.Log(this + "Outside move radius");
+        Debug.Log(this + " Outside move radius");
         return false;
     }
 
@@ -155,12 +166,12 @@ public class EntityController : IEntityController, IDisposable
 
         if (planet.FactionType == FactionType.Nothing)
         {
-            ICommand command = new ColonizeCommand(model, planet);
+            ICommand command = new ColonizeCommand(this, model, planet, () => OnActionComplete?.Invoke());
             commandInvoker.ExecuteCommand(command);
             return true;
         }
 
-        Debug.Log(this + "You cannot colonize a owned planet!");
+        Debug.Log(this + " You cannot colonize a owned planet!");
         return false;
     }
 
