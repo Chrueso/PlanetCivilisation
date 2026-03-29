@@ -5,13 +5,14 @@ using UnityEngine;
 public class BattleManager 
 {
     private ShipDatabaseSO shipDatabase;
+    [SerializeField] BattleVisualController BattleVisual;
 
     public BattleManager(ShipDatabaseSO shipDatabase)
     {
         this.shipDatabase = shipDatabase;
     }
 
-    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, PlanetData targetPlanet)
+    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, FactionType attackerFaction, PlanetData targetPlanet)
     {
         bool attackerWon = false;
         int maxRoll = 10; // can be adjusted for more or less randomness, the base number for attack power multiplier
