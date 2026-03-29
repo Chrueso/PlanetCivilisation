@@ -14,6 +14,7 @@ public class PlanetListController : IUIMenuController
     public void ConnectView()
     {
         view.CloseButton.onClick.AddListener(CloseView);
+        view.Init();
     }
 
     public void OpenView()

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -170,7 +171,7 @@ public class CameraController : MonoBehaviour
 
     public void MoveCamera(Vector3 position)
     {
-        Camera.main.transform.position = new Vector3(position.x, Camera.main.transform.position.y, position.z);
+        Camera.main.transform.DOMove(new Vector3(position.x, Camera.main.transform.position.y, position.z),0.3f).SetEase(Ease.OutQuad);
     }
 
     private void DisableMovement()

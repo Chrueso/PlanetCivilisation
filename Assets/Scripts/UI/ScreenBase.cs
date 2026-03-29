@@ -67,6 +67,9 @@ public class ScreenBase : MonoBehaviour
     public void Hide(bool instant)
     {
         ClearCurrentCoroutine();
+
+        OnHide();
+
         if (instant)
         {
             canvas.enabled = false;
@@ -96,6 +99,10 @@ public class ScreenBase : MonoBehaviour
 
     // Called by Show()
     protected virtual void OnShow()
+    { }
+
+    // Called by Hide()
+    protected virtual void OnHide()
     { }
 
     // Called by Show()
