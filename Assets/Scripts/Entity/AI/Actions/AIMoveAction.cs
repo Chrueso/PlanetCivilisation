@@ -5,13 +5,7 @@ using UnityEngine;
 public class AIMoveAction : AIAction
 {
     [SerializeField] private AnimationCurve attackCurve;
-
-    public override void Init(AIContext context)
-    {
-        attackCurve = new AnimationCurve(
-            new Keyframe(0, 0), 
-            new Keyframe(1, 1)); 
-    }
+    [SerializeField] private AnimationCurve centerCurve;
 
     public override float CalculateUtility(AIContext context)
     {
@@ -30,7 +24,7 @@ public class AIMoveAction : AIAction
 
             float hexScore = 0;
 
-            if (hex.Occupant != null && hex.Occupant is PlanetData planet)
+            if (hex.Occupant != null && hex.Occupant is PlanetData planet && planet.FactionType != context.Model.FactionType)
             {
                 bool isUninhabited = planet.FactionType == FactionType.Nothing;
                 bool isOwnedByMe = planet.FactionType == context.Model.FactionType;
@@ -47,19 +41,26 @@ public class AIMoveAction : AIAction
                     int planetDefense = planet.CalculateDefensePower();
                     planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f; 
                 }
-                else if (isOwnedByMe)
-                {
-                    planetScore = 0.1f;
-                }
 
                 float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
-                float distanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
-                hexScore = (planetScore * 0.8f) + (distanceScore * 0.1f);
+                float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
+
+                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f);
             }
             else
             {
                 float distanceFromLastVisitedHex = HexGridXZ<GridHex>.Distance(context.LastVisitedHex.GridPositionCube, hex.GridPositionCube);
-                hexScore = Mathf.Clamp01(distanceFromLastVisitedHex / context.Model.MoveRadius) * 0.5f;
+                //float distanceFromLastVisitedHexScore = Mathf.Clamp01(distanceFromLastVisitedHex / context.Model.MoveRadius);
+
+                if (distanceFromLastVisitedHex < context.Model.MoveRadius) continue; //waste of ap to move less
+
+                float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.MapGrid.Grid.GetAproxCenterGridObject.GridPositionCube);
+                float maxDistanceFromCenter = context.MapGrid.Grid.Width / 2f;
+                float centerScore = 1f - centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
+
+                //hexScore += distanceFromLastVisitedHexScore * centerScore * 0.1f;
+
+                hexScore += centerScore * 0.1f;
             }
 
             if (hexScore > highestHexScore)
