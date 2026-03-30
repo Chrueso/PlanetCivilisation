@@ -45,7 +45,7 @@ public enum RelationshipLevel
 
 public class DiplomacySystem 
 {
-    public static Dictionary<TradeType, TradeDeal> TradeDeal = new();
+    public static Dictionary<ResourceType, int> TradeDeal = new();
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
@@ -61,13 +61,11 @@ public class DiplomacySystem
 
     private void OnTurnChanged(TurnChangeEvent turnChangeEvent)
     {
-        Debug.Log("WOW U DID SOMETHING");
         currentFactionTurn = turnChangeEvent.CurrentTurnFaction;
     }
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        Debug.Log($"{gameStartEvent.PlayerController.GetFaction()}");
         player = gameStartEvent.PlayerController;
     }
 
@@ -93,19 +91,15 @@ public class DiplomacySystem
     }
 
     // "AI" makes the 
-    private static Dictionary<TradeType, TradeDeal> GetTradeDeals(/*PlanetData planetData*/) // not really "DECIDED" by ai yet but add parameter for numbers maybe
+    private static Dictionary<ResourceType, int> GetTradeDeals(/*PlanetData planetData*/) // not really "DECIDED" by ai yet but add parameter for numbers maybe
     {
         // this function generates the trade deals that will then be display in the trade popup
         // Get current person's turn and their identifier to get their data, for now i just hardcode Player from GameManager
-        Dictionary<TradeType, TradeDeal> tradePayload = new();
-        List<ResourceType> resources = new List<ResourceType>() { ResourceType.Metals, ResourceType.Rations, ResourceType.Credits };
+        Dictionary<ResourceType, int> tradePayload = new();
+        List<ResourceType> resources = new List<ResourceType>() { ResourceType.Metals, ResourceType.Rations };
         int rand = UnityEngine.Random.Range(0, resources.Count - 1);
         ResourceType getResource = resources[rand];
-        resources.Remove(getResource);
-        TradeDeal fairDeal = new TradeDeal(getResource, 10, resources[rand], 10); // amount should be decided by amount in inventory / 10 maybe but for now just like this
-        tradePayload[TradeType.FAIR] = fairDeal;
-        TradeDeal unfairDeal = new TradeDeal(getResource, 5, resources[rand], 10);
-        tradePayload[TradeType.UNFAIR] = unfairDeal;
+        tradePayload[getResource] = UnityEngine.Random.Range(10, 100);
 
         return tradePayload;
     }
