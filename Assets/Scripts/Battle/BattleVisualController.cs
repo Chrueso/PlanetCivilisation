@@ -22,6 +22,16 @@ public class BattleVisualController : MonoBehaviour
         
     }
 
+    void setupBattle(Dictionary<ShipType, int> attackingShips, Dictionary<ShipType, int> defendingShips, FactionType attackerFaction, PlanetData targetPlanet)
+    {
+        spawnShips(attackingShips, defendingShips, attackerFaction, targetPlanet);
+
+        float radius = targetPlanet.View.ShapeSettings.PlanetRadius;
+
+        fanOutShips(attackingShipModels, targetPlanet, radius , -90, 90);
+        fanOutShips(defendingShipModels, targetPlanet, radius , 90, 270);
+    }
+
     void spawnShips(Dictionary<ShipType, int> attackingShips, Dictionary<ShipType , int> defendingShips, FactionType attackerFaction , PlanetData targetPlanet)
     {
         attackingShipModels = new();

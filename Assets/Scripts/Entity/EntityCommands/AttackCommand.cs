@@ -24,7 +24,7 @@ public class AttackCommand : ICommand
 
         entityModel.RemoveAP(1);
 
-        BattleResult result = battleManager.Battle(entityModel.Ships, targetPlanet);
+        BattleResult result = battleManager.Battle(entityModel.Ships, entityModel.FactionType, targetPlanet);
         if (result.AttackerWon)
         {
             targetPlanet.SetFaction(entityModel.FactionType);
