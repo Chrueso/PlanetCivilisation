@@ -7,6 +7,10 @@ public class PlanetListView : ScreenBase
 {
     public Button CloseButton;
 
+    [Header("List Setup")]
+    [SerializeField] private Transform layoutGroup;
+    [SerializeField] private PlanetListVisualList planetListVisualPrefab;
+
     [Header("Animation")]
     [SerializeField] RectTransform planetListViewPanel;
     [SerializeField] private float animationDuration = 0.5f;
@@ -32,6 +36,8 @@ public class PlanetListView : ScreenBase
 
         }
     }
+
+
 
     protected override void OnShow()
     {
