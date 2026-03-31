@@ -1,65 +1,76 @@
-//using UnityEngine;
-//using UnityEngine.UI;
-//using System.Collections.Generic;
-//public class Crafter : MonoBehaviour
-//{
-//    [SerializeField] UINavigationManager uINavigationManager;
-//    [SerializeField] private Button craftExtractor;
-//    [SerializeField] private Button craftShipyard;
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using Mono.Cecil;
+public class Crafter
+{
+    private StructureRecipesSO structureRecipes;
+    private EventBinding<GameStartEvent> gameStartBinding;
+    private EventBinding<TurnChangeEvent> turnChangeEventBinding;
+    //recipes
+    
+    private IEntityController currentEntity;
 
-//    //recipes
-//    private Dictionary<StructureType, Dictionary<ResourceType, int>> Recipe = new Dictionary<StructureType, Dictionary<ResourceType, int>>() {
-//        {StructureType.Extractor, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 1 } } },
-//        {StructureType.Shipyard, new Dictionary<ResourceType, int>() { { ResourceType.Metals, 1}, { ResourceType.Rations, 1 }, { ResourceType.Credits, 0 } } },
-//    };
-   
-//    private void OnEnable()
-//    {
-//        craftExtractor.onClick.AddListener(delegate { BuildStructure(StructureType.Extractor); });
-//        craftShipyard.onClick.AddListener(delegate { BuildStructure(StructureType.Shipyard); });
-//    }
+    public Crafter(StructureRecipesSO structureRecipes)
+    {
+        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
+        EventBus<GameStartEvent>.Register(gameStartBinding);
+        turnChangeEventBinding = new EventBinding<TurnChangeEvent>(OnTurnChanged);
+        EventBus<TurnChangeEvent>.Register(turnChangeEventBinding);
+        this.structureRecipes = structureRecipes;
+    }
 
-//    private void OnDisable()
-//    {
-//        craftExtractor.onClick.RemoveListener(delegate { BuildStructure(StructureType.Extractor); });
-//        craftShipyard.onClick.RemoveListener(delegate { BuildStructure(StructureType.Shipyard); });
-//    }
-
-//    private void BuildStructure(StructureType structure)
-//    {
-//        // if (!TurnManager.Instance.currentFaction.DecreaseTurn(1)) return;  should get player turn from GameManager
-//        /*
-//        if (CheckPlayerInv(structure))
-//        {
-//            SimulationHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU SUCCESSFULLY BUILT STRUCTURE");
-//            PlayerInteractionController.Instance.CurrentPlanet.BuildStructure(structure);
-//            uINavigationManager.BackFromOverlay();
-//        } else
-//        {
-//            SimulationHandler.Instance.RunSimulationScreen("BUILD PROCESSING", $"YOU ARE BUILDING {structure}", "BUILD OUTCOME", "YOU FAILED TO BUILT STRUCTURE");
-//        }
+    private void OnTurnChanged(TurnChangeEvent turnChangeEvent)
+    {
         
-//        UINavigationManager.Instance.UpdateFriendlyUI();
-//        */
-//    }
+        
+    }
 
-//    private bool CheckPlayerInv(StructureType structure)
-//    {
-//        bool canCraft = false;
-//        foreach (KeyValuePair<ResourceType, int> recipe in Recipe[structure] )
-//        {
-//            if (GameManager.Instance.Player.Resources[recipe.Key] > recipe.Value) {
-//                canCraft = true;
-//            } else
-//            {
-//                canCraft = false;
-//                break;
-//            }
-//        }
-//        return canCraft;
-//    }
+    private void HandleGameStart(GameStartEvent gameStartEvent)
+    {
+        
+    }
+    public bool BuildStructure(PlanetData planetData, StructureType structure)
+    {
+        if (CheckEntityInv(structure, out var recipe))
+        { 
+            planetData.BuildStructure(structure);
+            foreach (var req in recipe)
+            {
+                currentEntity.GetModel().TakeResource(req.Key, req.Value);
+            }
+            return true;   
+        }
+        return false;
+    }
 
-//    // need structure data too
-//    // missing data but like its just if has enough of x then yes craft it
-//    // basically should send a signal to say this planet does indeed have a structure
-//}
+    private bool CheckEntityInv(StructureType structure, out Dictionary<ResourceType, int> requirement)
+    {
+        bool canCraft = true;
+        requirement = new();
+        int index = (int)structure;
+        StructureRecipeSO recipe = structureRecipes.RECIPES[index];
+        foreach (var structureRecipe in structureRecipes.RECIPES)
+        {
+            if (structureRecipe.StructureType == structure)
+            {
+                for (int i = 0; i<structureRecipe.ResourceRequirement.Length-1; ++i)
+                {
+                    if (currentEntity.GetModel().Resources[structureRecipe.ResourceRequirement[i]] < structureRecipe.ResourceRequirementAmount[i])
+                    {
+                        canCraft = false;
+                        return false;
+                    }
+                    requirement[structureRecipe.ResourceRequirement[i]] = structureRecipe.ResourceRequirementAmount[i];
+                }
+                break;
+            }
+        }
+        
+        return canCraft;
+    }
+    public bool Threaten(PlanetData planetData)
+    {
+        return false;
+    }
+}

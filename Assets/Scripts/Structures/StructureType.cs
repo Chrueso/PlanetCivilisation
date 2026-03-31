@@ -1,6 +1,6 @@
 public enum StructureType
 {
-    Shipyard,
+    Shipyard = 0,
     Extractor,
     Teleporter,
     Defense

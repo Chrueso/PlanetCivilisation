@@ -10,6 +10,7 @@ public class GridInteractionController : MonoBehaviour
     private Camera cam;
     private MapGrid mapGrid;
     private GridHex selectedHex;
+    
 
     private bool touchStartedOnUI = false;
 

@@ -176,19 +176,19 @@ public class EntityModel
         }
     }
 
-    public void TakeResource(ResourceType resource)
+    public void TakeResource(ResourceType resource, int amount)
     {
-        if (Resources.TryGetValue(resource, out int amount))
+        if (Resources.TryGetValue(resource, out int invAmount))
         {
-            Resources[resource] = amount - 1;
+            Resources[resource] = Mathf.Max(invAmount - amount, 0);
             OnResourcesChanged?.Invoke();
         }
     }
-    public void GainResource(ResourceType resource)
+    public void GainResource(ResourceType resource, int amount)
     {
-        if (Resources.TryGetValue(resource, out int amount))
+        if (Resources.TryGetValue(resource, out int invAmount))
         {
-            Resources[resource] = amount + 1;
+            Resources[resource] = invAmount + amount;
             OnResourcesChanged?.Invoke();
         }
     }

@@ -18,4 +18,5 @@ public struct TurnChangeEvent : IEvent
     public int CurrentTurn;
     public FactionType PrevTurnFaction;
     public FactionType CurrentTurnFaction;
+    public IEntityController CurrentEntity;
 }

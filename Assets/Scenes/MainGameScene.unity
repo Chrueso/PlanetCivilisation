@@ -1201,6 +1201,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1698070666}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: structureRecipes
+      value: 
+      objectReference: {fileID: 11400000, guid: 90a87a520c03dde43ae316a1c77ef0d3, type: 2}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: structuresMenuView
       value: 
       objectReference: {fileID: 991482257075438394}

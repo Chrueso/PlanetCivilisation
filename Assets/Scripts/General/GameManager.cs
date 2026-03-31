@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
+    [SerializeField] private StructureRecipesSO structureRecipes;
 
     [Header("Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
+    private Crafter crafterSystem;
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
@@ -103,6 +105,7 @@ public class GameManager : MonoBehaviour
         battleManager = new BattleManager(shipDatabase);
         commandInvoker = new CommandInvoker();
         diplomacySystem = new();
+        crafterSystem = new(structureRecipes);
         AudioService.SetAudioInstance(audioSystem);
         
         entityFactory = new EntityFactory(shipDatabase, entityView);
