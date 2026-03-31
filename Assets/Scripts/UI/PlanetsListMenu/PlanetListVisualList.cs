@@ -1,13 +1,17 @@
-using UnityEngine;
+using System;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlanetListVisualList : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI planetName;
     [SerializeField] private TextMeshProUGUI resourceGain;
     [SerializeField] private TextMeshProUGUI structures;
+    [SerializeField] private Button planetButton;
 
-    public void setup(PlanetData planetData)
+
+    public void setup(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked)
     {
         planetName.text = planetData.PlanetName;
 
@@ -18,7 +22,13 @@ public class PlanetListVisualList : MonoBehaviour
             resourceString += $"{resource.Key}: {resource.Value} \n";
         }
         resourceGain.text = resourceString;
-
+        
         structures.text = $"Structures: {planetData.Structures.Count}";
+
+        planetButton.onClick.RemoveAllListeners();
+        planetButton.onClick.AddListener(() =>
+        {
+            onPlanetButtonClicked?.Invoke(planetData);
+        });
     }
 }

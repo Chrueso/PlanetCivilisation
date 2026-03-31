@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
     private void CreateHUD()
     {
         settingsController = new SettingsController(settingsView); //maybe should be mono persistant from main menu
-        planetListController = new PlanetListController(planetListView);
+        planetListController = new PlanetListController(planetListView, cameraController);
         hudController = new HUDController(hudView, cameraController, planetListController, settingsController);
 
         TryRegisterDisposable(settingsController, planetListController, hudController);

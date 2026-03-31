@@ -26,7 +26,7 @@ public class PlanetListView : ScreenBase
     private List<GameObject> activeRows = new List<GameObject>();
     public void Init()
     {
-        if (planetListViewPanel != null&& !hasInitialzedPosition)
+        if (planetListViewPanel != null && !hasInitialzedPosition)
         {
             // just memorizing original position 
 
@@ -39,8 +39,8 @@ public class PlanetListView : ScreenBase
 
         }
     }
-    
-    public void InitalizeList(HashSet<PlanetData> ownedPlanets)
+
+    public void InitalizeList(HashSet<PlanetData> ownedPlanets, Action<PlanetData> onPlanetClicked)
     {
         // Destroy old UI rows
         foreach (var row in activeRows)
@@ -53,7 +53,7 @@ public class PlanetListView : ScreenBase
         foreach (PlanetData planet in ownedPlanets)
         {
             PlanetListVisualList row = Instantiate(planetListVisualPrefab, layoutGroup);
-            row.setup(planet); // Fill it with data
+            row.setup(planet, onPlanetClicked); // Fill it with data
             activeRows.Add(row.gameObject);
         }
     }
