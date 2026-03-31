@@ -1,7 +1,8 @@
-using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using System;
+using UnityEngine.UI;
 
 public class PlanetListView : ScreenBase
 {
@@ -21,6 +22,8 @@ public class PlanetListView : ScreenBase
     private float screenHeightOffset;
     private bool hasInitialzedPosition = false;
 
+    // Cache spawned rows
+    private List<GameObject> activeRows = new List<GameObject>();
     public void Init()
     {
         if (planetListViewPanel != null&& !hasInitialzedPosition)
@@ -36,8 +39,24 @@ public class PlanetListView : ScreenBase
 
         }
     }
+    
+    public void InitalizeList(HashSet<PlanetData> ownedPlanets)
+    {
+        // Destroy old UI rows
+        foreach (var row in activeRows)
+        {
+            Destroy(row);
+        }
+        activeRows.Clear();
 
-
+        // Spawn a new row for every planet the player owns
+        foreach (PlanetData planet in ownedPlanets)
+        {
+            PlanetListVisualList row = Instantiate(planetListVisualPrefab, layoutGroup);
+            row.setup(planet); // Fill it with data
+            activeRows.Add(row.gameObject);
+        }
+    }
 
     protected override void OnShow()
     {
@@ -54,7 +73,6 @@ public class PlanetListView : ScreenBase
         {
             planetListViewPanel.anchoredPosition = new Vector2(originalPosition.x, originalPosition.y);
             planetListViewPanel.DOAnchorPos(new Vector2(originalPosition.x, originalPosition.y - screenHeightOffset), animationDuration).SetEase(animationEase);
-
         }
     }
 }

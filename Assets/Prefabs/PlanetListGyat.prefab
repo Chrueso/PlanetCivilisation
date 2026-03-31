@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 8626834339622250609}
   - component: {fileID: 3781114345143058557}
   m_Layer: 5
-  m_Name: PlanetResource (1)
+  m_Name: PlanetStructure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,6 +360,7 @@ GameObject:
   - component: {fileID: 6235293221932544668}
   - component: {fileID: 2313365101710319822}
   - component: {fileID: 3752777810210384837}
+  - component: {fileID: 8570981523919103273}
   m_Layer: 5
   m_Name: PlanetListGyat
   m_TagString: Untagged
@@ -426,6 +427,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8570981523919103273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825807551716019774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3602ad9f3d0a9fa47944b18fc2202957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetListVisualList
+  planetName: {fileID: 8169309760686700750}
+  resourceGain: {fileID: 768521404295438988}
+  structures: {fileID: 3781114345143058557}
 --- !u!1 &8356966627374751813
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,7 +507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Resource A\nResource B : Gain '
+  m_text: 'Resource Gain: \n adasldjaskldajsl\nadasdsadsad'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96f0c6ccba06f5247961a31547818296, type: 2}
   m_sharedMaterial: {fileID: -963866391948432394, guid: 96f0c6ccba06f5247961a31547818296, type: 2}
@@ -601,8 +617,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1062.5406, y: -370.4086}
-  m_SizeDelta: {x: 1328.7717, y: 518.8875}
+  m_AnchoredPosition: {x: 1062.5406, y: -834.40393}
+  m_SizeDelta: {x: 1328.7717, y: 1446.8784}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4920119395778357486
 CanvasRenderer:

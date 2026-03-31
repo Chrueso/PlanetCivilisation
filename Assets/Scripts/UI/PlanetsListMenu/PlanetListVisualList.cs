@@ -12,7 +12,7 @@ public class PlanetListVisualList : MonoBehaviour
         planetName.text = planetData.PlanetName;
 
         // Display each resource in planet with new line
-        string resourceString = "Resource Gain: ";
+        string resourceString = "Resource Gain: \n";
         foreach (var resource in planetData.GeneratedResource)
         {
             resourceString += $"{resource.Key}: {resource.Value} \n";
