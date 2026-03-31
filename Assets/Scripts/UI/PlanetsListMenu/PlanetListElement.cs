@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlanetListVisualList : MonoBehaviour
+public class PlanetListElement : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI planetName;
     [SerializeField] private TextMeshProUGUI resourceGain;

@@ -10,7 +10,7 @@ public class PlanetListView : ScreenBase
 
     [Header("List Setup")]
     [SerializeField] private Transform layoutGroup;
-    [SerializeField] private PlanetListVisualList planetListVisualPrefab;
+    [SerializeField] private PlanetListElement planetListElement;
 
     [Header("Animation")]
     [SerializeField] RectTransform planetListViewPanel;
@@ -52,7 +52,7 @@ public class PlanetListView : ScreenBase
         // Spawn a new row for every planet the player owns
         foreach (PlanetData planet in ownedPlanets)
         {
-            PlanetListVisualList row = Instantiate(planetListVisualPrefab, layoutGroup);
+            PlanetListElement row = Instantiate(planetListElement, layoutGroup);
             row.setup(planet, onPlanetClicked); // Fill it with data
             activeRows.Add(row.gameObject);
         }
