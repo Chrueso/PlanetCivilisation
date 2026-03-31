@@ -5,13 +5,6 @@ public class AIAttackAction : AIAction
 {
     [SerializeField] private AnimationCurve attackCurve;
 
-    public override void Init(AIContext context)
-    {
-        attackCurve = new AnimationCurve(
-            new Keyframe(0, 0),
-            new Keyframe(1, 1));
-    }
-
     public override float CalculateUtility(AIContext context)
     {
         if (context.IsOnEnemyPlanet)

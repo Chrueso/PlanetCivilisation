@@ -31,6 +31,8 @@ public class HexGridXZ<TGridObject>
 
     public bool IsDebug = false;
 
+    public Vector2Int AproxCenterGridPos => new Vector2Int(Width / 2, Height / 2);
+
     public HexGridXZ(int width, int height, float cellSize, Vector3 originPos, Func<int, int, TGridObject> createGridObj)
     {
         Width = width;
@@ -134,6 +136,8 @@ public class HexGridXZ<TGridObject>
 
         return gridPos;
     }
+
+    public TGridObject GetAproxCenterGridObject => GetGridObject(AproxCenterGridPos.x, AproxCenterGridPos.y);
 
     public TGridObject GetGridObject(int x, int z)
     {
