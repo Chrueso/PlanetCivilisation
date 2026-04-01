@@ -23,7 +23,7 @@ public class ColonizeCommand : ICommand
         entityModel.RemoveAP(1);
         targetPlanet.SetFaction(entityModel.FactionType);
         entityModel.AddOwnedPlanets(targetPlanet);
-
+        targetPlanet.View.ShowColonizeEffect();
         entityController.IsPerformingAction = false;
         onComplete?.Invoke();
         Debug.Log(this.ToString());

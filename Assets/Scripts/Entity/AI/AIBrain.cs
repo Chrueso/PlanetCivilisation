@@ -26,7 +26,13 @@ public class AIBrain
             action.Init(context);
         }
 
-        controller.OnCurrentTurn += Think;
+        controller.OnCurrentTurn += HandleOnCurrentTurn;
+    }
+
+    private void HandleOnCurrentTurn()
+    {
+        context.UpdateVisitedHexesRecency();
+        Think();
     }
 
     private async void Think()
@@ -34,7 +40,7 @@ public class AIBrain
         int safetyLimit = 100;
         while (currentAP > 0 && safetyLimit-- > 0)
         {
-            Debug.Log(model.FactionType + " started thinking...");
+            Debug.Log($"<color=yellow>{model.FactionType} started thinking...</color>");
 
             AIAction bestAction = null;
             float highestUtility = float.MinValue;
@@ -58,7 +64,7 @@ public class AIBrain
                 Action onComplete = () => tcs.TrySetResult(true);
                 controller.OnActionComplete += onComplete;
 
-                Debug.Log("Best action: " + bestAction + " | Utility: " + highestUtility);
+                Debug.Log($"<color=yellow>Best action: {bestAction} | Utility: {highestUtility}</color>");
                 bestAction.Execute(context);
 
                 await tcs.Task; //for actions/commands which have animation/duration/delay

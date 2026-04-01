@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlanetView : MonoBehaviour, IHideable
 {
-
     [Range(2, 256)] // 256^2 is max amount vertices a mesh can have in unity
     public int Resolution = 30;
 
@@ -19,6 +18,9 @@ public class PlanetView : MonoBehaviour, IHideable
 
     private TerrainFace[] terrainFaces;
     private MeshRenderer[] renderers;
+
+    [SerializeField] private ParticleSystem colonizeVFX;
+    [SerializeField] private ParticleSystem takenOverVFX;
 
     private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
@@ -96,6 +98,16 @@ public class PlanetView : MonoBehaviour, IHideable
     private void GenerateColors()
     {
         colorGenerator.UpdateColors(renderers, shapeGenerator.ElevationMinMax);
+    }
+
+    public void ShowColonizeEffect()
+    {
+        ParticleSystem vfxInstance = Instantiate(colonizeVFX, this.transform);
+    }
+
+    public void ShowTakenOverEffect()
+    {
+        ParticleSystem vfxInstance = Instantiate(takenOverVFX, this.transform);
     }
 
     private void OnDestroy()

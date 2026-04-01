@@ -68,8 +68,13 @@ public class GameManager : MonoBehaviour
 
         mapGenerator.GenerateMap(mapSettings, out mapGrid, out homePlanet, out planets, SeedRNG);
 
-        CreatePlayer(homePlanet, out player);
-        CreateAI(FactionDatabase.factions.Length - 2, planets.ToList(), out AIEntities);
+        //CreatePlayer(homePlanet, out player);
+        //CreateAI(FactionDatabase.factions.Length - 2, planets.ToList(), out AIEntities);
+
+        //3 ai
+        CreateAI(FactionDatabase.factions.Length - 1, planets.ToList(), out AIEntities);
+        player = AIEntities.First().Value;
+        AIEntities.Remove(AIEntities.First().Key);
 
         HashSet<IEntityController> aiControllers = new HashSet<IEntityController>();
         foreach (var kvp in AIEntities)
@@ -77,12 +82,16 @@ public class GameManager : MonoBehaviour
             aiControllers.Add(kvp.Value);
         }
 
+        //Give everything conntext to the game
         EventBus<GameStartEvent>.Raise(new GameStartEvent
         {
             MapGrid = mapGrid,
             PlayerController = player,
             AIControllers = aiControllers
         });
+
+        //Start first turn
+        turnManager.ChangeTurn();
     }
 
     private void CreateSystems()

@@ -27,8 +27,14 @@ public class AttackCommand : ICommand
         BattleResult result = battleManager.Battle(entityModel.Ships, targetPlanet);
         if (result.AttackerWon)
         {
+            Debug.Log($"{entityModel.FactionType} has taken over planet {targetPlanet.FactionType}'s planet {targetPlanet.PlanetName}");
             targetPlanet.SetFaction(entityModel.FactionType);
             entityModel.AddOwnedPlanets(targetPlanet);
+            targetPlanet.View.ShowTakenOverEffect();
+        }
+        else
+        {
+            Debug.Log($"{entityModel.FactionType} failed to take over planet {targetPlanet.PlanetName}");
         }
 
         entityController.IsPerformingAction = false;
@@ -38,5 +44,5 @@ public class AttackCommand : ICommand
 
     //For logging overrides ToString
     public override string ToString() =>
-        $"{entityModel.FactionType} has taken over planet {targetPlanet.FactionType}'s planet {targetPlanet.PlanetName}";
+        $"{entityModel.FactionType} started attack on {targetPlanet.FactionType}'s planet {targetPlanet.PlanetName}";
 }

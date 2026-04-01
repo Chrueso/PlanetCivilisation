@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
@@ -17,6 +18,12 @@ public class AIMoveAction : AIAction
         GridHex bestHex = null;
         float highestHexScore = float.MinValue;
 
+        GridHex centerHex = context.MapGrid.Grid.GetAproxCenterGridObject;
+        float maxDistanceFromCenter = context.MapGrid.Grid.Width * 0.5f;
+        Vector3 lastDirection = context.LastHex != context.CurrentHex
+            ? ((Vector3)(context.CurrentHex.GridPositionCube - context.LastHex.GridPositionCube)).normalized
+            : Vector3.forward;
+
         //Calculate score for each hex in move radius and pick the one with highest score
         foreach (GridHex hex in context.HexesInMoveRadius)
         {
@@ -31,12 +38,12 @@ public class AIMoveAction : AIAction
                 bool isOwnedByEnemy = !isUninhabited && !isOwnedByMe;
 
                 float planetScore = 0;
-                if (isUninhabited)
+                if (isUninhabited) //usualy u want to go here
                 {
                     //Check resource
                     planetScore = 1; 
                 }
-                else if (isOwnedByEnemy)
+                else if (isOwnedByEnemy) //based on ship
                 {
                     int planetDefense = planet.CalculateDefensePower();
                     planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f; 
@@ -45,23 +52,28 @@ public class AIMoveAction : AIAction
                 float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
                 float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
 
-                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f);
+                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f); //prio closest
             }
-            else
+            else //For empty hexes and own planet prefer hexes that are farther from recently visited hexes and closer to center of the map
             {
-                float distanceFromLastVisitedHex = HexGridXZ<GridHex>.Distance(context.LastVisitedHex.GridPositionCube, hex.GridPositionCube);
-                //float distanceFromLastVisitedHexScore = Mathf.Clamp01(distanceFromLastVisitedHex / context.Model.MoveRadius);
+                float distanceFromCurrentHex = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.CurrentHex.GridPositionCube);
+                if (distanceFromCurrentHex < context.Model.MoveRadius) continue; // waste of ap
 
-                if (distanceFromLastVisitedHex < context.Model.MoveRadius) continue; //waste of ap to move less
+                float distanceFromLastHex = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.LastHex.GridPositionCube);
+                float lastHexScore = Mathf.Clamp01(distanceFromLastHex / context.Model.MoveRadius);
 
-                float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.MapGrid.Grid.GetAproxCenterGridObject.GridPositionCube);
-                float maxDistanceFromCenter = context.MapGrid.Grid.Width / 2f;
-                float centerScore = 1f - centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
+                Vector3 candidateDirection = ((Vector3)(hex.GridPositionCube - context.CurrentHex.GridPositionCube)).normalized;
+                float directionScore = (Vector3.Dot(lastDirection, candidateDirection) + 1f) * 0.5f; // remap -1,1 to 0,1
 
-                //hexScore += distanceFromLastVisitedHexScore * centerScore * 0.1f;
+                float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, centerHex.GridPositionCube);
+                float centerScore = centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
 
-                hexScore += centerScore * 0.1f;
+                float hexRecencyScore = context.VisitedHexes.ContainsKey(hex) ? context.VisitedHexes[hex] : 0f; // prefer unvisited hexes
+
+                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.1f) - hexRecencyScore);
             }
+
+            //Debug.Log("Hexscore " + hexScore);
 
             if (hexScore > highestHexScore)
             {
@@ -70,8 +82,8 @@ public class AIMoveAction : AIAction
             }
         }
 
-        context.VisitedHexes.Add(context.CurrentHex);
-        context.LastVisitedHex = context.CurrentHex;
+        context.LastHex = context.CurrentHex;
+        context.AddLastVisitedHex(context.CurrentHex);
         context.Controller.TryMove(bestHex);
     }
 

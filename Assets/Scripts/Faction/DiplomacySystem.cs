@@ -61,7 +61,6 @@ public class DiplomacySystem
 
     private void OnTurnChanged(TurnChangeEvent turnChangeEvent)
     {
-        Debug.Log("WOW U DID SOMETHING");
         currentFactionTurn = turnChangeEvent.CurrentTurnFaction;
     }
 

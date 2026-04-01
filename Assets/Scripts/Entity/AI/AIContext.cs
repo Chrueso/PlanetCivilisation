@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AIContext 
@@ -12,8 +14,8 @@ public class AIContext
     public MapGrid MapGrid => Controller.MapGrid;
     public HashSet<GridHex> HexesInMoveRadius => Controller.HexesInMoveRadius;
     public GridHex CurrentHex => Model.CurrentHex;
-    public HashSet<GridHex> VisitedHexes = new HashSet<GridHex>();
-    public GridHex LastVisitedHex;
+    public GridHex LastHex;
+    public Dictionary<GridHex, float> VisitedHexes = new Dictionary<GridHex, float>(); 
 
     // Planet state
     public PlanetData CurrentPlanet => CurrentHex.Occupant as PlanetData; //doing it this way makes it so i never have to null check in the actions
@@ -26,7 +28,35 @@ public class AIContext
     {
         Brain = brain;
         this.Controller = controller;
-        VisitedHexes.Add(CurrentHex);
-        LastVisitedHex = CurrentHex;
+        LastHex = CurrentHex;
+        VisitedHexes.Add(CurrentHex, 1f);
+    }
+
+    public void AddLastVisitedHex(GridHex hex)
+    {
+        if (VisitedHexes.ContainsKey(hex))
+        {
+            VisitedHexes[hex] = 1f; // Reset recency if hex is visited again
+        }
+        else
+        {
+            VisitedHexes.Add(hex, 1f);
+        }
+    }
+
+    public void UpdateVisitedHexesRecency()
+    {
+        var toRemove = new List<GridHex>();
+
+        foreach (var hex in VisitedHexes.Keys.ToList()) 
+        {
+            VisitedHexes[hex] -= 0.2f;
+
+            if (VisitedHexes[hex] <= 0f)
+                toRemove.Add(hex);
+        }
+
+        foreach (var hex in toRemove)
+            VisitedHexes.Remove(hex);
     }
 }

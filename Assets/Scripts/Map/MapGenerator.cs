@@ -51,6 +51,6 @@ public class MapGenerator
 
         // Generate planets and assign factions
         planetMapGenerator.GeneratePlanets(out homePlanet, out planets);
-        planetMapGenerator.AssignFactionToPlanets(homePlanet);
+        //planetMapGenerator.AssignFactionToPlanets(homePlanet);
     }
 }
