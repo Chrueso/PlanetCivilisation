@@ -146,18 +146,21 @@ public class HUDController : IUIMenuController, IDisposable
 
         // Unsub the old model
         entityModel.OnResourcesChanged -= HandleResourcesChanged;
+        entityModel.OnAPChanged -= HandleAPChanged;
 
         // Update model
         entityController = allEntities[currentEntityIndex];
         entityModel = entityController.GetModel();
 
         entityModel.OnResourcesChanged += HandleResourcesChanged;
+        entityModel.OnAPChanged += HandleAPChanged;
+
         view.UpdateFaction(entityModel.FactionType);
         view.UpdateResources(entityModel.Resources);
         view.UpdateAP(entityModel.CurrentAP, entityModel.MaxAP);
 
         cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
       
-        Debug.Log("HUD Displaying " + entityController.GetFaction());
+        Debug.Log("HUD Displaying " + entityModel.FactionType);
     }
 }

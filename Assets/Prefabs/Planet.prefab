@@ -136,3 +136,5 @@ MonoBehaviour:
       m_NumAlphaKeys: 2
     Material: {fileID: 0}
   meshFilters: []
+  colonizeVFX: {fileID: 1649646071701696839, guid: e1eca4a3ba3bfa44fa19b073269272de, type: 3}
+  takenOverVFX: {fileID: 5279599964573014816, guid: d0642801ddad5254197b23932a7c2c0c, type: 3}

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181dfed5f8e9ac14fac9d5f1c5a35670, type: 3}
   m_Name: MapSettings
   m_EditorClassIdentifier: Assembly-CSharp::MapSettings
-  MapDimensions: {x: 100, y: 100}
+  MapDimensions: {x: 30, y: 30}
   MapCellSize: 6
   MapGridPrefab: {fileID: 7126611557689938711, guid: 1daf4cf6af60a43419e14182baecc4df, type: 3}
   RadiusBetweenPlanets: 2
-  MaxPlanets: 100
+  MaxPlanets: 30
   HomePlanetData: {fileID: 11400000, guid: ee73ebb0de09fec42bc84efd5d59a2f8, type: 2}

@@ -1,81 +1,79 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
 public class AIMoveAction : AIAction
 {
-    Dictionary<int, GridHex> hexScores;
-
-    AnimationCurve curve;
-
-    public override void Init(AIContext context)
-    {
-        curve = new AnimationCurve(
-            new Keyframe(0, 1),  // at normalized distance 0 utility is 1
-            new Keyframe(1, 0)); // at normalized distance 1 utility is 0
-    }
+    [SerializeField] private AnimationCurve attackCurve;
+    [SerializeField] private AnimationCurve centerCurve;
 
     public override float CalculateUtility(AIContext context)
     {
-        EntityModel model = context.Model;
-        EntityController controller = context.Controller;
-
-        GridHex currentHex = model.CurrentHex;
-        var planet = currentHex.Occupant as PlanetData;
-        bool isOnPlanet = planet != null;
-        bool isUninhabited = isOnPlanet && planet.FactionType == FactionType.Nothing;
-        bool isOwnedByMe = isOnPlanet && planet.FactionType == controller.GetFaction();
-        bool isOwnedByEnemy = isOnPlanet && !isUninhabited && !isOwnedByMe;
-
-        if (!isOnPlanet) return 1;
-        else if (isUninhabited) return 0; 
-        else if (isOwnedByMe) return 1;
-        else if (isOwnedByEnemy)
-        {
-            int defensePower = planet.CalculateDefensePower();
-            int attackPower = model.CalculateAttackPower();
-
-            return curve.Evaluate((float)attackPower / defensePower); //if attack 1 defense 0 return 1 so move
-        }
-
-        return 0;
+        return 0.5f;
     }
 
     public override void Execute(AIContext context)
     {
-        EntityModel model = context.Model;
-        EntityController controller = context.Controller;
-        GridHex currentHex = model.CurrentHex;
         GridHex bestHex = null;
         float highestHexScore = float.MinValue;
 
-        foreach (GridHex hex in controller.HexesInMoveRadius)
+        GridHex centerHex = context.MapGrid.Grid.GetAproxCenterGridObject;
+        float maxDistanceFromCenter = context.MapGrid.Grid.Width * 0.5f;
+        Vector3 lastDirection = context.LastHex != context.CurrentHex
+            ? ((Vector3)(context.CurrentHex.GridPositionCube - context.LastHex.GridPositionCube)).normalized
+            : Vector3.forward;
+
+        //Calculate score for each hex in move radius and pick the one with highest score
+        foreach (GridHex hex in context.HexesInMoveRadius)
         {
-            if (hex == currentHex) continue;
+            if (hex == context.CurrentHex) continue;
 
             float hexScore = 0;
 
-            if (hex.Occupant is PlanetData planet)
+            if (hex.Occupant != null && hex.Occupant is PlanetData planet && planet.FactionType != context.Model.FactionType)
             {
                 bool isUninhabited = planet.FactionType == FactionType.Nothing;
-                bool isOwnedByMe = planet.FactionType == controller.GetFaction();
+                bool isOwnedByMe = planet.FactionType == context.Model.FactionType;
                 bool isOwnedByEnemy = !isUninhabited && !isOwnedByMe;
-                if (isUninhabited)
+
+                float planetScore = 0;
+                if (isUninhabited) //usualy u want to go here
                 {
-                    hexScore = 1; // prefer uninhabited or owned by me
+                    //Check resource
+                    planetScore = 1; 
                 }
-                else if (isOwnedByEnemy)
+                else if (isOwnedByEnemy) //based on ship
                 {
-                    int defensePower = planet.CalculateDefensePower();
-                    int attackPower = model.CalculateAttackPower();
-                    hexScore = curve.Evaluate((float)attackPower / defensePower); // prefer if I have higher attack power
+                    int planetDefense = planet.CalculateDefensePower();
+                    planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f; 
                 }
+
+                float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
+                float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
+
+                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f); //prio closest
             }
-            else
+            else //For empty hexes and own planet prefer hexes that are farther from recently visited hexes and closer to center of the map
             {
-                hexScore = 0.5f; // neutral score for empty hexes
+                float distanceFromCurrentHex = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.CurrentHex.GridPositionCube);
+                if (distanceFromCurrentHex < context.Model.MoveRadius) continue; // waste of ap
+
+                float distanceFromLastHex = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, context.LastHex.GridPositionCube);
+                float lastHexScore = Mathf.Clamp01(distanceFromLastHex / context.Model.MoveRadius);
+
+                Vector3 candidateDirection = ((Vector3)(hex.GridPositionCube - context.CurrentHex.GridPositionCube)).normalized;
+                float directionScore = (Vector3.Dot(lastDirection, candidateDirection) + 1f) * 0.5f; // remap -1,1 to 0,1
+
+                float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, centerHex.GridPositionCube);
+                float centerScore = centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
+
+                float hexRecencyScore = context.VisitedHexes.ContainsKey(hex) ? context.VisitedHexes[hex] : 0f; // prefer unvisited hexes
+
+                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.1f) - hexRecencyScore);
             }
+
+            //Debug.Log("Hexscore " + hexScore);
 
             if (hexScore > highestHexScore)
             {
@@ -84,6 +82,10 @@ public class AIMoveAction : AIAction
             }
         }
 
-        controller.TryMove(bestHex);
+        context.LastHex = context.CurrentHex;
+        context.AddLastVisitedHex(context.CurrentHex);
+        context.Controller.TryMove(bestHex);
     }
+
 }
+

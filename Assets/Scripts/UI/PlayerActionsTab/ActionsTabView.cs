@@ -20,10 +20,12 @@ public class ActionsTabView : ScreenBase
 
     private GridHex selectedHex;
     private IEntityController entityController;
+    private EntityModel entityModel;
 
     public void Init(IEntityController entityController)
     {
         this.entityController = entityController;
+        this.entityModel = entityController.GetModel();
     }
 
     public void UpdateCurrentHex(GridHex selectedHex)
@@ -37,7 +39,7 @@ public class ActionsTabView : ScreenBase
 
         HideAllButtons();
 
-        bool isCurrentHex = selectedHex == entityController.GetCurrentHex();
+        bool isCurrentHex = selectedHex == entityModel.CurrentHex;
         bool inMoveRange = entityController.CheckIfHexIsInMoveRadius(selectedHex);
 
         // Move — not current hex and in range
@@ -53,7 +55,7 @@ public class ActionsTabView : ScreenBase
         // Not on current hex — only info
         if (!isCurrentHex) return;
 
-        bool isOwnedByMe = planet.FactionType == entityController.GetFaction();
+        bool isOwnedByMe = planet.FactionType == entityModel.FactionType;
         bool isOwnedByEnemy = planet.FactionType != FactionType.Nothing && !isOwnedByMe;
         bool isUninhabited = planet.FactionType == FactionType.Nothing;
 
@@ -94,7 +96,7 @@ public class ActionsTabView : ScreenBase
                 {
                     additionalInfoText.text = $"Colonized by {planet.FactionType}";
 
-                    if (planet.FactionType == entityController.GetFaction())
+                    if (planet.FactionType == entityModel.FactionType)
                     {
                         additionalInfoText.text = $"Colonized by {planet.FactionType} (You)";
                     }

@@ -27,7 +27,6 @@ public class TurnManager
         }
 
         SetupTurnOrder(playerFaction, AIfactions);
-        ChangeTurn();
     }
 
     private void SetupTurnOrder(FactionType playerFaction, List<FactionType> AIfactions)

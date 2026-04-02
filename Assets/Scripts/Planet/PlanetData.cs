@@ -23,12 +23,13 @@ public class PlanetData : IGridHexObject
     public GridHex CurrentHex { get; set; }
     public bool IsHiddenForPlayer { get; private set; }
 
-    public event Action<bool> OnHiddenForPlayer;
-
     private ShipDatabaseSO shipDatabase;
 
-    public PlanetData(ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
+    public PlanetView View { get; private set; }
+
+    public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
     {
+        this.View = view;
         this.shipDatabase = shipDatabase;
 
         this.PlanetName = planetName;
@@ -59,13 +60,13 @@ public class PlanetData : IGridHexObject
     public void Show()
     {
         IsHiddenForPlayer = false;
-        OnHiddenForPlayer?.Invoke(false);
+        View.Show();
     }
 
     public void Hide()
     {
         IsHiddenForPlayer = true;
-        OnHiddenForPlayer?.Invoke(true);
+        View.Hide();
     }
     
     public void SetFaction(FactionType factionType)

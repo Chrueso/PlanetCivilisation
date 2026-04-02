@@ -7,10 +7,6 @@ public interface IEntityController
 
     public EntityView GetView();
 
-    public FactionType GetFaction();
-
-    public GridHex GetCurrentHex();
-
     public void HandleCurrrentHexChanged();
 
     public bool CheckIfHexIsInMoveRadius(GridHex hex);

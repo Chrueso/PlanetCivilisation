@@ -31,6 +31,8 @@ public class HexGridXZ<TGridObject>
 
     public bool IsDebug = false;
 
+    public Vector2Int AproxCenterGridPos => new Vector2Int(Width / 2, Height / 2);
+
     public HexGridXZ(int width, int height, float cellSize, Vector3 originPos, Func<int, int, TGridObject> createGridObj)
     {
         Width = width;
@@ -134,6 +136,8 @@ public class HexGridXZ<TGridObject>
 
         return gridPos;
     }
+
+    public TGridObject GetAproxCenterGridObject => GetGridObject(AproxCenterGridPos.x, AproxCenterGridPos.y);
 
     public TGridObject GetGridObject(int x, int z)
     {
@@ -244,6 +248,11 @@ public class HexGridXZ<TGridObject>
         return AxialToCube(axial.x, axial.y);
     }
 
+    public static int Distance(Vector3Int cubea, Vector3Int cubeb)
+    {
+        return (Mathf.Abs(cubea.x - cubeb.x) + Mathf.Abs(cubea.y - cubeb.y) + Mathf.Abs(cubea.z - cubeb.z)) / 2;
+    }
+
     private void ShowDebug()
     {
         debugTextArray = new TextMeshPro[Width, Height];
@@ -256,8 +265,6 @@ public class HexGridXZ<TGridObject>
                     10, Color.white, TextAlignmentOptions.Center);
             }
         }
-
- 
     }
 
 }

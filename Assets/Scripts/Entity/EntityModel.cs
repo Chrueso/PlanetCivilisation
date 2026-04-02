@@ -92,12 +92,12 @@ public class EntityModel
         foreach (var planet in OwnedPlanets)
         {
             int increment = planet.StationedShips[ShipType.Worker];
-            if (planet.Structures.Contains(StructureType.Extractor))
-            {
+            //if (planet.Structures.Contains(StructureType.Extractor))
+
                 Resources[ResourceType.Metals] += (1 + increment);
                 Resources[ResourceType.Rations] += (1 + increment);
                 Resources[ResourceType.Credits] += (1 + increment);
-            }
+            
             if (planet.Structures.Contains(StructureType.Shipyard))
             {
                 Ships[ShipType.Scout] += (1 + increment);

@@ -4,15 +4,23 @@ using UnityEngine;
 public class EntityFactory 
 {
     private EntityView entityView;
+    private CommandInvoker commandInvoker;
+    private TurnManager turnManager;
+    private BattleManager battleManager;
+    private DiplomacySystem diplomacySystem;
 
     private List<FactionType> avaliableFactions;
 
     ShipDatabaseSO shipDatabase;
 
-    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView) //We want different ship view for player and the ai so maybe a database of SOs later?
+    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
         this.shipDatabase = shipDatabase;
         this.entityView = entityView;
+        this.commandInvoker = commandInvoker;
+        this.turnManager = turnManager;
+        this.battleManager = battleManager;
+        this.diplomacySystem = diplomacySystem;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
     }
@@ -50,7 +58,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem);
 
         brain = new AIBrain(controller, actions);
 
@@ -76,7 +84,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem);
 
         return controller;
     }
