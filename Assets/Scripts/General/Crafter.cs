@@ -69,8 +69,4 @@ public class Crafter
         
         return canCraft;
     }
-    public bool Threaten(PlanetData planetData)
-    {
-        return false;
-    }
 }
