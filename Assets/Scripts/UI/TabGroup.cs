@@ -43,6 +43,7 @@ public class TabGroup : MonoBehaviour
             toggle.onValueChanged.AddListener(CheckForTab);
             toggle.group = toggleGroup;
         }
+        JumpToPage(0);
     }
 
     private void OnDestroy()
