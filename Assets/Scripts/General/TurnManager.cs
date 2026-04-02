@@ -1,20 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class TurnManager
 {
+    private GameConfigSO gameConfig;
     private int currentTurn = 0;
     private FactionType currentTurnFaction = FactionType.Nothing;
     private int turnIndex = -1; 
     private List<FactionType> turnOrder = new List<FactionType>();
+    // chris - i need to have the peeps
+    private IEntityController currEntityController = null;
+    private List<IEntityController> entityControllerOrder = new List<IEntityController>();
+
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
-    public TurnManager()
+    public TurnManager(GameConfigSO gameConfig)
     {
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
+        this.gameConfig = gameConfig;
     }
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
@@ -25,8 +33,33 @@ public class TurnManager
         {
             AIfactions.Add(ai.GetModel().FactionType);
         }
-
+        SetupEntityOrder(gameStartEvent.PlayerController, gameStartEvent.AIControllers.ToList());
         SetupTurnOrder(playerFaction, AIfactions);
+    }
+    // added by chris
+    private void SetupEntityOrder(IEntityController player, List<IEntityController> AIcontroller)
+    {
+        entityControllerOrder.Clear();
+        if (!entityControllerOrder.Contains(player))
+        {
+            entityControllerOrder.Add(player);
+        } else
+        {
+            Debug.LogError("Duplicate player faction in entity controller order!");
+            return;
+        }
+
+        foreach (var faction in AIcontroller)
+        {
+            if (!entityControllerOrder.Contains(faction))
+            {
+                entityControllerOrder.Add(faction);
+            }
+            else
+            {
+                Debug.LogError("Duplicate AI faction in entity controller order!");
+            }
+        }
     }
 
     private void SetupTurnOrder(FactionType playerFaction, List<FactionType> AIfactions)
@@ -59,9 +92,15 @@ public class TurnManager
     public void ChangeTurn()
     {
         currentTurn++;
+        if (currentTurn >= gameConfig.MaxTurns)
+        {
+            Debug.Log("Someone won idk");
+            //return;
+        }
         turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 
         var prevTurnFaction = currentTurnFaction;
         currentTurnFaction = turnOrder[turnIndex];
+        currEntityController = entityControllerOrder[turnIndex];
 
         Debug.Log($"Current turn: {currentTurnFaction}");
 
@@ -69,7 +108,8 @@ public class TurnManager
         {
             CurrentTurn = currentTurn,
             PrevTurnFaction = prevTurnFaction,
-            CurrentTurnFaction = currentTurnFaction
+            CurrentTurnFaction = currentTurnFaction,
+            CurrentEntity = currEntityController
         });
     }
 }

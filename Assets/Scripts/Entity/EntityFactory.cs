@@ -8,12 +8,13 @@ public class EntityFactory
     private TurnManager turnManager;
     private BattleManager battleManager;
     private DiplomacySystem diplomacySystem;
+    private GameConfigSO gameConfig; // added by chris
 
     private List<FactionType> avaliableFactions;
 
     ShipDatabaseSO shipDatabase;
 
-    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem) //We want different ship view for player and the ai so maybe a database of SOs later?
+    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
         this.shipDatabase = shipDatabase;
         this.entityView = entityView;
@@ -21,8 +22,10 @@ public class EntityFactory
         this.turnManager = turnManager;
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
+        this.gameConfig = gameConfig;
 
-        avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct};
+        avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct };
+        
     }
 
     public EntityController CreateAI(out AIBrain brain, PlanetData homePlanet, List<AIAction> actions, FactionType factionType = FactionType.Nothing)
@@ -49,7 +52,7 @@ public class EntityFactory
         avaliableFactions.Remove(factionType);
         homePlanet.SetFaction(factionType);
 
-        EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType);
+        EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType, gameConfig.MoveRadius, gameConfig.MaxAP, gameConfig.StartingResourcesAmount, gameConfig.StartingShipsAmount);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);
@@ -58,7 +61,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
 
         brain = new AIBrain(controller, actions);
 
@@ -75,7 +78,7 @@ public class EntityFactory
         avaliableFactions.Remove(factionType);
         homePlanet.SetFaction(factionType);
 
-        EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType);
+        EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType, gameConfig.MoveRadius, gameConfig.MaxAP, gameConfig.StartingResourcesAmount, gameConfig.StartingShipsAmount);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);
@@ -84,7 +87,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
 
         return controller;
     }

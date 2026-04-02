@@ -12,6 +12,9 @@ public class EntityController : IEntityController, IDisposable
     private BattleManager battleManager;
     private DiplomacySystem diplomacySystem;
 
+    //gameconfig
+    private GameConfigSO gameConfig;
+
     //Context
     public bool IsCurrentTurn { get; private set; }
     public event Action OnCurrentTurn;
@@ -25,7 +28,7 @@ public class EntityController : IEntityController, IDisposable
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
-    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem)
+    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig)
     {
         this.model = model;
         this.view = view;
@@ -33,12 +36,14 @@ public class EntityController : IEntityController, IDisposable
         this.turnManager = turnManager;
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
+        this.gameConfig = gameConfig;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
 
         turnChangeEventBinding = new EventBinding<TurnChangeEvent>(HandleTurnChange);
         EventBus<TurnChangeEvent>.Register(turnChangeEventBinding);
+        
     }
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
@@ -141,7 +146,8 @@ public class EntityController : IEntityController, IDisposable
     {
         if (!CanExecuteAction()) return false;
 
-        turnManager.ChangeTurn(); 
+        turnManager.ChangeTurn();
+        model.CalculateResourceGain();
         return true;
     }
 
@@ -163,8 +169,8 @@ public class EntityController : IEntityController, IDisposable
     public bool TryColonize(PlanetData planet)
     {
         if (!CanExecuteAction() || !HasAP()) return false;
-
-        if (planet.FactionType == FactionType.Nothing)
+        if (!model.EnoughShips(ShipType.Worker, gameConfig.MinWorkerShipNeededForColonize)/*added by chris*/) return false;
+            if (planet.FactionType == FactionType.Nothing)
         {
             ICommand command = new ColonizeCommand(this, model, planet, () => OnActionComplete?.Invoke());
             commandInvoker.ExecuteCommand(command);

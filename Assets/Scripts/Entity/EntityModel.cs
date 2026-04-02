@@ -25,7 +25,7 @@ public class EntityModel
     public int MoveRadius { get; private set; }
     public float yValue { get; private set; }
 
-    public int MaxAP { get; private set; } = 10;
+    public int MaxAP { get; private set; }
     public int CurrentAP { get; private set; }
 
     public event Action OnResourcesChanged;
@@ -37,18 +37,17 @@ public class EntityModel
 
     private ShipDatabaseSO shipDatabase;
 
-    public EntityModel(ShipDatabaseSO shipDatabase, PlanetData homePlanet, FactionType factionType, int moveRadius = 5, float yValue = 30, int maxAP = 10)
+    public EntityModel(ShipDatabaseSO shipDatabase, PlanetData homePlanet, FactionType factionType, int moveRadius = 5, int maxAP = 10, int startingResources = 10, int startingShips = 10, float yValue = 30)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);
         DiscoveredPlanets.Add(homePlanet);
         FactionType = factionType;
-        Resources[ResourceType.Metals] = 10;
-        Resources[ResourceType.Rations] = 10;
-        Resources[ResourceType.Credits] = 10;
-        Ships[ShipType.Scout] = 10;
-        Ships[ShipType.Attacker] = 10;
-        Ships[ShipType.Worker] = 10;
+        Resources[ResourceType.Metals] = startingResources;
+        Resources[ResourceType.Rations] = startingResources;
+        Ships[ShipType.Scout] = startingShips;
+        Ships[ShipType.Attacker] = startingShips;
+        Ships[ShipType.Worker] = startingShips;
 
         MoveRadius = moveRadius;
         this.yValue = yValue;
@@ -92,19 +91,14 @@ public class EntityModel
         foreach (var planet in OwnedPlanets)
         {
             int increment = planet.StationedShips[ShipType.Worker];
-            //if (planet.Structures.Contains(StructureType.Extractor))
 
-                Resources[ResourceType.Metals] += (1 + increment);
-                Resources[ResourceType.Rations] += (1 + increment);
-                Resources[ResourceType.Credits] += (1 + increment);
-            
-            if (planet.Structures.Contains(StructureType.Shipyard))
-            {
-                Ships[ShipType.Scout] += (1 + increment);
-                Ships[ShipType.Attacker] += (1 + increment);
-                Ships[ShipType.Worker] += (1 + increment);
-            }
+            Resources[planet.PlanetResource[ResourceClass.Abundant]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]] + increment);
+            Resources[planet.PlanetResource[ResourceClass.Scarce]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] + increment);
         }
+
+        Ships[ShipType.Scout] += 1;
+        Ships[ShipType.Attacker] += 1;
+        Ships[ShipType.Worker] += 1;
 
         OnResourcesChanged?.Invoke();
     }
@@ -145,7 +139,15 @@ public class EntityModel
 
             OnShipsChanged?.Invoke();
         }
+    }
 
+    public bool EnoughShips(ShipType shipType, int amount)
+    {
+        if (Ships.ContainsKey(shipType))
+        {
+            return Ships[shipType] >= amount;
+        }
+        return false;
     }
 
     public void AddPlanetDiscovery(PlanetData planet)

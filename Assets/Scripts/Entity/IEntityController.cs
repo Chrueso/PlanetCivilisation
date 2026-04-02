@@ -33,4 +33,6 @@ public interface IEntityController
     public void Gift(PlanetData planet);
 
     public void Agreement(PlanetData planet);
+
+
 }

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ShipDatabaseSO shipDatabase;
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
     [SerializeField] private StructureRecipesSO structureRecipes;
+    [SerializeField] private GameConfigSO gameConfig;
 
     [Header("Mono Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -105,13 +106,13 @@ public class GameManager : MonoBehaviour
         gridInteractionController.Init(cameraController);
         planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(planetGenerator);
-        turnManager = new TurnManager();
+        turnManager = new TurnManager(gameConfig);
         battleManager = new BattleManager(shipDatabase,battleVisualController);
         commandInvoker = new CommandInvoker();
         diplomacySystem = new();
         crafterSystem = new(structureRecipes);
         AudioService.SetAudioInstance(audioSystem);
-        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem);
+        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
 
         TryRegisterDisposable(
             planetGenerator,
