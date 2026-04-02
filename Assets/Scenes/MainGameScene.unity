@@ -194,6 +194,25 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8313462475198884946, guid: b33df7d7ad5accb4e95e5c3b22cec072, type: 3}
   m_PrefabInstance: {fileID: 6331515728511681992}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &758232353 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 739636086863223599, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+  m_PrefabInstance: {fileID: 7359518929127859920}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &758232356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758232353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd21b11671bef143b5571c582b24a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleVisualController
+  shipModelDb: {fileID: 11400000, guid: d29c3a2487034844883a8b6913460337, type: 2}
+  shipBattlePrefab: {fileID: 1840781467935455566, guid: fd9927b53de803b41bbeccb74cd9f7c4, type: 3}
 --- !u!114 &790713327 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1517321228414392602, guid: b33df7d7ad5accb4e95e5c3b22cec072, type: 3}
@@ -4800,6 +4819,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: battleVisualController
+      value: 
+      objectReference: {fileID: 758232356}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: 'aIActions.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 369b98d05aa17a941ac886ce3db8a14d, type: 2}
@@ -4914,7 +4937,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 739636086863223599, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 758232356}
   m_SourcePrefab: {fileID: 100100000, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
 --- !u!114 &7507562936090818501 stripped
 MonoBehaviour:

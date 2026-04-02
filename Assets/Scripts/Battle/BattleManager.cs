@@ -5,16 +5,19 @@ using UnityEngine;
 public class BattleManager 
 {
     private ShipDatabaseSO shipDatabase;
+    private BattleVisualController battleVisual;
 
-    public BattleManager(ShipDatabaseSO shipDatabase)
+    public BattleManager(ShipDatabaseSO shipDatabase, BattleVisualController battleVisual)
     {
         this.shipDatabase = shipDatabase;
+        this.battleVisual = battleVisual;
     }
 
-    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, PlanetData targetPlanet)
+    public BattleResult Battle(Dictionary<ShipType, int> attackerShips, FactionType attackerFaction, PlanetData targetPlanet)
     {
         bool attackerWon = false;
         int maxRoll = 10; // can be adjusted for more or less randomness, the base number for attack power multiplier
+        List<BattleStep> battleSteps = new List<BattleStep>();
 
         Dictionary<ShipType,int> defenderShips = targetPlanet.StationedShips;
 
@@ -45,7 +48,6 @@ public class BattleManager
             foreach (var attacker in currentAttackers)
             {
                 if (defenders.Count == 0) break;
-
                 // Pick a random defender
                 int defenderIndex = Random.Range(0, defenders.Count);
                 ShipType defender = defenders[defenderIndex];
@@ -60,10 +62,12 @@ public class BattleManager
                 if (attackerRoll > defenderRoll)
                 {
                     defenders.RemoveAt(defenderIndex);
+                    battleSteps.Add(new BattleStep(attacker,defender,true));
                 }
                 else
                 {
                     attackers.Remove(attacker);
+                    battleSteps.Add(new BattleStep(attacker, defender, false));
                 }
 
                 // End battle if one side is empty
@@ -77,10 +81,13 @@ public class BattleManager
 
         attackerWon = remainingAttackers > 0;
 
+        battleVisual.setupBattle(attackerShips, targetPlanet.StationedShips, attackerFaction, targetPlanet, battleSteps);
+
         Debug.Log($"Battle Result: Attacker Ships Remaining: {remainingAttackers}, Defender Ships Remaining: {remainingDefenders}, Attacker Won: {attackerWon}");
-        return new BattleResult(remainingAttackers, remainingDefenders, attackerWon);
+        return new BattleResult(remainingAttackers, remainingDefenders, attackerWon, battleSteps);
     }
 
+    #region don't look
     public BattleResult BattleBrianVersion(Dictionary<ShipType, int> attackerShips, PlanetData targetPlanet)
     {
         int attackerShipPower = 0;
@@ -108,6 +115,7 @@ public class BattleManager
         bool attackerWon = Random.value < chanceForSuccess;
 
         Debug.Log($"Attacker Won: {attackerWon} at {chanceForSuccess * 100}%");
-        return new BattleResult(0, 0, attackerWon);
+        return new BattleResult(0, 0, attackerWon, new List<BattleStep>());
     }
+    #endregion
 }

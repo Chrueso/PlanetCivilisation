@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraController cameraController;
     [SerializeField] private GridInteractionController gridInteractionController;
     [SerializeField] private AudioSystem audioSystem;
+    [SerializeField] private BattleVisualController battleVisualController;
 
     [Header("Views")]
     [SerializeField] private GameObject planetPrefab;
@@ -107,7 +108,7 @@ public class GameManager : MonoBehaviour
         planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab);
         mapGenerator = new MapGenerator(planetGenerator);
         turnManager = new TurnManager();
-        battleManager = new BattleManager(shipDatabase);
+        battleManager = new BattleManager(shipDatabase,battleVisualController);
         commandInvoker = new CommandInvoker();
         diplomacySystem = new();
         crafterSystem = new(structureRecipes);
@@ -145,6 +146,8 @@ public class GameManager : MonoBehaviour
     {
         player = entityFactory.CreatePlayer(homePlanet, FactionType.Human);
         TryRegisterDisposable(player);
+
+        player.GetModel().AddShips(ShipType.Attacker, 3);
     }
 
     //This is ugly i want change later
