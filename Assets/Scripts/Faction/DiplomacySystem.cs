@@ -150,7 +150,7 @@ public class DiplomacySystem
         player.GetModel().TakeResource(resource, amount);
         int affection = Mathf.RoundToInt(amount * 0.5f);
         planetData.GainResource(resource, amount);
-        planetData.RaiseAffection(player.GetFaction(), affection); // temporary formula
+        planetData.RaiseAffection(player.GetModel().FactionType, affection); // temporary formula
     }
 
     public void Agreement(PlanetData planetData, PactType pactType)

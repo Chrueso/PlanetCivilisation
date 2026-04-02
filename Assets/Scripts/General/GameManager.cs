@@ -54,8 +54,6 @@ public class GameManager : MonoBehaviour
     //TO CHANGE
     //public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
-    private readonly List<IDisposable> disposables = new(); // for cleanup
-
     //Game context
     private MapGrid mapGrid;
     private PlanetData homePlanet;
