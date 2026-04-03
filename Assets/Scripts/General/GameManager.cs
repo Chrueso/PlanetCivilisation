@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GridInteractionController gridInteractionController;
     [SerializeField] private AudioSystem audioSystem;
     [SerializeField] private BattleVisualController battleVisualController;
+    [SerializeField] private EntityScoutShipPool entityScoutShipPool;
 
     [Header("Views")]
     [SerializeField] private GameObject planetPrefab;
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour
     {
         infoMenuController = new InfoMenuController(infoMenuView);
         structuresController = new StructuresController(structuresMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController, entityScoutShipPool);
 
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }

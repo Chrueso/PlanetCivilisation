@@ -6,6 +6,7 @@ public class EntityController : IEntityController, IDisposable
 {
     //Components
     private EntityModel model;
+    
     private EntityView view;
     private CommandInvoker commandInvoker;
     private TurnManager turnManager;
@@ -177,6 +178,21 @@ public class EntityController : IEntityController, IDisposable
         if (HexesInMoveRadius.Contains(targetHex))
         {
             ICommand command = new MoveCommand(this, model, view, targetHex, () => OnActionComplete?.Invoke());
+            commandInvoker.ExecuteCommand(command);
+            return true;
+        }
+
+        Debug.Log(this + " Outside move radius");
+        return false;
+    }
+
+    public bool TryMoveScoutShip(GridHex targetHex, EntityScoutShipView scoutShipView)
+    {
+        if (!CanExecuteAction() || !HasAP()) return false;
+
+        if (HexesInMoveRadius.Contains(targetHex))
+        {
+            ICommand command = new MoveScoutShipCommand(this, model, scoutShipView, targetHex, () => OnActionComplete?.Invoke());
             commandInvoker.ExecuteCommand(command);
             return true;
         }

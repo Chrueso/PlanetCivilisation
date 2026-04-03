@@ -8,6 +8,7 @@ public class ActionsTabView : ScreenBase
 
     public Button InfoButton;
     public Button MoveButton;
+    public Button MoveScoutButton;
     public Button ColonizeButton;
     public Button AttackButton;
     public Button DiplomacyButton;
@@ -46,7 +47,11 @@ public class ActionsTabView : ScreenBase
 
         // Move — not current hex and in range
         if (!isCurrentHex && inMoveRange)
+        {
             MoveButton.gameObject.SetActive(true);
+            if (entityModel.EnoughShips(ShipType.Scout, 1)) 
+                MoveScoutButton.gameObject.SetActive(true);
+        }
 
         // No planet — nothing else to show
         if (selectedHex.Occupant is not PlanetData planet) return;
@@ -116,6 +121,7 @@ public class ActionsTabView : ScreenBase
     private void HideAllButtons()
     {
         MoveButton.gameObject.SetActive(false);
+        MoveScoutButton.gameObject.SetActive(false);
         InfoButton.gameObject.SetActive(false);
         AttackButton.gameObject.SetActive(false);
         ColonizeButton.gameObject.SetActive(false);

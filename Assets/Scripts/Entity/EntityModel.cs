@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EntityModel 
@@ -101,7 +102,7 @@ public class EntityModel
         Ships[ShipType.Scout] += 1;
         Ships[ShipType.Attacker] += 1;
         Ships[ShipType.Worker] += 1;
-
+        Debug.Log($"Scouts : {Ships[ShipType.Scout]} | Assaults : {Ships[ShipType.Attacker]} | Workers : {Ships[ShipType.Worker]}");
         OnResourcesChanged?.Invoke();
     }
 

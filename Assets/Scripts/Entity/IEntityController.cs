@@ -24,7 +24,7 @@ public interface IEntityController
     public bool TryEndTurn();
 
     public bool TryMove(GridHex hex);
-
+    public bool TryMoveScoutShip(GridHex hex, EntityScoutShipView scoutShipView);
     public bool TryColonize(PlanetData planet);
 
     public bool TryAttack(PlanetData planet);

@@ -9,17 +9,19 @@ public class ActionsTabController : IUIMenuController, IDisposable
     private InfoMenuController infoMenuController;
     private StructuresController structuresController;
     private GridHex selectedHex;
+    private EntityScoutShipPool scoutShipPool;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
     public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController,
-        InfoMenuController infoMenuController, StructuresController structuresController)
+        InfoMenuController infoMenuController, StructuresController structuresController, EntityScoutShipPool scoutShipPool)
     {
         this.view = view;
 
         this.gridInteractionController = gridInteractionController;
         this.infoMenuController = infoMenuController;
         this.structuresController = structuresController;
+        this.scoutShipPool = scoutShipPool;
 
         gridInteractionController.OnHexSelected += HandleHexSelected;
 
@@ -48,6 +50,7 @@ public class ActionsTabController : IUIMenuController, IDisposable
         view.CloseButton.onClick.AddListener(CloseView);
         view.InfoButton.onClick.AddListener(HandleInfoButtonClicked);
         view.MoveButton.onClick.AddListener(HandleMoveButtonClicked);
+        view.MoveScoutButton.onClick.AddListener(HandleMoveScoutButtonClicked);
         view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
         view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
         view.DiplomacyButton.onClick.AddListener(HandleDiplomacyButtonClicked);
@@ -88,6 +91,19 @@ public class ActionsTabController : IUIMenuController, IDisposable
         {
             CloseView();
         }
+    }
+
+    private void HandleMoveScoutButtonClicked()
+    {
+        if (playerController == null) return;
+        EntityScoutShipView ssInstance = scoutShipPool.GetScoutShipInstance();
+        ssInstance.SetPos(playerController.GetView().transform.position);
+        if (playerController.TryMoveScoutShip(selectedHex, ssInstance))
+        {
+            CloseView();
+        }
+        
+
     }
 
     private void HandleColonizeButtonClicked()
