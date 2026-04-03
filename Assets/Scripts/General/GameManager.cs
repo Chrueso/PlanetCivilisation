@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
         diplomacySystem = new();
         crafterSystem = new(structureRecipes);
         AudioService.SetAudioInstance(audioSystem);
-        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
+        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig, crafterSystem);
 
         TryRegisterDisposable(
             planetGenerator,

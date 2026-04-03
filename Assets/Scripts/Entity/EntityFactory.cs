@@ -8,13 +8,14 @@ public class EntityFactory
     private TurnManager turnManager;
     private BattleManager battleManager;
     private DiplomacySystem diplomacySystem;
+    private Crafter crafterSystem;
     private GameConfigSO gameConfig; // added by chris
 
     private List<FactionType> avaliableFactions;
 
     ShipDatabaseSO shipDatabase;
 
-    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig) //We want different ship view for player and the ai so maybe a database of SOs later?
+    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig, Crafter crafter) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
         this.shipDatabase = shipDatabase;
         this.entityView = entityView;
@@ -23,6 +24,7 @@ public class EntityFactory
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
         this.gameConfig = gameConfig;
+        this.crafterSystem = crafter;
 
         avaliableFactions = new List<FactionType>() { FactionType.Human, FactionType.DemiHuman, FactionType.IntelligentConstruct };
         
@@ -61,7 +63,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig);
 
         brain = new AIBrain(controller, actions);
 
@@ -87,7 +89,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig);
 
         return controller;
     }
