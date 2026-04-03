@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EntityModel 
 {
+    private GameConfigSO gameConfig;
     public Dictionary<ResourceType, int> Resources { get; private set; } = new Dictionary<ResourceType, int>();
     public Dictionary<ShipType, int> Ships { get; private set; } = new Dictionary<ShipType, int>();
     public FactionType FactionType { get; private set; }
@@ -37,23 +38,23 @@ public class EntityModel
 
     private ShipDatabaseSO shipDatabase;
 
-    public EntityModel(ShipDatabaseSO shipDatabase, PlanetData homePlanet, FactionType factionType, int moveRadius = 5, int maxAP = 10, int startingResources = 10, int startingShips = 10, float yValue = 30)
+    public EntityModel(ShipDatabaseSO shipDatabase, PlanetData homePlanet, FactionType factionType, GameConfigSO gameConfig, float yValue = 30)
     {
         HomePlanet = homePlanet;
         OwnedPlanets.Add(homePlanet);
         DiscoveredPlanets.Add(homePlanet);
         FactionType = factionType;
-        Resources[ResourceType.Metals] = startingResources;
-        Resources[ResourceType.Rations] = startingResources;
-        Ships[ShipType.Scout] = startingShips;
-        Ships[ShipType.Attacker] = startingShips;
-        Ships[ShipType.Worker] = startingShips;
+        Resources[ResourceType.Metals] = gameConfig.StartingResourcesAmount;
+        Resources[ResourceType.Rations] = gameConfig.StartingResourcesAmount;
+        Ships[ShipType.Scout] = gameConfig.StartingShipsAmount;
+        Ships[ShipType.Attacker] = gameConfig.StartingShipsAmount;
+        Ships[ShipType.Worker] = gameConfig.StartingShipsAmount;
 
-        MoveRadius = moveRadius;
+        MoveRadius = gameConfig.MoveRadius;
         this.yValue = yValue;
 
-        MaxAP = maxAP;
-        CurrentAP = maxAP;
+        MaxAP = gameConfig.MaxAP;
+        CurrentAP = gameConfig.MaxAP;
 
         OnResourcesChanged?.Invoke();
         OnShipsChanged?.Invoke();
@@ -61,6 +62,7 @@ public class EntityModel
         OnDiscoveredPlanetsChanged?.Invoke();
 
         this.shipDatabase = shipDatabase;
+        this.gameConfig = gameConfig;
     }
 
     public void AddAP(int amount)
@@ -114,31 +116,35 @@ public class EntityModel
 
     public void AddShips(ShipType shipType, int amount)
     {
-        if (Ships.ContainsKey(shipType))
-        {
-            Ships[shipType] += amount;
-        }
-        else
+        if (Ships.TryGetValue(shipType, out int shipAmount)) {
+            int max = 1;
+            switch (shipType)
+            {
+                case ShipType.Scout:
+                    max = gameConfig.MaxHeldScoutShips;
+                    break;
+                case ShipType.Attacker:
+                    max = gameConfig.MaxHeldAssaultShips;
+                    break;
+                case ShipType.Worker:
+                    max = gameConfig.MaxHeldWorkerShips;
+                    break;
+            }
+            Ships[shipType] = Mathf.Clamp(shipAmount + amount, 0, max);
+        } else
         {
             Ships.Add(shipType, amount);
         }
-
         OnShipsChanged?.Invoke();
     }
 
     public void RemoveShips(ShipType shipType, int amount) 
     {
-        if (Ships.ContainsKey(shipType))
+        if (Ships.TryGetValue(shipType, out int shipAmount))
         {
-            Ships[shipType] -= amount;
-
-            if (Ships[shipType] <= 0)
-            {
-                Ships[shipType] = 0;
-            }
-
-            OnShipsChanged?.Invoke();
+            Ships[shipType] = Mathf.Max(shipAmount-amount, 0);
         }
+        OnShipsChanged?.Invoke();
     }
 
     public bool EnoughShips(ShipType shipType, int amount)

@@ -19,9 +19,16 @@ MonoBehaviour:
   MaxStationedWorkerShips: 10
   MaxStationedAssaultShips: 10
   DefenseStructureDefenseValue: 2
+  MinAbundantResourceGen: 21
+  MaxAbundantResourceGen: 60
+  MinScarceResourceGen: 1
+  MaxScarceResourceGen: 20
   MaxHeldWorkerShips: 10
   MaxHeldScoutShips: 10
   MaxHeldAssaultShips: 10
+  StartingResourcesAmount: 10
+  StartingShipsAmount: 10
   AssaultShipAttackValue: 1
   WorkerShipEfficacyValue: 1
   ScoutShipRangeValue: 10
+  MoveRadius: 5

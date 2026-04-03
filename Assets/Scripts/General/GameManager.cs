@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
     {
         cameraController.Init();
         gridInteractionController.Init(cameraController);
-        planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab);
+        planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab, gameConfig);
         mapGenerator = new MapGenerator(planetGenerator);
         turnManager = new TurnManager(gameConfig);
         battleManager = new BattleManager(shipDatabase,battleVisualController);

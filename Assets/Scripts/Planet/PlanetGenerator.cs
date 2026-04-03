@@ -4,15 +4,17 @@ using static PlanetShapeSettings;
 
 public class PlanetGenerator 
 {
+    private GameConfigSO gameConfig;
     private ShipDatabaseSO shipDatabase;
     private List<PlanetVisualTypesSO> presets;
     private GameObject planetPrefab;
 
-    public PlanetGenerator(ShipDatabaseSO shipDatabase, List<PlanetVisualTypesSO> presets, GameObject planetPrefab)
+    public PlanetGenerator(ShipDatabaseSO shipDatabase, List<PlanetVisualTypesSO> presets, GameObject planetPrefab, GameConfigSO gameConfig)
     {
         this.shipDatabase = shipDatabase;
         this.presets = presets;
         this.planetPrefab = planetPrefab;
+        this.gameConfig = gameConfig;
     }
 
     static readonly string[] planetBaseNames =
@@ -223,7 +225,7 @@ public class PlanetGenerator
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
         planetView.GeneratePlanetView(shapeSettings, colorSettings);
 
-        PlanetData data = new PlanetData(planetView, shipDatabase, planetName, factionType, additionalResources); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(planetView, shipDatabase, planetName, factionType, additionalResources, gameConfig); // Check out PlanetData.cs
 
         return (planetObj, data);
     }
@@ -240,7 +242,7 @@ public class PlanetGenerator
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
         planetView.GeneratePlanetView(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
 
-        PlanetData data = new PlanetData(planetView, shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource); // Check out PlanetData.cs
+        PlanetData data = new PlanetData(planetView, shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource, gameConfig); // Check out PlanetData.cs
 
         return (planetObj, data);
     }

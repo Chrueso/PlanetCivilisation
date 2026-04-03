@@ -14,6 +14,10 @@ public class GameConfigSO : ScriptableObject
     public int MaxStationedWorkerShips = 10;
     public int MaxStationedAssaultShips = 10;
     public int DefenseStructureDefenseValue = 2;
+    public int MinAbundantResourceGen = 5;
+    public int MaxAbundantResourceGen = 10;
+    public int MinScarceResourceGen = 1;
+    public int MaxScarceResourceGen = 4;
 
     [Header("Entity Specific Config")]
     public int MaxHeldWorkerShips = 10;
@@ -31,21 +35,29 @@ public class GameConfigSO : ScriptableObject
 
     private void OnValidate()
     {
+        // general
         MaxTurns = Mathf.Max(MaxTurns, 1);
         MaxAP = Mathf.Max(MaxAP, 1);
         MaxPlanetsNeeded = Mathf.Max(MaxPlanetsNeeded, 1);
 
+        // planet
         MinWorkerShipNeededForColonize = Mathf.Max(MinWorkerShipNeededForColonize, 1);
         MaxStationedWorkerShips = Mathf.Max(MaxStationedWorkerShips, 1);
         MaxStationedAssaultShips = Mathf.Max(MaxStationedAssaultShips, 1);
         DefenseStructureDefenseValue = Mathf.Max(DefenseStructureDefenseValue, 1);
-
+        MinAbundantResourceGen = Mathf.Max(MinAbundantResourceGen, MaxScarceResourceGen + 1);
+        MaxAbundantResourceGen = Mathf.Max(MaxAbundantResourceGen, MinAbundantResourceGen + 1);
+        MinScarceResourceGen = Mathf.Clamp(MinScarceResourceGen, 1, MinAbundantResourceGen - 1); // both of these should not exceed minabundant
+        MaxScarceResourceGen = Mathf.Clamp(MaxScarceResourceGen, MinScarceResourceGen+1, MinAbundantResourceGen - 1);
+        
+        // entity
         MaxHeldWorkerShips = Mathf.Max(MaxHeldWorkerShips, 1);
         MaxHeldScoutShips = Mathf.Max(MaxHeldScoutShips, 1);
         MaxHeldAssaultShips = Mathf.Max(MaxHeldAssaultShips, 1);
         StartingResourcesAmount = Mathf.Max(StartingResourcesAmount, 1);
         StartingShipsAmount = Mathf.Max(StartingShipsAmount, 1);
 
+        // ships
         AssaultShipAttackValue = Mathf.Max(AssaultShipAttackValue, 1);
         WorkerShipEfficacyValue = Mathf.Max(WorkerShipEfficacyValue, 1);
         ScoutShipRangeValue = Mathf.Max(ScoutShipRangeValue, 1);

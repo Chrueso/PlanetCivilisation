@@ -52,7 +52,7 @@ public class EntityFactory
         avaliableFactions.Remove(factionType);
         homePlanet.SetFaction(factionType);
 
-        EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType, gameConfig.MoveRadius, gameConfig.MaxAP, gameConfig.StartingResourcesAmount, gameConfig.StartingShipsAmount);
+        EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType, gameConfig);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);
@@ -78,7 +78,7 @@ public class EntityFactory
         avaliableFactions.Remove(factionType);
         homePlanet.SetFaction(factionType);
 
-        EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType, gameConfig.MoveRadius, gameConfig.MaxAP, gameConfig.StartingResourcesAmount, gameConfig.StartingShipsAmount);
+        EntityModel model = new EntityModel(shipDatabase,homePlanet, factionType, gameConfig);
         model.CurrentHex = homePlanet.CurrentHex;
 
         EntityView view = Object.Instantiate(entityView);

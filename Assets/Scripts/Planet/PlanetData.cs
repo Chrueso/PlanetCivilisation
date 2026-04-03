@@ -25,17 +25,20 @@ public class PlanetData : IGridHexObject
 
     private ShipDatabaseSO shipDatabase;
 
+    private GameConfigSO gameConfig;
     public PlanetView View { get; private set; }
 
-    public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GridHex hex = null)
+    public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GameConfigSO gameConfig, GridHex hex = null)
     {
         this.View = view;
         this.shipDatabase = shipDatabase;
 
         this.PlanetName = planetName;
         this.PlanetResource = resource;
-        this.GeneratedResource = new Dictionary<ResourceType, int>() { {resource[ResourceClass.Abundant], 2}, { resource[ResourceClass.Scarce], 1 } };
-        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals,0 }, { ResourceType.Rations, 0 } };
+        this.GeneratedResource = new Dictionary<ResourceType, int>() {
+            {resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
+            { resource[ResourceClass.Scarce], UnityEngine.Random.Range(gameConfig.MinScarceResourceGen, gameConfig.MaxScarceResourceGen) } };
+        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 0 }, { ResourceType.Rations, 0 } };
         this.Relations = new();
         this.FactionType = faction;
 
@@ -54,6 +57,7 @@ public class PlanetData : IGridHexObject
         };
 
         this.CurrentHex = hex;
+        this.gameConfig = gameConfig;
         UpdateRelations();
     }
 
@@ -76,9 +80,19 @@ public class PlanetData : IGridHexObject
 
     public void AddShips(ShipType shipType, int amount)
     {
-        if (StationedShips.ContainsKey(shipType))
+        if (StationedShips.TryGetValue(shipType, out int shipAmount))
         {
-            StationedShips[shipType] += amount;
+            int max = 1;
+            switch (shipType)
+            {
+                case ShipType.Attacker:
+                    max = gameConfig.MaxStationedAssaultShips;
+                    break;
+                case ShipType.Worker:
+                    max = gameConfig.MaxStationedWorkerShips;
+                    break;
+            }
+            StationedShips[shipType] = Mathf.Clamp(shipAmount + amount, 0, max);
         }
         else
         {
@@ -113,7 +127,6 @@ public class PlanetData : IGridHexObject
         return defensePower;
     }
 
-    //public void DebugPurposes()
     public void RaiseAffection(FactionType rizzler, int affection)
     {
         if (this.Affection.TryGetValue(rizzler, out int currAffection))
