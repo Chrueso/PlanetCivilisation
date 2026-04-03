@@ -5222,6 +5222,8 @@ MonoBehaviour:
   AttackButton: {fileID: 3526270542680519187}
   DiplomacyButton: {fileID: 841626469641716990}
   BuildStructureButton: {fileID: 91992855012911892}
+  ManageStructuresButton: {fileID: 0}
+  StationShipsButton: {fileID: 0}
   CloseButton: {fileID: 1991115462413384121}
   hexOccupantText: {fileID: 2769780760958656007}
   additionalInfoText: {fileID: 8243955389428111032}

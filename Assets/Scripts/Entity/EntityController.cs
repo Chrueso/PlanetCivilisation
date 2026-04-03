@@ -11,6 +11,7 @@ public class EntityController : IEntityController, IDisposable
     private TurnManager turnManager;
     private BattleManager battleManager;
     private DiplomacySystem diplomacySystem;
+    private Crafter crafter;
 
     //gameconfig
     private GameConfigSO gameConfig;
@@ -29,6 +30,9 @@ public class EntityController : IEntityController, IDisposable
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
     public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig)
+    public bool IsActivePlayer { get; set; }
+
+    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, Crafter crafter)
     {
         this.model = model;
         this.view = view;
@@ -37,6 +41,7 @@ public class EntityController : IEntityController, IDisposable
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
         this.gameConfig = gameConfig;
+        this.crafter = crafter;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -78,7 +83,7 @@ public class EntityController : IEntityController, IDisposable
     public void HandleCurrrentHexChanged()
     {
         UpdateHexesInMoveRadius();
-        UpdateVision();
+        UpdateDiscoveredHex();
     }
 
     public bool CheckIfHexIsInMoveRadius(GridHex hex) => HexesInMoveRadius.Contains(hex);
@@ -100,12 +105,28 @@ public class EntityController : IEntityController, IDisposable
         }
     }
 
-    public void UpdateVision()
+    public void UpdateDiscoveredHex()
     {
         foreach (GridHex hex in HexesInMoveRadius)
         {
-            hex.Show();
             model.AddDiscoveredHex(hex);
+            if (IsActivePlayer) hex.Show(); 
+        }
+    }
+
+    public void UpdateVision()
+    {
+        foreach (GridHex hex in MapGrid.Grid.GridArray)
+        {
+            hex.Hide();
+        }
+
+        if (IsActivePlayer)
+        {
+            foreach (GridHex hex in model.DiscoveredHexes)
+            {
+                hex.Show();
+            }
         }
     }
 
@@ -197,6 +218,12 @@ public class EntityController : IEntityController, IDisposable
     }
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure)
+    {
+        if (!CanExecuteAction()) return false;
+        return true;
+    }
+
+    public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
     {
         if (!CanExecuteAction()) return false;
         return true;

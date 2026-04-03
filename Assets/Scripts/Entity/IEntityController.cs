@@ -3,6 +3,8 @@ using UnityEngine;
 
 public interface IEntityController
 {
+    public bool IsActivePlayer { get; set; }
+
     public EntityModel GetModel();
 
     public EntityView GetView();
@@ -12,6 +14,8 @@ public interface IEntityController
     public bool CheckIfHexIsInMoveRadius(GridHex hex);
 
     public void UpdateHexesInMoveRadius();
+
+    public void UpdateDiscoveredHex();
 
     public void UpdateVision();
 
