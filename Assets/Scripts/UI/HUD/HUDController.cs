@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HUDController : IUIMenuController, IDisposable
@@ -151,6 +152,7 @@ public class HUDController : IUIMenuController, IDisposable
         // Update model
         entityController = allEntities[currentEntityIndex];
         entityModel = entityController.GetModel();
+        EventBus<HUDEntityChangeEvent>.Raise(new HUDEntityChangeEvent { NewEntity = entityController});
 
         entityModel.OnResourcesChanged += HandleResourcesChanged;
         entityModel.OnAPChanged += HandleAPChanged;
@@ -160,7 +162,9 @@ public class HUDController : IUIMenuController, IDisposable
         view.UpdateAP(entityModel.CurrentAP, entityModel.MaxAP);
 
         cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
-      
+
+        entityController.UpdateVision();
+
         Debug.Log("HUD Displaying " + entityModel.FactionType);
     }
 }

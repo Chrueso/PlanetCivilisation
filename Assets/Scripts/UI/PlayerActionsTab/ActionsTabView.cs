@@ -12,6 +12,8 @@ public class ActionsTabView : ScreenBase
     public Button AttackButton;
     public Button DiplomacyButton;
     public Button BuildStructureButton;
+    public Button ManageStructuresButton;
+    public Button StationShipsButton;
 
     public Button CloseButton;
 

@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //For debugging purposes
     [SerializeField] bool isDebug = false;
+    private EventBinding<HUDEntityChangeEvent> HUDEntityChangeBinding;
 
     public string GalaxyName { get; private set; }
     public int SeedInt { get; private set; }
@@ -65,6 +67,9 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
+        HUDEntityChangeBinding = new EventBinding<HUDEntityChangeEvent>(HandleHUDEntityChange);
+        EventBus<HUDEntityChangeEvent>.Register(HUDEntityChangeBinding);
+
         CreateSystems();
         CreateHUD();
         CreateActionTab();
@@ -75,6 +80,8 @@ public class GameManager : MonoBehaviour
 
         CreatePlayer(homePlanet, out player);
         CreateAI(FactionDatabase.factions.Length - 2, planets.ToList(), out AIEntities);
+
+        SetActivePlayer(player);
 
         //3 ai
         //CreateAI(FactionDatabase.factions.Length - 1, planets.ToList(), out AIEntities);
@@ -87,7 +94,7 @@ public class GameManager : MonoBehaviour
             aiControllers.Add(kvp.Value);
         }
 
-        //Give everything conntext to the game
+        //Give everything context to the game
         EventBus<GameStartEvent>.Raise(new GameStartEvent
         {
             MapGrid = mapGrid,
@@ -138,6 +145,19 @@ public class GameManager : MonoBehaviour
         actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController);
 
         TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
+    }
+
+    public void SetActivePlayer(IEntityController entity)
+    {
+       if (AIEntities == null || player == null) return;
+        foreach (var ai in AIEntities)
+        {
+            ai.Value.IsActivePlayer = false;
+        }
+
+        player.IsActivePlayer = false;
+
+        entity.IsActivePlayer = true;
     }
 
     private void CreatePlayer(PlanetData homePlanet, out IEntityController player)
@@ -227,6 +247,11 @@ public class GameManager : MonoBehaviour
         {
             hudController.DisableDebug();
         }
+    }
+
+    public void HandleHUDEntityChange(HUDEntityChangeEvent HUDEntityChangeEvent)
+    {
+        SetActivePlayer(HUDEntityChangeEvent.NewEntity);
     }
 
 }
