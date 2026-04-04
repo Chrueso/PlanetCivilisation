@@ -1,12 +1,16 @@
 using UnityEngine;
 
-public class BuildMenuController : IUIMenuController
+public class BuildMenuController : MonoBehaviour
 {
     private BuildMenuView view;
-
-    public BuildMenuController(BuildMenuView view, EntityController entityController)
+    private StructureRecipeDatabaseSO structureRecepiesDatabase;
+    private IEntityController entityController;
+    private EntityModel entityModel;
+    private PlanetData currentPlanet;
+    public BuildMenuController(BuildMenuView view, StructureRecipeDatabaseSO structureRecepiesDatabase)
     {
         this.view = view;
+        this.structureRecepiesDatabase = structureRecepiesDatabase;  
 
         ConnectView();
     }
@@ -14,10 +18,14 @@ public class BuildMenuController : IUIMenuController
     public void ConnectView()
     {
         view.CloseButton.onClick.AddListener(CloseView);
+        view.Init(structureRecepiesDatabase, HandleBuildElementClicked);
     }
 
-    public void OpenView()
+    public void OpenView(PlanetData planet, IEntityController entityController)
     {
+        this.entityController = entityController;
+        entityModel = entityController.GetModel();
+        view.UpdateView(entityModel, planet);
         GameScreenManager.Push(view);
     }
 
@@ -28,6 +36,15 @@ public class BuildMenuController : IUIMenuController
 
     public void HandleBuildElementClicked(StructureType structureType)
     {
+        view.UpdateView(entityModel, currentPlanet);
 
+        if (entityController.TryBuildStructure(currentPlanet, structureType))
+        {
+            CloseView();
+        }
+        else
+        {
+            Debug.Log("Not enough resources to build " + structureType);
+        }
     }
 }

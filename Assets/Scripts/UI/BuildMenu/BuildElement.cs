@@ -1,16 +1,26 @@
+using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildElement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private TextMeshProUGUI structureName;
+    [SerializeField] private TextMeshProUGUI recipeText;
+    public Button ElementButton;
+    public StructureType StructureType { private set; get; }
 
-    // Update is called once per frame
-    void Update()
+    public void Init(StructureRecipeSO recipe, Action<StructureType> onBuildElementClicked)
     {
-        
+        StructureType = recipe.StructureType;
+
+        structureName.text = recipe.StructureType.ToString();
+        recipeText.text = "Recipe: \n";
+        foreach (var kvp in recipe.RecipeDict)
+        {
+            recipeText.text += $"{kvp.Key}: {kvp.Value} \n";
+        }
+
+        ElementButton.onClick.AddListener(() => onBuildElementClicked(recipe.StructureType));
     }
 }

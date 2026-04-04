@@ -1,27 +1,18 @@
 using TMPro.Examples;
 using UnityEngine;
 
-public class PlanetListController : IUIMenuController
+public class PlanetListController : MonoBehaviour
 {
     private PlanetListView view;
 
     private CameraController cameraController;
-    private EntityModel playerModel;
 
     public PlanetListController(PlanetListView view, CameraController cameraController)
     {
         this.view = view;
         this.cameraController = cameraController;
 
-
-        EventBus<GameStartEvent>.Register(new EventBinding<GameStartEvent>(HandleGameStart));
-
         ConnectView();
-    }
-
-    private void HandleGameStart(GameStartEvent gameStartEvent)
-    {
-        playerModel = gameStartEvent.PlayerController.GetModel();
     }
 
     public void ConnectView()
@@ -30,12 +21,12 @@ public class PlanetListController : IUIMenuController
         view.Init();
     }
 
-    public void OpenView()
+    public void OpenView(EntityModel entityModel)
     {
         // Tell the view to populate the scroll list before showing it
-        if (playerModel != null)
+        if (entityModel != null)
         {
-            view.InitalizeList(playerModel.OwnedPlanets, HandlePlanetClicked);
+            view.InitalizeList(entityModel.OwnedPlanets, HandlePlanetClicked);
         }
 
         GameScreenManager.Push(view);

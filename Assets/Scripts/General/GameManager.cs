@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlanetListView planetListView;
     [SerializeField] private StructuresMenuView structuresMenuView;
     [SerializeField] private SettingsView settingsView;
+    [SerializeField] private BuildMenuView buildMenuView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -49,13 +50,12 @@ public class GameManager : MonoBehaviour
     private ActionsTabController actionsTabController;
     private HUDController hudController;
     private PlanetListController planetListController;
-    private StructuresMenuController structuresController;
+    private StructuresMenuController structuresMenuController;
+    private BuildMenuController buildMenuController;
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
     private Crafter crafterSystem;
-    //TO CHANGE
-    //public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
     //Game context
     private MapGrid mapGrid;
@@ -142,10 +142,11 @@ public class GameManager : MonoBehaviour
     private void CreateActionTab()
     {
         //infoMenuController = new InfoMenuController(infoMenuView);
-        structuresController = new StructuresController(structuresMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresController, infoMenuView);
+        structuresMenuController = new StructuresMenuController(structuresMenuView);
+        buildMenuController = new BuildMenuController(buildMenuView, structureRecipes);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController);
 
-        TryRegisterDisposable(structuresController, actionsTabController);
+        TryRegisterDisposable(structuresMenuController, actionsTabController);
     }
 
     public void SetActivePlayer(IEntityController entity)
