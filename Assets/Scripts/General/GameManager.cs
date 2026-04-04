@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private StructuresMenuView structuresMenuView;
     [SerializeField] private SettingsView settingsView;
     [SerializeField] private BuildMenuView buildMenuView;
+    [SerializeField] private StationShipMenuView stationShipMenuView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
     private PlanetListController planetListController;
     private StructuresMenuController structuresMenuController;
     private BuildMenuController buildMenuController;
+    private StationShipMenuController stationShipMenuController;
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
@@ -144,9 +146,10 @@ public class GameManager : MonoBehaviour
         //infoMenuController = new InfoMenuController(infoMenuView);
         structuresMenuController = new StructuresMenuController(structuresMenuView);
         buildMenuController = new BuildMenuController(buildMenuView, structureRecipes);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController);
+        stationShipMenuController = new StationShipMenuController(stationShipMenuView, shipDatabase);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController);
 
-        TryRegisterDisposable(structuresMenuController, actionsTabController);
+        TryRegisterDisposable(structuresMenuController, actionsTabController, stationShipMenuController);
     }
 
     public void SetActivePlayer(IEntityController entity)

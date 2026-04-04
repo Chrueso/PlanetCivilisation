@@ -9,13 +9,14 @@ public class ActionsTabController : IDisposable
     private StructuresMenuController structuresController;
     private InfoMenuView infoMenuView;
     private BuildMenuController buildMenuController;
+    private StationShipMenuController stationShipMenuController;
 
     private GridHex selectedHex;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
     public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, 
-        BuildMenuController buildMenuController)
+        BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController)
     {
         this.view = view;
 
@@ -23,6 +24,7 @@ public class ActionsTabController : IDisposable
         this.structuresController = structuresController;
         this.infoMenuView = infoMenuView;
         this.buildMenuController = buildMenuController;
+        this.stationShipMenuController = stationShipMenuController;
 
         gridInteractionController.OnHexSelected += HandleHexSelected;
 
@@ -56,6 +58,7 @@ public class ActionsTabController : IDisposable
         view.DiplomacyButton.onClick.AddListener(HandleDiplomacyButtonClicked);
         view.StructureButton.onClick.AddListener(HandleStructuresButtonClicked);
         view.BuildButton.onClick.AddListener(HandleBuildButtonClicked);
+        view.StationShipsButton.onClick.AddListener(HandleStationShipsButtonClicked);
     }
 
     public void OpenView()
@@ -137,6 +140,14 @@ public class ActionsTabController : IDisposable
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             buildMenuController.OpenView(planet, entityController);
+        }
+    }
+
+    private void HandleStationShipsButtonClicked()
+    {
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet && entityController != null)
+        {
+            stationShipMenuController.OpenView(planet, entityController.GetModel());
         }
     }
 
