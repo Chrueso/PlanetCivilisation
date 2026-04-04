@@ -32,6 +32,8 @@ public class GameConfigSO : ScriptableObject
     public int ScoutShipRangeValue = 10;
     public int MoveRadius = 5;
 
+    [Header("Structure Specific Config")]
+    public int ExtractorResourceMultiplier = 2;
 
     private void OnValidate()
     {
@@ -62,5 +64,8 @@ public class GameConfigSO : ScriptableObject
         WorkerShipEfficacyValue = Mathf.Max(WorkerShipEfficacyValue, 1);
         ScoutShipRangeValue = Mathf.Max(ScoutShipRangeValue, 1);
         MoveRadius = Mathf.Max(MoveRadius, 1);
+
+        //structure
+        ExtractorResourceMultiplier = Mathf.Max(ExtractorResourceMultiplier, 1);
     }
 }

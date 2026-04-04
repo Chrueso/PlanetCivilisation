@@ -30,6 +30,7 @@ public interface IEntityController
     public bool TryAttack(PlanetData planet);
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure);
+    public bool TryBuildShip(ShipType ship, int amount);
 
     // Diplomacy
     public void Trade(PlanetData planet);

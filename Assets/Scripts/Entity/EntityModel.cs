@@ -94,9 +94,9 @@ public class EntityModel
         foreach (var planet in OwnedPlanets)
         {
             int increment = planet.StationedShips[ShipType.Worker] + gameConfig.WorkerShipEfficacyValue;
-
-            Resources[planet.PlanetResource[ResourceClass.Abundant]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]] + increment);
-            Resources[planet.PlanetResource[ResourceClass.Scarce]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] + increment);
+            int mult = planet.Structures.Contains(StructureType.Extractor) ? gameConfig.ExtractorResourceMultiplier : 1;
+            Resources[planet.PlanetResource[ResourceClass.Abundant]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]]  * mult) + increment);
+            Resources[planet.PlanetResource[ResourceClass.Scarce]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] * mult) + increment);
         }
 
         Ships[ShipType.Scout] += 1;

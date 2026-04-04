@@ -36,7 +36,7 @@ public class PlanetData : IGridHexObject
         this.PlanetName = planetName;
         this.PlanetResource = resource;
         this.GeneratedResource = new Dictionary<ResourceType, int>() {
-            {resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
+            { resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
             { resource[ResourceClass.Scarce], UnityEngine.Random.Range(gameConfig.MinScarceResourceGen, gameConfig.MaxScarceResourceGen) } };
         this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 0 }, { ResourceType.Rations, 0 } };
         this.Relations = new();
@@ -180,7 +180,7 @@ public class PlanetData : IGridHexObject
         }
     }
 
-    public void AddPact(PactType pactType)
+    public void AddPact(PactType pactType, FactionType faction)
     {
         switch (pactType)
         {
@@ -188,7 +188,7 @@ public class PlanetData : IGridHexObject
                 HasNAPact = true;
                 break;
             case PactType.FCP:
-                //FactionType = GameManager.Instance.turnManager.currentFaction.FactionType;
+                FactionType = faction;
                 break;
         }
     }

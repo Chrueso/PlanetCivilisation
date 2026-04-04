@@ -19,7 +19,19 @@ public struct GetShipAfterTurnsPayload
 
 public class Structures
 {
-    
+    // Shipyard utility functions
+    public static GetShipAfterTurnsPayload BuildScoutShip(int amount)
+    {
+        return new(amount, ShipType.Scout);
+    }
 
-    
+    public static GetShipAfterTurnsPayload BuildAssaultShip(int amount)
+    {
+        return new(amount, ShipType.Attacker);
+    }
+
+    public static GetShipAfterTurnsPayload BuildWorkerShip(int amount)
+    {
+        return new(amount, ShipType.Worker);
+    }
 }

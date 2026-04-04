@@ -160,14 +160,14 @@ public class DiplomacySystem
             if (planetData.HasNAPact) return;
             if (planetData.Relations[player.GetModel().FactionType] >= RelationshipLevel.INDIFFERENT)
             {
-                planetData.AddPact(PactType.NAP);
+                planetData.AddPact(PactType.NAP, currentFactionTurn);
             }
         }
         else if (pactType == PactType.FCP)
         {
             if (planetData.Relations[player.GetModel().FactionType] == RelationshipLevel.FRIENDLY)
             {
-                planetData.AddPact(pactType);
+                planetData.AddPact(pactType, currentFactionTurn);
                 player.GetModel().AddOwnedPlanets(planetData);
                 planetData.SetFaction(player.GetModel().FactionType);
             }

@@ -253,6 +253,29 @@ public class EntityController : IEntityController, IDisposable
         return true;
     }
 
+    public bool TryBuildShip(ShipType ship, int amount)
+    {
+        if (!CanExecuteAction()) return false;
+        bool success = false;
+        switch (ship)
+        {
+            case ShipType.Scout:
+                shipBuildQueueList.Add(Structures.BuildScoutShip(amount));
+                success = true;
+                break;
+            case ShipType.Attacker:
+                shipBuildQueueList.Add(Structures.BuildAssaultShip(amount));
+                success = true;
+                break;
+            case ShipType.Worker:
+                shipBuildQueueList.Add(Structures.BuildAssaultShip(amount));
+                success = true;
+                break;
+        }
+        if (success) commandInvoker.ExecuteCommand(new BuildShipCommand(this, model, () => OnActionComplete?.Invoke()));
+        return success;
+    }
+
     public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
     {
         if (!CanExecuteAction()) return false;
