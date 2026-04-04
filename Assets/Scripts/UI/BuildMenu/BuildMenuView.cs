@@ -23,7 +23,7 @@ public class BuildMenuView : ScreenBase
     public void UpdateView(EntityModel entityModel, PlanetData planet)
     {
         //If not enough resource to build change visual of elemnent maybe grey out or something
-        //Alos if planet has structure grey out certain elements
+        //Alos if planet has structure grey out certain elementsd
 
         foreach (BuildElement element in buildElements)
         {
