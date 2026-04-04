@@ -6,20 +6,20 @@ public class ActionsTabController : IUIMenuController, IDisposable
     private ActionsTabView view;
     private IEntityController playerController;
     private GridInteractionController gridInteractionController;
-    private InfoMenuController infoMenuController;
-    private StructuresController structuresController;
+    private StructuresMenuController structuresController;
+    private InfoMenuView infoMenuView;
+
     private GridHex selectedHex;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
-    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController,
-        InfoMenuController infoMenuController, StructuresController structuresController)
+    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView)
     {
         this.view = view;
 
         this.gridInteractionController = gridInteractionController;
-        this.infoMenuController = infoMenuController;
         this.structuresController = structuresController;
+        this.infoMenuView = infoMenuView;
 
         gridInteractionController.OnHexSelected += HandleHexSelected;
 
@@ -51,7 +51,7 @@ public class ActionsTabController : IUIMenuController, IDisposable
         view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
         view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
         view.DiplomacyButton.onClick.AddListener(HandleDiplomacyButtonClicked);
-        view.BuildStructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
+        view.StructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
     }
 
     public void OpenView()
@@ -75,8 +75,8 @@ public class ActionsTabController : IUIMenuController, IDisposable
     {
         if (selectedHex.Occupant != null)
         {
-            infoMenuController.UpdateView(selectedHex.Occupant);
-            infoMenuController.OpenView();
+            infoMenuView.UpdateInfo(selectedHex.Occupant);
+            GameScreenManager.Push(infoMenuView);
         }
     }
 

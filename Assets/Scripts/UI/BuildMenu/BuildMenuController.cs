@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class StructuresMenuController : IUIMenuController
+public class BuildMenuController : IUIMenuController
 {
-    private StructuresMenuView view;
+    private BuildMenuView view;
 
-    public StructuresMenuController(StructuresMenuView view)
+    public BuildMenuController(BuildMenuView view, EntityController entityController)
     {
         this.view = view;
 
@@ -24,5 +24,10 @@ public class StructuresMenuController : IUIMenuController
     public void CloseView()
     {
         GameScreenManager.Pop();
+    }
+
+    public void HandleBuildElementClicked(StructureType structureType)
+    {
+
     }
 }

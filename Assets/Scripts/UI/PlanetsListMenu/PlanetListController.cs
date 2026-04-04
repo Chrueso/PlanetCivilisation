@@ -42,11 +42,11 @@ public class PlanetListController : IUIMenuController
     }
 
     // Teleport to the planet's location on the map and close the menu
-    private void HandlePlanetClicked(PlanetData clickedPlanet)
+    private void HandlePlanetClicked(PlanetData planet)
     {
-        if(clickedPlanet.CurrentHex != null)
+        if(planet.CurrentHex != null)
         {
-            cameraController.MoveCamera(clickedPlanet.CurrentHex.WorldPosition);
+            cameraController.MoveCamera(planet.CurrentHex.WorldPosition);
             CloseView();
         }
     }

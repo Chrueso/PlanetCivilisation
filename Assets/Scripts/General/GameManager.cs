@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
-    [SerializeField] private StructureRecipesSO structureRecipes;
+    [SerializeField] private StructureRecipeDatabaseSO structureRecipes;
     [SerializeField] private GameConfigSO gameConfig;
 
     [Header("Mono Controllers")]
@@ -45,11 +45,11 @@ public class GameManager : MonoBehaviour
     private BattleManager battleManager;
     private CommandInvoker commandInvoker;
     private EntityFactory entityFactory;
-    private InfoMenuController infoMenuController;
+    //private InfoMenuController infoMenuController;
     private ActionsTabController actionsTabController;
     private HUDController hudController;
     private PlanetListController planetListController;
-    private StructuresController structuresController;
+    private StructuresMenuController structuresController;
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
@@ -141,11 +141,11 @@ public class GameManager : MonoBehaviour
 
     private void CreateActionTab()
     {
-        infoMenuController = new InfoMenuController(infoMenuView);
+        //infoMenuController = new InfoMenuController(infoMenuView);
         structuresController = new StructuresController(structuresMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresController, infoMenuView);
 
-        TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
+        TryRegisterDisposable(structuresController, actionsTabController);
     }
 
     public void SetActivePlayer(IEntityController entity)

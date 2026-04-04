@@ -1,33 +1,37 @@
-using UnityEngine;
+//using UnityEngine;
 
-public class InfoMenuController : IUIMenuController
-{
-    private InfoMenuView view;
+//MAYBE DONT REALLY NEED THIS CAUSE PLANET INFO LEGIT IS JUST SHOW TEXT SO JUST DIRECTLY OPEN VIEW AND PASS IN PLANET
+//CONTROLLER IS FOR MORE HEAVY LOGIC UI
 
-    public InfoMenuController(InfoMenuView view)
-    {
-        this.view = view;
+//public class InfoMenuController : IUIMenuController
+//{
+//    private InfoMenuView view;
 
-        ConnectView();
-    }
+//    public InfoMenuController(InfoMenuView view)
+//    {
+//        this.view = view;
 
-    public void ConnectView()
-    {
-        view.CloseButton.onClick.AddListener(CloseView);
-    }
+//        ConnectView();
+//    }
 
-    public void OpenView()
-    {
-        GameScreenManager.Push(view);
-    }
+//    public void ConnectView()
+//    {
+//        view.CloseButton.onClick.AddListener(CloseView);
+//    }
 
-    public void CloseView()
-    {
-        GameScreenManager.Pop();
-    }
+//    public void OpenView()
+//    {
+//        GameScreenManager.Push(view);
+//    }
 
-    public void UpdateView(IGridHexObject hexOccupant)
-    {
-       
-    }
-}
+//    public void CloseView()
+//    {
+//        GameScreenManager.Pop();
+//    }
+
+//    public void UpdateView(IGridHexObject hexOccupant)
+//    {
+
+//    }
+//}
+
