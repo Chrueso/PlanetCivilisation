@@ -25,6 +25,7 @@ public class BuildMenuController
     {
         this.entityController = entityController;
         entityModel = entityController.GetModel();
+        this.currentPlanet = planet;
         view.UpdateView(entityModel, planet);
         GameScreenManager.Push(view);
     }
