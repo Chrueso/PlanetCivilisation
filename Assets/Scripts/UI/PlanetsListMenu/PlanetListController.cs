@@ -1,7 +1,7 @@
 using TMPro.Examples;
 using UnityEngine;
 
-public class PlanetListController : MonoBehaviour
+public class PlanetListController 
 {
     private PlanetListView view;
 

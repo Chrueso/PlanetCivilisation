@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StructuresMenuController : MonoBehaviour
+public class StructuresMenuController 
 {
     private StructuresMenuView view;
     private IEntityController entityController;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BuildMenuController : MonoBehaviour
+public class BuildMenuController 
 {
     private BuildMenuView view;
     private StructureRecipeDatabaseSO structureRecepiesDatabase;

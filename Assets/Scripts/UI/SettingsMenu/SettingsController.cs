@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SettingsController : MonoBehaviour
+public class SettingsController
 {
     private SettingsView view;
 

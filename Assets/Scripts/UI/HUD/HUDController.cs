@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class HUDController : MonoBehaviour, IDisposable
+public class HUDController : IDisposable
 {
     private HUDView view;
     private IEntityController entityController;

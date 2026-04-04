@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ActionsTabController : MonoBehaviour, IDisposable
+public class ActionsTabController : IDisposable
 {
     private ActionsTabView view;
     private IEntityController entityController;
