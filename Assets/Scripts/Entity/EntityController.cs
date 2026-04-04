@@ -26,6 +26,7 @@ public class EntityController : IEntityController, IDisposable
 
     public MapGrid MapGrid { get; private set; }
     public HashSet<GridHex> HexesInMoveRadius { get; private set; } = new HashSet<GridHex>();
+    private List<GetShipAfterTurnsPayload> shipBuildQueueList = new();
 
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
@@ -68,6 +69,21 @@ public class EntityController : IEntityController, IDisposable
             model.CalculateResourceGain();
             model.RefreshAP();
             OnCurrentTurn?.Invoke();
+        }
+
+        if (shipBuildQueueList.Count > 0)
+        {
+            int currentTurnCount = turnChangeEvent.CurrentTurn;
+            
+            foreach (var shipBuild in shipBuildQueueList)
+            {
+                model.AddShips(shipBuild.ShipToBeBuilt, 1);
+                shipBuild.DecrementAmount();
+                if (shipBuild.ShipAmount <= 0)
+                {
+                    shipBuildQueueList.Remove(shipBuild);
+                }
+            }
         }
     }
 

@@ -93,7 +93,7 @@ public class EntityModel
     {
         foreach (var planet in OwnedPlanets)
         {
-            int increment = planet.StationedShips[ShipType.Worker];
+            int increment = planet.StationedShips[ShipType.Worker] + gameConfig.WorkerShipEfficacyValue;
 
             Resources[planet.PlanetResource[ResourceClass.Abundant]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]] + increment);
             Resources[planet.PlanetResource[ResourceClass.Scarce]] += (planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] + increment);
