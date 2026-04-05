@@ -6,33 +6,29 @@ using UnityEngine.UI;
 public class StationShipMenuView : ScreenBase
 {
     [Header("UI Configuration")]
-    [SerializeField] public Button closeButton;
+    [SerializeField] public Button CloseButton;
     [SerializeField] private Transform elementsContainer;
-    [SerializeField] private StationShipElementView shipElementPrefab;
+    [SerializeField] private StationShipElement shipElementPrefab;
 
+    private List<StationShipElement> stationShipElements = new List<StationShipElement>();
 
-
-    private List<StationShipElementView> spawnedElements = new List<StationShipElementView>();
-
-    // Called by the Controller to build up the list visually
-    public void Populate(IEnumerable<ShipDataSO> ships, PlanetData planetData, Action<ShipDataSO> onBuildRequested)
+    public void Init(IEnumerable<ShipDataSO> ships, PlanetData planetData, Action<ShipType> onStationRequested)
     {
         ClearPreviousElements();
 
         foreach (var shipData in ships)
         {
-            StationShipElementView newElement = Instantiate(shipElementPrefab, elementsContainer);
+            StationShipElement element = Instantiate(shipElementPrefab, elementsContainer);
             int currentCount = planetData.GetShipCount(shipData.Type);
-            newElement.Setup(shipData, currentCount, onBuildRequested);
+            element.Init(shipData, currentCount, onStationRequested);
 
-            spawnedElements.Add(newElement);
+            stationShipElements.Add(element);
         }
     }
 
-    // Called by the Controller to refresh amounts after a purchase
-    public void RefreshCounts(PlanetData planetData)
+    public void UpdateView(PlanetData planetData)
     {
-        foreach (var element in spawnedElements)
+        foreach (var element in stationShipElements)
         {
             ShipDataSO data = element.GetShipData();
             if (data != null)
@@ -45,13 +41,13 @@ public class StationShipMenuView : ScreenBase
 
     public void ClearPreviousElements()
     {
-        foreach (var element in spawnedElements)
+        foreach (var element in stationShipElements)
         {
             if (element != null)
             {
                 Destroy(element.gameObject);
             }
         }
-        spawnedElements.Clear();
+        stationShipElements.Clear();
     }
 }

@@ -30,11 +30,11 @@ public class Crafter
     {
         
     }
-    public bool BuildStructure(PlanetData planetData, StructureType structure)
+    public bool TryBuildStructure(PlanetData planetData, StructureType structure)
     {
         if (CheckEntityInv(structure, out var recipe))
         { 
-            planetData.BuildStructure(structure);
+            //planetData.BuildStructure(structure);
             foreach (var req in recipe)
             {
                 currentEntity.GetModel().TakeResource(req.Key, req.Value);

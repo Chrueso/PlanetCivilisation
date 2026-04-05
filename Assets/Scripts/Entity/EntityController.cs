@@ -250,7 +250,35 @@ public class EntityController : IEntityController, IDisposable
     public bool TryBuildStructure(PlanetData planet, StructureType structure)
     {
         if (!CanExecuteAction()) return false;
-        return true;
+
+        if (planet.FactionType == model.FactionType)
+        {
+            if (crafter.TryBuildStructure(planet, structure))
+            {
+                ICommand command = new BuildStructureCommand(this, planet, structure, () => OnActionComplete?.Invoke());
+                commandInvoker.ExecuteCommand(command);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
+    {
+        if (!CanExecuteAction()) return false;
+
+        if (planet.FactionType == model.FactionType)
+        {
+            if (model.EnoughShips(shipType, amount) && amount > 0)
+            {
+                ICommand command = new StationShipCommand(this, planet, shipType, amount, () => OnActionComplete?.Invoke());
+                commandInvoker.ExecuteCommand(command);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public bool TryBuildShip(ShipType ship, int amount)
@@ -276,11 +304,6 @@ public class EntityController : IEntityController, IDisposable
         return success;
     }
 
-    public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
-    {
-        if (!CanExecuteAction()) return false;
-        return true;
-    }
 
     // Diplomacy
     public void Trade(PlanetData planet)
