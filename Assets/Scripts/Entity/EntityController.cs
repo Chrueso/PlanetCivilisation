@@ -253,7 +253,7 @@ public class EntityController : IEntityController, IDisposable
 
         if (planet.FactionType == model.FactionType)
         {
-            if (crafter.TryBuildStructure(planet, structure))
+            if (crafter.TryBuildStructure(planet, structure, model))
             {
                 ICommand command = new BuildStructureCommand(this, planet, structure, () => OnActionComplete?.Invoke());
                 commandInvoker.ExecuteCommand(command);
