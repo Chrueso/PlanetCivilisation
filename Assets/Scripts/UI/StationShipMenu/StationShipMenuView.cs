@@ -18,6 +18,7 @@ public class StationShipMenuView : ScreenBase
 
         foreach (var shipData in ships)
         {
+            if (shipData.Type == ShipType.Scout) continue; 
             StationShipElement element = Instantiate(shipElementPrefab, elementsContainer);
             int currentCount = planetData.GetShipCount(shipData.Type);
             element.Init(shipData, currentCount, onStationRequested);

@@ -19,13 +19,13 @@ public class StationShipMenuController
     public void ConnectView()
     {
         view.CloseButton.onClick.AddListener(CloseView);
-        view.Init(shipDatabase.Ships.Values, this.planet, HandleStationShipElementClicked);
     }
 
     public void OpenView(PlanetData planet, IEntityController entityController)
     {
         this.planet = planet;
         this.entityController = entityController;
+        view.Init(shipDatabase.Ships.Values, this.planet, HandleStationShipElementClicked);
         view.UpdateView(planet);
         GameScreenManager.Push(view);
     }

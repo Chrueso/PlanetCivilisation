@@ -15,7 +15,8 @@ public class AIContext
     public HashSet<GridHex> HexesInMoveRadius => Controller.HexesInMoveRadius;
     public GridHex CurrentHex => Model.CurrentHex;
     public GridHex LastHex;
-    public Dictionary<GridHex, float> VisitedHexes = new Dictionary<GridHex, float>(); 
+    public Dictionary<GridHex, float> VisitedHexes = new Dictionary<GridHex, float>();
+    public GameConfigSO GameConfig => Controller.GameConfig;
 
     // Planet state
     public PlanetData CurrentPlanet => CurrentHex.Occupant as PlanetData; //doing it this way makes it so i never have to null check in the actions

@@ -28,6 +28,8 @@ public class PlanetData : IGridHexObject
     private GameConfigSO gameConfig;
     public PlanetView View { get; private set; }
 
+    public event Action OnDataChanged;
+
     public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GameConfigSO gameConfig, GridHex hex = null)
     {
         this.View = view;
@@ -65,17 +67,20 @@ public class PlanetData : IGridHexObject
     {
         IsHiddenForPlayer = false;
         View.Show();
+        OnDataChanged?.Invoke();
     }
 
     public void Hide()
     {
         IsHiddenForPlayer = true;
         View.Hide();
+        OnDataChanged?.Invoke();
     }
     
     public void SetFaction(FactionType factionType)
     {
         this.FactionType = factionType;
+        OnDataChanged?.Invoke();
     }
 
     public void AddShips(ShipType shipType, int amount)
@@ -98,6 +103,7 @@ public class PlanetData : IGridHexObject
         {
             StationedShips.Add(shipType, amount);
         }
+        OnDataChanged?.Invoke();
     }
 
     public void RemoveShips(ShipType shipType, int amount)
@@ -106,6 +112,7 @@ public class PlanetData : IGridHexObject
         {
             StationedShips[shipType] -= Mathf.Max(0, shipAmount-amount);
         }
+        OnDataChanged?.Invoke();
     }
 
     public int GetShipCount(ShipType shipType)
@@ -134,6 +141,7 @@ public class PlanetData : IGridHexObject
             this.Affection[rizzler] = Math.Clamp(currAffection + affection, 0, 100);
             UpdateRelations();
         }
+        OnDataChanged?.Invoke();
     }
 
     private void UpdateRelations()
@@ -155,12 +163,14 @@ public class PlanetData : IGridHexObject
                 Relations[relations.Key] = RelationshipLevel.FRIENDLY;
             }
         }
+        OnDataChanged?.Invoke();
     }
 
     public void BuildStructure(StructureType structure)
     {
         if (this.Structures.Contains(structure)) return;
         this.Structures.Add(structure);
+        OnDataChanged?.Invoke();
     }
 
     public void GainResource(ResourceType resource, int amount)
@@ -169,6 +179,7 @@ public class PlanetData : IGridHexObject
         {
             ResourceInventory[resource] = Mathf.Clamp(inventory+amount, 0, 8000);
         }
+        OnDataChanged?.Invoke();
     }
 
     public void RemoveResource(ResourceType resource, int amount)
@@ -178,6 +189,7 @@ public class PlanetData : IGridHexObject
             if (inventory < amount) return;
             ResourceInventory[resource] = Mathf.Max(inventory - amount, 0);
         }
+        OnDataChanged?.Invoke();
     }
 
     public void AddPact(PactType pactType, FactionType faction)
@@ -191,6 +203,7 @@ public class PlanetData : IGridHexObject
                 FactionType = faction;
                 break;
         }
+        OnDataChanged?.Invoke();
     }
 
     public void RemovePact(PactType pactType)
@@ -201,5 +214,6 @@ public class PlanetData : IGridHexObject
                 HasNAPact = false;
                 break;
         }
+        OnDataChanged?.Invoke();
     }
 }
