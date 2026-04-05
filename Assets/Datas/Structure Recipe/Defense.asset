@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af47e8eed3c1fc4889ee81a6e9ae3b4, type: 3}
   m_Name: Defense
   m_EditorClassIdentifier: Assembly-CSharp::StructureRecipeSO
-  StructureType: 3
+  StructureType: 0
   ResourceRequirement: 00000000
   ResourceRequirementAmount: 01000000

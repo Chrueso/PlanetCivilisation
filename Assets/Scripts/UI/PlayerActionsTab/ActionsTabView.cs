@@ -12,8 +12,8 @@ public class ActionsTabView : ScreenBase
     public Button ColonizeButton;
     public Button AttackButton;
     public Button DiplomacyButton;
-    public Button StructureButton;
-    public Button BuildButton;
+    public Button BuildStructureButton;
+    public Button ManageStructuresButton;
     public Button StationShipsButton;
 
     public Button CloseButton;
@@ -68,11 +68,8 @@ public class ActionsTabView : ScreenBase
 
         if (isOwnedByMe)
         {
-            StationShipsButton.gameObject.SetActive(true);
-
             bool hasStructure = planet.Structures.Count > 0;
-            BuildButton.gameObject.SetActive(!hasStructure);
-            StructureButton.gameObject.SetActive(hasStructure);
+            BuildStructureButton.gameObject.SetActive(!hasStructure);
         }
         else if (isOwnedByEnemy)
         {
@@ -129,8 +126,6 @@ public class ActionsTabView : ScreenBase
         AttackButton.gameObject.SetActive(false);
         ColonizeButton.gameObject.SetActive(false);
         DiplomacyButton.gameObject.SetActive(false);
-        StructureButton.gameObject.SetActive(false);
-        BuildButton.gameObject.SetActive(false);
-        StationShipsButton.gameObject.SetActive(false);
+        BuildStructureButton.gameObject.SetActive(false);
     }
 }

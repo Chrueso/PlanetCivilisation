@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SettingsController
+public class SettingsController : IUIMenuController
 {
     private SettingsView view;
 

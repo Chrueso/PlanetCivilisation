@@ -11,7 +11,7 @@ public class PlanetListElement : MonoBehaviour
     [SerializeField] private Button planetButton;
 
 
-    public void Init(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked)
+    public void setup(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked)
     {
         planetName.text = planetData.PlanetName;
 

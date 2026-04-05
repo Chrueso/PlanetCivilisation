@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class HUDController : IDisposable
+public class HUDController : IUIMenuController, IDisposable
 {
     private HUDView view;
     private IEntityController entityController;
@@ -102,7 +102,7 @@ public class HUDController : IDisposable
 
     private void HandlePlanetListButtonClicked()
     {
-        planetListController.OpenView(entityModel);
+        planetListController.OpenView();
     }
 
     private void HandleHomeShipButtonClicked()

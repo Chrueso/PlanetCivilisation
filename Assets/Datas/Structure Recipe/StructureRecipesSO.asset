@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 035cd1d81e0e9774b9c9a06cae24dea0, type: 3}
   m_Name: StructureRecipesSO
   m_EditorClassIdentifier: Assembly-CSharp::StructureRecipesSO
-  Recipes:
-  - {fileID: 11400000, guid: c75092b46b6351f408c499735fccc5e1, type: 2}
+  RECIPES:
   - {fileID: 11400000, guid: 2b5ebe916ba16674b970115a3a3e69c9, type: 2}
+  - {fileID: 11400000, guid: c75092b46b6351f408c499735fccc5e1, type: 2}
   - {fileID: 11400000, guid: 1b77a0f4327a1a54ea75c3033f7b5675, type: 2}
   - {fileID: 11400000, guid: 5b3eb785d55d45946b926f877191c8d3, type: 2}

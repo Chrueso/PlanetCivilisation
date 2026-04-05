@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapSettings mapSettings;
     [SerializeField] private ShipDatabaseSO shipDatabase;
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
-    [SerializeField] private StructureRecipeDatabaseSO structureRecipes;
+    [SerializeField] private StructureRecipesSO structureRecipes;
     [SerializeField] private GameConfigSO gameConfig;
 
     [Header("Mono Controllers")]
@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlanetListView planetListView;
     [SerializeField] private StructuresMenuView structuresMenuView;
     [SerializeField] private SettingsView settingsView;
-    [SerializeField] private BuildMenuView buildMenuView;
-    [SerializeField] private StationShipMenuView stationShipMenuView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -48,17 +46,17 @@ public class GameManager : MonoBehaviour
     private BattleManager battleManager;
     private CommandInvoker commandInvoker;
     private EntityFactory entityFactory;
-    //private InfoMenuController infoMenuController;
+    private InfoMenuController infoMenuController;
     private ActionsTabController actionsTabController;
     private HUDController hudController;
     private PlanetListController planetListController;
-    private StructuresMenuController structuresMenuController;
-    private BuildMenuController buildMenuController;
-    private StationShipMenuController stationShipMenuController;
+    private StructuresController structuresController;
     private SettingsController settingsController;
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
     private Crafter crafterSystem;
+    //TO CHANGE
+    //public DiplomacySystem DiplomacyInstance => diplomacySystem;
 
     //Game context
     private MapGrid mapGrid;
@@ -147,13 +145,8 @@ public class GameManager : MonoBehaviour
         infoMenuController = new InfoMenuController(infoMenuView);
         structuresController = new StructuresController(structuresMenuView);
         actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController, entityScoutShipPool);
-        //infoMenuController = new InfoMenuController(infoMenuView);
-        structuresMenuController = new StructuresMenuController(structuresMenuView);
-        buildMenuController = new BuildMenuController(buildMenuView, structureRecipes);
-        stationShipMenuController = new StationShipMenuController(stationShipMenuView, shipDatabase);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController);
 
-        TryRegisterDisposable(structuresMenuController, actionsTabController, stationShipMenuController);
+        TryRegisterDisposable(infoMenuController, structuresController, actionsTabController);
     }
 
     public void SetActivePlayer(IEntityController entity)

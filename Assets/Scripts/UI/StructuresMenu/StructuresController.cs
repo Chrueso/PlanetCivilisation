@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class InfoMenuController : IUIMenuController
+public class StructuresController : IUIMenuController
 {
-    private InfoMenuView view;
+    private StructuresMenuView view;
 
-    public InfoMenuController(InfoMenuView view)
+    public StructuresController(StructuresMenuView view)
     {
         this.view = view;
 
@@ -24,10 +24,5 @@ public class InfoMenuController : IUIMenuController
     public void CloseView()
     {
         GameScreenManager.Pop();
-    }
-
-    public void UpdateView(IGridHexObject hexOccupant)
-    {
-       
     }
 }
