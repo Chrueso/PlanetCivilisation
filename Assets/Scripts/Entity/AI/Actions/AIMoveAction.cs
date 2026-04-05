@@ -6,19 +6,7 @@ public class AIMoveAction : AIAction
 {
     [SerializeField] private AnimationCurve attackCurve;
     [SerializeField] private AnimationCurve centerCurve;
-    public AnimationCurve ewfwe = new AnimationCurve();
-    public AnimationCurve test = new AnimationCurve();
-
-    private void OnEnable()
-    {
-
-        test.AddKey(new Keyframe(0f, 0f, 0f, 0f));
-        test.AddKey(new Keyframe(1f, 1f, 3f, 3f));
-
-        ewfwe.AddKey(new Keyframe(0f, 1f, 0f, 0f));
-        ewfwe.AddKey(new Keyframe(1f, 0f, -2f, -2f));
-
-    }
+    [SerializeField] private AnimationCurve maxShipCurve; //if shipcount closer to max ship then higher score
 
     public override float CalculateUtility(AIContext context)
     {
@@ -59,6 +47,16 @@ public class AIMoveAction : AIAction
                     planetScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
 
                     //if planet ship count is less than 20 percent of current ships and ship count is close to max
+
+                    int shipCount = context.Model.Ships[ShipType.Attacker] + context.Model.Ships[ShipType.Worker];
+                    int maxShipCount = context.GameConfig.MaxStationedAssaultShips + context.GameConfig.MaxStationedWorkerShips;
+                    int planetShipCount = planet.GetShipCount(ShipType.Attacker) + planet.GetShipCount(ShipType.Worker);
+
+                    if (planetShipCount <= shipCount * 0.2f)
+                    {
+                        // scor eiddk add
+                    }
+
                 }
                 else if (isOwnedByEnemy) //based on ship
                 {
