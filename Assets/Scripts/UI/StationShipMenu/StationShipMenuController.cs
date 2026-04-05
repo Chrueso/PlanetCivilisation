@@ -6,6 +6,7 @@ public class StationShipMenuController
     private ShipDatabaseSO shipDatabase;
     private PlanetData currentPlanetData;
     private EntityModel currentEntityModel; // Track the player's model
+    private IEntityController entityController;
 
     public StationShipMenuController(StationShipMenuView view, ShipDatabaseSO shipDatabase)
     {
@@ -21,12 +22,13 @@ public class StationShipMenuController
     }
 
     // Pass the EntityModel (player) in along with the planet
-    public void OpenView(PlanetData planetData, EntityModel entityModel)
+    public void OpenView(PlanetData planetData, IEntityController entityController)
     {
-        if (planetData == null || shipDatabase == null || shipDatabase.Ships == null || entityModel == null) return;
+        if (planetData == null || shipDatabase == null || shipDatabase.Ships == null || entityController.GetModel() == null) return;
 
         currentPlanetData = planetData;
-        currentEntityModel = entityModel;
+        currentEntityModel = entityController.GetModel();
+        this.entityController = entityController;
 
         // Pass the raw data and the callback function downward
         view.Populate(shipDatabase.Ships.Values, currentPlanetData, TryBuildShip);
@@ -38,8 +40,10 @@ public class StationShipMenuController
     private void TryBuildShip(ShipDataSO shipData)
     {
         if (currentPlanetData == null || shipData == null || currentEntityModel == null) return;
-
+        if (!entityController.TryBuildShip(currentPlanetData, shipData.Type, 1)) return;
+        view.RefreshCounts(currentPlanetData);
         // 1. Validate: Check if the player has enough resources in their global inventory
+        /*
         foreach (var req in shipData.RequiredResources)
         {
             if (!currentEntityModel.Resources.TryGetValue(req.ResourceType, out int amount))
@@ -64,9 +68,9 @@ public class StationShipMenuController
 
         // 3. Execution: Build/Add ship to the planet
         currentPlanetData.AddShips(shipData.Type, 1);
-
+        */
         // 4. Update the View
-        view.RefreshCounts(currentPlanetData);
+
     }
 
     public void CloseView()

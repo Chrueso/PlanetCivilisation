@@ -2,11 +2,19 @@ using UnityEngine;
 
 public struct GetShipAfterTurnsPayload 
 {
+    public bool Active;
     public int ShipAmount;
     public ShipType ShipToBeBuilt;
 
+    public GetShipAfterTurnsPayload(int throwaway)
+    {
+        this.Active = false;
+        this.ShipAmount = 0;
+        this.ShipToBeBuilt = ShipType.Worker;
+    }
     public GetShipAfterTurnsPayload(int shipAmount, ShipType ship)
     {
+        this.Active = true;
         this.ShipAmount = shipAmount;
         this.ShipToBeBuilt = ship;
     }
@@ -14,6 +22,10 @@ public struct GetShipAfterTurnsPayload
     public void DecrementAmount()
     {
         this.ShipAmount--;
+        if (this.ShipAmount <= 0)
+        {
+            this.Active = false;
+        }
     }
 }
 

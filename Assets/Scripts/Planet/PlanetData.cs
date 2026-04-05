@@ -26,6 +26,7 @@ public class PlanetData : IGridHexObject
     private ShipDatabaseSO shipDatabase;
 
     private GameConfigSO gameConfig;
+    private GetShipAfterTurnsPayload shipBuildQueue = new(0);
     public PlanetView View { get; private set; }
 
     public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GameConfigSO gameConfig, GridHex hex = null)
@@ -42,7 +43,7 @@ public class PlanetData : IGridHexObject
         this.Relations = new();
         this.FactionType = faction;
 
-        this.Structures = new List<StructureType>();
+        this.Structures = new List<StructureType>() { StructureType.Shipyard };
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
             {ShipType.Scout, 0},
@@ -157,10 +158,14 @@ public class PlanetData : IGridHexObject
         }
     }
 
-    public void BuildStructure(StructureType structure)
-    {
-        if (this.Structures.Contains(structure)) return;
+    public bool BuildStructure(StructureType structure)
+    { 
+        if (this.Structures.Contains(StructureType.Shipyard) ||
+            this.Structures.Contains(StructureType.Extractor) || 
+            this.Structures.Contains(StructureType.Teleporter)) return false;
+        if (this.Structures.Contains(structure)) return false;
         this.Structures.Add(structure);
+        return true;
     }
 
     public void GainResource(ResourceType resource, int amount)
@@ -178,6 +183,24 @@ public class PlanetData : IGridHexObject
             if (inventory < amount) return;
             ResourceInventory[resource] = Mathf.Max(inventory - amount, 0);
         }
+    }
+    
+    public void AddToShipQueue(GetShipAfterTurnsPayload payload)
+    {
+        shipBuildQueue = payload;
+    }
+    public GetShipAfterTurnsPayload GetPlanetShipyardPayload()
+    {
+        return shipBuildQueue;
+    }
+    public bool CheckPlanetShipyardActive()
+    {
+        return shipBuildQueue.Active;
+    }
+
+    public void ProgressShipBuilding()
+    {
+        shipBuildQueue.DecrementAmount();
     }
 
     public void AddPact(PactType pactType, FactionType faction)

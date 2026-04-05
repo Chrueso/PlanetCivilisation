@@ -26,7 +26,7 @@ public class EntityController : IEntityController, IDisposable
 
     public MapGrid MapGrid { get; private set; }
     public HashSet<GridHex> HexesInMoveRadius { get; private set; } = new HashSet<GridHex>();
-    private List<GetShipAfterTurnsPayload> shipBuildQueueList = new();
+    
 
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
@@ -71,20 +71,6 @@ public class EntityController : IEntityController, IDisposable
             OnCurrentTurn?.Invoke();
         }
 
-        if (shipBuildQueueList.Count > 0)
-        {
-            int currentTurnCount = turnChangeEvent.CurrentTurn;
-            
-            foreach (var shipBuild in shipBuildQueueList)
-            {
-                model.AddShips(shipBuild.ShipToBeBuilt, 1);
-                shipBuild.DecrementAmount();
-                if (shipBuild.ShipAmount <= 0)
-                {
-                    shipBuildQueueList.Remove(shipBuild);
-                }
-            }
-        }
     }
 
     private void ConnectModel()
@@ -253,22 +239,22 @@ public class EntityController : IEntityController, IDisposable
         return true;
     }
 
-    public bool TryBuildShip(ShipType ship, int amount)
+    public bool TryBuildShip(PlanetData planet, ShipType ship, int amount)
     {
-        if (!CanExecuteAction()) return false;
+        if (!CanExecuteAction() || planet.CheckPlanetShipyardActive()) return false;
         bool success = false;
         switch (ship)
         {
             case ShipType.Scout:
-                shipBuildQueueList.Add(Structures.BuildScoutShip(amount));
+                planet.AddToShipQueue(Structures.BuildScoutShip(amount));
                 success = true;
                 break;
             case ShipType.Attacker:
-                shipBuildQueueList.Add(Structures.BuildAssaultShip(amount));
+                planet.AddToShipQueue(Structures.BuildAssaultShip(amount));
                 success = true;
                 break;
             case ShipType.Worker:
-                shipBuildQueueList.Add(Structures.BuildAssaultShip(amount));
+                planet.AddToShipQueue(Structures.BuildAssaultShip(amount));
                 success = true;
                 break;
         }

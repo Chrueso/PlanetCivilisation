@@ -162,7 +162,7 @@ public class ActionsTabController : IDisposable
     {
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet && entityController != null)
         {
-            stationShipMenuController.OpenView(planet, entityController.GetModel());
+            stationShipMenuController.OpenView(planet, entityController);
         }
     }
 

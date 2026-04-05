@@ -97,13 +97,33 @@ public class EntityModel
             int mult = planet.Structures.Contains(StructureType.Extractor) ? gameConfig.ExtractorResourceMultiplier : 1;
             Resources[planet.PlanetResource[ResourceClass.Abundant]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]]  * mult) + increment);
             Resources[planet.PlanetResource[ResourceClass.Scarce]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] * mult) + increment);
-        }
-
-        Ships[ShipType.Scout] += 1;
-        Ships[ShipType.Attacker] += 1;
-        Ships[ShipType.Worker] += 1;
+            if (!planet.CheckPlanetShipyardActive()) continue;
+            GetShipAfterTurnsPayload payload = planet.GetPlanetShipyardPayload();
+            if (!TryBuildShip(planet, payload.ShipToBeBuilt)) continue;
+            
+        }   
         Debug.Log($"Scouts : {Ships[ShipType.Scout]} | Assaults : {Ships[ShipType.Attacker]} | Workers : {Ships[ShipType.Worker]}");
         OnResourcesChanged?.Invoke();
+    }
+
+    public bool TryBuildShip(PlanetData planet, ShipType payload)
+    {
+        ShipDataSO shipData = shipDatabase.GetShip(payload);
+        Dictionary<ResourceType, int> costQueue = new();
+        foreach (var resource in shipData.RequiredResources)
+        {
+            if (Resources[resource.ResourceType] < resource.Amount) return false;
+            costQueue[resource.ResourceType] = resource.Amount;
+        }
+
+        foreach (var cost in costQueue)
+        {
+            TakeResource(cost.Key, cost.Value);
+        }
+        AddShips(payload, 1);
+        planet.ProgressShipBuilding();
+        Debug.Log($"WOI LOOK AT THIS{planet.GetPlanetShipyardPayload().Active}");
+        return true;
     }
 
     public int CalculateAttackPower()
