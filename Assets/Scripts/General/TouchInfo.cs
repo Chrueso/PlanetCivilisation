@@ -9,6 +9,7 @@ public class TouchInfo
     private int fingerIndex;
     private Vector3 screenPosition;
     private TouchPhase phase;
+    public Vector3 lastScreenPos;
     
 
     public Touch Current => curr;
@@ -18,7 +19,12 @@ public class TouchInfo
     public Vector3 ScreenPos => screenPosition;
     public TouchPhase Phase => phase;
 
-
+    // debug
+    public TouchInfo()
+    {
+        this.screenPosition = Vector3.zero;
+        this.lastScreenPos = Vector3.zero;
+    }
     public TouchInfo(Touch currentTouch, int touchIndex, int fingerIndex, Touch lastTouch, Vector2 screenPos, TouchPhase phase)
     {
         this.curr = currentTouch;

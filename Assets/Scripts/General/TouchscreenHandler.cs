@@ -32,7 +32,8 @@ public class TouchscreenHandler : MonoBehaviour
                 fingerIndex: touch.touchId,
                 lastTouch: touch, 
                 screenPos: touch.screenPosition, 
-                touch.phase);    
+                phase: touch.phase
+                );    
             switch (touch.phase)
             {
                 case TouchPhase.Began: FingerDownCallback?.Invoke(this, touchInfo); break;
