@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AIContext 
 {
+    //Basically the consideration checks cause actions share same checks
+
     public AIBrain Brain { get; private set; }
     public EntityController Controller { get; private set; }
 
@@ -18,12 +20,28 @@ public class AIContext
     public Dictionary<GridHex, float> VisitedHexes = new Dictionary<GridHex, float>();
     public GameConfigSO GameConfig => Controller.GameConfig;
 
-    // Planet state
     public PlanetData CurrentPlanet => CurrentHex.Occupant as PlanetData; //doing it this way makes it so i never have to null check in the actions
     public bool IsOnPlanet => CurrentPlanet != null;
     public bool IsOnUninhabitedPlanet => IsOnPlanet && CurrentPlanet.FactionType == FactionType.Nothing;
     public bool IsOnOwnedPlanet => IsOnPlanet && CurrentPlanet.FactionType == Model.FactionType;
     public bool IsOnEnemyPlanet => IsOnPlanet && !IsOnUninhabitedPlanet && !IsOnOwnedPlanet;
+
+    public bool HasResourceToBuildStructures
+    {
+        get
+        {
+            Crafter crafter = Controller.Crafter;
+            foreach (var recipe in crafter.StructureRecipes.Recipes)
+            {
+                if (crafter.TryBuildStructure(recipe.StructureType, Model))
+                {
+                    return true;    
+                }
+            }
+
+            return false;
+        }
+    }
 
     public AIContext(AIBrain brain, EntityController controller)
     {
@@ -60,4 +78,5 @@ public class AIContext
         foreach (var hex in toRemove)
             VisitedHexes.Remove(hex);
     }
+
 }

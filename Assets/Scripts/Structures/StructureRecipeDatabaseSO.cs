@@ -6,4 +6,6 @@ public class StructureRecipeDatabaseSO
     : ScriptableObject
 {
     public StructureRecipeSO[] Recipes;
+
+    //public Dictionary<StructureType, StructureRecipeSO> = new
 }

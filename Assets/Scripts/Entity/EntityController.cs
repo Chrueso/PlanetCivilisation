@@ -12,7 +12,7 @@ public class EntityController : IEntityController, IDisposable
     private TurnManager turnManager;
     private BattleManager battleManager;
     private DiplomacySystem diplomacySystem;
-    private Crafter crafter;
+    public Crafter Crafter { get; private set; }
 
     //gameconfig
     public GameConfigSO GameConfig { get; private set; }
@@ -32,7 +32,8 @@ public class EntityController : IEntityController, IDisposable
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
     public bool IsActivePlayer { get; set; }
 
-    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, Crafter crafter, GameConfigSO gameConfig)
+    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, 
+        Crafter crafter, GameConfigSO gameConfig)
     {
         this.model = model;
         this.view = view;
@@ -41,7 +42,7 @@ public class EntityController : IEntityController, IDisposable
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
         this.GameConfig = gameConfig;
-        this.crafter = crafter;
+        this.Crafter = crafter;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -253,7 +254,7 @@ public class EntityController : IEntityController, IDisposable
 
         if (planet.FactionType == model.FactionType)
         {
-            if (crafter.TryBuildStructure(planet, structure, model))
+            if (Crafter.TryBuildStructure(structure, model))
             {
                 ICommand command = new BuildStructureCommand(this, planet, structure, () => OnActionComplete?.Invoke());
                 commandInvoker.ExecuteCommand(command);
