@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
 
-public class ActionsTabController : IUIMenuController, IDisposable
+public class ActionsTabController : IDisposable
 {
     private ActionsTabView view;
-    private IEntityController playerController;
+    private IEntityController entityController;
     private GridInteractionController gridInteractionController;
-    private InfoMenuController infoMenuController;
-    private StructuresController structuresController;
+    private StructuresMenuController structuresController;
+    private InfoMenuView infoMenuView;
+    private BuildMenuController buildMenuController;
+    private StationShipMenuController stationShipMenuController;
+
     private GridHex selectedHex;
     private EntityScoutShipPool scoutShipPool;
 
@@ -15,13 +18,17 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController,
         InfoMenuController infoMenuController, StructuresController structuresController, EntityScoutShipPool scoutShipPool)
+    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, 
+        BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController)
     {
         this.view = view;
 
         this.gridInteractionController = gridInteractionController;
-        this.infoMenuController = infoMenuController;
         this.structuresController = structuresController;
         this.scoutShipPool = scoutShipPool;
+        this.infoMenuView = infoMenuView;
+        this.buildMenuController = buildMenuController;
+        this.stationShipMenuController = stationShipMenuController;
 
         gridInteractionController.OnHexSelected += HandleHexSelected;
 
@@ -31,7 +38,7 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
-        playerController = gameStartEvent.PlayerController;
+        entityController = gameStartEvent.PlayerController;
         Debug.Log("ActionTabController recieved entity controller");
 
         ConnectView();
@@ -39,13 +46,13 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     public void ConnectView()
     {
-        if (playerController == null)
+        if (entityController == null)
         {
             Debug.Log("ActionTab entityController is null!");
             return;
         }
         
-        view.Init(playerController);
+        view.Init(entityController);
 
         view.CloseButton.onClick.AddListener(CloseView);
         view.InfoButton.onClick.AddListener(HandleInfoButtonClicked);
@@ -54,7 +61,9 @@ public class ActionsTabController : IUIMenuController, IDisposable
         view.ColonizeButton.onClick.AddListener(HandleColonizeButtonClicked);
         view.AttackButton.onClick.AddListener(HandleAttackButtonClicked);
         view.DiplomacyButton.onClick.AddListener(HandleDiplomacyButtonClicked);
-        view.BuildStructureButton.onClick.AddListener(HandleBuildStructuresButtonClicked);
+        view.StructureButton.onClick.AddListener(HandleStructuresButtonClicked);
+        view.BuildButton.onClick.AddListener(HandleBuildButtonClicked);
+        view.StationShipsButton.onClick.AddListener(HandleStationShipsButtonClicked);
     }
 
     public void OpenView()
@@ -78,16 +87,16 @@ public class ActionsTabController : IUIMenuController, IDisposable
     {
         if (selectedHex.Occupant != null)
         {
-            infoMenuController.UpdateView(selectedHex.Occupant);
-            infoMenuController.OpenView();
+            infoMenuView.UpdateInfo(selectedHex.Occupant);
+            GameScreenManager.Push(infoMenuView);
         }
     }
 
     private void HandleMoveButtonClicked()
     {
-        if (playerController == null) return;
+        if (entityController == null) return;
 
-        if (playerController.TryMove(selectedHex))
+        if (entityController.TryMove(selectedHex))
         {
             CloseView();
         }
@@ -108,11 +117,11 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleColonizeButtonClicked()
     {
-        if (playerController == null) return;
+        if (entityController == null) return;
 
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (playerController.TryColonize(planet))
+            if (entityController.TryColonize(planet))
             {
                 //CloseView();
                 view.Show(true); // updates after colonize
@@ -122,11 +131,11 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     private void HandleAttackButtonClicked()
     {
-        if (playerController == null) return; 
+        if (entityController == null) return; 
 
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            if (playerController.TryAttack(planet))
+            if (entityController.TryAttack(planet))
             {
                 CloseView();
             }
@@ -139,11 +148,27 @@ public class ActionsTabController : IUIMenuController, IDisposable
 
     }
 
-    private void HandleBuildStructuresButtonClicked()
+    private void HandleStructuresButtonClicked()
     {
-        structuresController.OpenView();
+        structuresController.OpenView(entityController);
     }
-    
+
+    private void HandleBuildButtonClicked()
+    {
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
+        {
+            buildMenuController.OpenView(planet, entityController);
+        }
+    }
+
+    private void HandleStationShipsButtonClicked()
+    {
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet && entityController != null)
+        {
+            stationShipMenuController.OpenView(planet, entityController.GetModel());
+        }
+    }
+
     public void Dispose()
     {
         gridInteractionController.OnHexSelected -= HandleHexSelected;
