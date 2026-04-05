@@ -10,7 +10,7 @@ public class AIAttackAction : AIAction
         if (context.IsOnEnemyPlanet)
         {
             int planetDefense = context.CurrentPlanet.CalculateDefensePower();
-            return planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f;
+            return planetDefense > 0 ? Mathf.Clamp01(attackCurve.Evaluate((float)context.AttackPower / planetDefense)) : 1f;
         }
         else
         {

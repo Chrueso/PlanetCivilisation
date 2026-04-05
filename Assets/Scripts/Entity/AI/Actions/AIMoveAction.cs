@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
@@ -7,6 +6,19 @@ public class AIMoveAction : AIAction
 {
     [SerializeField] private AnimationCurve attackCurve;
     [SerializeField] private AnimationCurve centerCurve;
+    public AnimationCurve ewfwe = new AnimationCurve();
+    public AnimationCurve test = new AnimationCurve();
+
+    private void OnEnable()
+    {
+
+        test.AddKey(new Keyframe(0f, 0f, 0f, 0f));
+        test.AddKey(new Keyframe(1f, 1f, 3f, 3f));
+
+        ewfwe.AddKey(new Keyframe(0f, 1f, 0f, 0f));
+        ewfwe.AddKey(new Keyframe(1f, 0f, -2f, -2f));
+
+    }
 
     public override float CalculateUtility(AIContext context)
     {
@@ -45,17 +57,19 @@ public class AIMoveAction : AIAction
                 else if (isOwnedByMe) //go back to build
                 {
                     planetScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
+
+                    //if planet ship count is less than 20 percent of current ships and ship count is close to max
                 }
                 else if (isOwnedByEnemy) //based on ship
                 {
                     int planetDefense = planet.CalculateDefensePower();
-                    planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f;
+                    planetScore = planetDefense > 0 ? Mathf.Clamp01(attackCurve.Evaluate((float)context.AttackPower / planetDefense)) : 1f;
                 }
 
                 float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
                 float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
 
-                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f * planetScore); //prio closest if both planetscores equally similar
+                hexScore = (planetScore * 0.9f) + (closestDistanceScore * 0.1f * planetScore); //prio closest if both planetscores equally similar
             }
             else //For empty hexes and own planet prefer hexes that are farther from recently visited hexes and closer to center of the map
             {
@@ -69,11 +83,11 @@ public class AIMoveAction : AIAction
                 float directionScore = (Vector3.Dot(lastDirection, candidateDirection) + 1f) * 0.5f; // remap -1,1 to 0,1
 
                 float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, centerHex.GridPositionCube);
-                float centerScore = centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
+                float centerScore = Mathf.Clamp01(centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter));
 
                 float hexRecencyScore = context.VisitedHexes.ContainsKey(hex) ? context.VisitedHexes[hex] : 0f; // prefer unvisited hexes
 
-                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.1f) - hexRecencyScore);
+                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.5f) - hexRecencyScore);
             }
 
             //Debug.Log("Hexscore " + hexScore);
