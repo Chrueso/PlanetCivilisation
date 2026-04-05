@@ -19,7 +19,6 @@ public class ColonizeCommand : ICommand
     public void Execute()
     {
         entityController.IsPerformingAction = true;
-
         entityModel.RemoveAP(1);
         entityModel.RemoveShips(ShipType.Worker, 1); // added by chris
         targetPlanet.SetFaction(entityModel.FactionType);

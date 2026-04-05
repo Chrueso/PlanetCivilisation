@@ -42,6 +42,8 @@ public class ActionsTabView : ScreenBase
 
         HideAllButtons();
 
+        if (selectedHex.IsHiddenForPlayer) return;
+
         bool isCurrentHex = selectedHex == entityModel.CurrentHex;
         bool inMoveRange = entityController.CheckIfHexIsInMoveRadius(selectedHex);
 
@@ -92,7 +94,7 @@ public class ActionsTabView : ScreenBase
         hexOccupantText.text = $"Empty hex";
         additionalInfoText.text = "";
 
-        if (selectedHex.Occupant != null)
+        if (selectedHex.Occupant != null && !selectedHex.IsHiddenForPlayer)
         {
             if (selectedHex.Occupant is PlanetData planet)
             {
@@ -116,6 +118,11 @@ public class ActionsTabView : ScreenBase
     }
 
     protected override void OnShow()
+    {
+        UpdateView();
+    }
+
+    public void UpdateView()
     {
         HandleText();
         HandleButtons();

@@ -8,7 +8,7 @@ public class StructureRecipeSO : ScriptableObject
     public ResourceType[] ResourceRequirement;
     public int[] ResourceRequirementAmount;
 
-    public Dictionary<ResourceType, int> RecipeDict { get; private set; }
+    public Dictionary<ResourceType, int> RecipeDict { get; private set; } = new Dictionary<ResourceType, int>();
 
     private void OnEnable()
     {
@@ -18,7 +18,6 @@ public class StructureRecipeSO : ScriptableObject
             return;
         }
 
-        RecipeDict = new Dictionary<ResourceType, int>();
         for (int i = 0; i < ResourceRequirement.Length; i++)
         {
             RecipeDict[ResourceRequirement[i]] = ResourceRequirementAmount[i];

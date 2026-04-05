@@ -15,7 +15,7 @@ public class EntityController : IEntityController, IDisposable
     private Crafter crafter;
 
     //gameconfig
-    private GameConfigSO gameConfig;
+    public GameConfigSO GameConfig { get; private set; }
 
     //Context
     public bool IsCurrentTurn { get; private set; }
@@ -40,7 +40,7 @@ public class EntityController : IEntityController, IDisposable
         this.turnManager = turnManager;
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
-        this.gameConfig = gameConfig;
+        this.GameConfig = gameConfig;
         this.crafter = crafter;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
@@ -206,7 +206,7 @@ public class EntityController : IEntityController, IDisposable
     public bool TryColonize(PlanetData planet)
     {
         if (!CanExecuteAction() || !HasAP()) return false;
-        if (!model.EnoughShips(ShipType.Worker, gameConfig.MinWorkerShipNeededForColonize)/*added by chris*/) return false;
+        if (!model.EnoughShips(ShipType.Worker, GameConfig.MinWorkerShipNeededForColonize)/*added by chris*/) return false;
             if (planet.FactionType == FactionType.Nothing)
         {
             ICommand command = new ColonizeCommand(this, model, planet, () => OnActionComplete?.Invoke());
@@ -236,7 +236,46 @@ public class EntityController : IEntityController, IDisposable
     public bool TryBuildStructure(PlanetData planet, StructureType structure)
     {
         if (!CanExecuteAction()) return false;
-        return true;
+
+        if (planet.FactionType == model.FactionType)
+        {
+            if (crafter.TryBuildStructure(planet, structure, model))
+            {
+                ICommand command = new BuildStructureCommand(this, planet, structure, () => OnActionComplete?.Invoke());
+                commandInvoker.ExecuteCommand(command);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
+    {
+        if (!CanExecuteAction()) return false;
+        if (shipType == ShipType.Scout) return false; //cannot station scout ships
+        if (planet.FactionType == model.FactionType)
+        {
+            int max = 0;
+            switch (shipType)
+            {
+                case ShipType.Attacker:
+                    max = GameConfig.MaxStationedAssaultShips;
+                    break;
+                case ShipType.Worker:
+                    max = GameConfig.MaxStationedWorkerShips;
+                    break;
+            }
+
+            if (model.EnoughShips(shipType, amount) && amount > 0 && planet.StationedShips[shipType] < max)
+            {
+                ICommand command = new StationShipCommand(this, planet, shipType, amount, () => OnActionComplete?.Invoke());
+                commandInvoker.ExecuteCommand(command);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public bool TryBuildShip(PlanetData planet, ShipType ship, int amount)
@@ -262,11 +301,6 @@ public class EntityController : IEntityController, IDisposable
         return success;
     }
 
-    public bool TryStationShip(PlanetData planet, ShipType shipType, int amount)
-    {
-        if (!CanExecuteAction()) return false;
-        return true;
-    }
 
     // Diplomacy
     public void Trade(PlanetData planet)

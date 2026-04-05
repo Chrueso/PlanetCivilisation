@@ -76,7 +76,14 @@ public class ActionsTabController : IDisposable
 
     public void HandleHexSelected(GridHex selectedHex)
     {
+        if (this.selectedHex !=null && this.selectedHex.Occupant != null)
+            this.selectedHex.Occupant.OnDataChanged -= view.UpdateView;
+
         this.selectedHex = selectedHex;
+
+        if (selectedHex.Occupant != null)
+            selectedHex.Occupant.OnDataChanged += view.UpdateView;
+
         OpenView();
     }
 
@@ -168,6 +175,9 @@ public class ActionsTabController : IDisposable
 
     public void Dispose()
     {
+        if (this.selectedHex != null && this.selectedHex.Occupant != null)
+            this.selectedHex.Occupant.OnDataChanged -= view.UpdateView;
+
         gridInteractionController.OnHexSelected -= HandleHexSelected;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }

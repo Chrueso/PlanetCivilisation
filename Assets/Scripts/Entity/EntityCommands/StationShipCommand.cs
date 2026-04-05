@@ -1,16 +1,38 @@
 using UnityEngine;
+using System;
 
-public class StationShipCommand : MonoBehaviour
+public class StationShipCommand : ICommand
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    EntityModel entityModel;
+    private Action onComplete;
+    EntityController entityController;
+    PlanetData targetPlanet;
+    ShipType shipType;
+    int amount;
+
+    public StationShipCommand(EntityController entityController, PlanetData targetPlanet, ShipType shipData, int amount, Action onComplete)
     {
-        
+        this.entityController = entityController;
+        this.targetPlanet = targetPlanet;
+        this.shipType = shipData;
+        this.onComplete = onComplete;
+        this.entityModel = entityController.GetModel();
+        this.amount = amount;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute()
     {
-        
+        entityController.IsPerformingAction = true;
+
+        entityModel.RemoveShips(shipType, amount);
+        targetPlanet.AddShips(shipType, amount);
+
+        entityController.IsPerformingAction = false;
+        onComplete?.Invoke();
+
+        Debug.Log(this.ToString());
     }
+
+    public override string ToString() =>
+        $"{entityModel.FactionType} has stationed {amount} {shipType} on planet {targetPlanet.PlanetName}";
 }

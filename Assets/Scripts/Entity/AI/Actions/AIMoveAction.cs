@@ -39,9 +39,8 @@ public class AIMoveAction : AIAction
 
                 float planetScore = 0;
                 if (isUninhabited) //usualy u want to go here
-                {
-                    //Check resource
-                    planetScore = 1; 
+                {    
+                    planetScore = context.Model.EnoughShips(ShipType.Worker, context.GameConfig.MinWorkerShipNeededForColonize) ? 1f : 0f; 
                 }
                 else if (isOwnedByEnemy) //based on ship
                 {

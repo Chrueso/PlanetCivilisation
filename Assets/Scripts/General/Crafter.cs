@@ -8,43 +8,27 @@ public class Crafter
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
     //recipes
-    
-    private IEntityController currentEntity;
 
     public Crafter(StructureRecipeDatabaseSO structureRecipes)
     {
-        gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
-        EventBus<GameStartEvent>.Register(gameStartBinding);
-        turnChangeEventBinding = new EventBinding<TurnChangeEvent>(OnTurnChanged);
-        EventBus<TurnChangeEvent>.Register(turnChangeEventBinding);
         this.structureRecipes = structureRecipes;
     }
 
-    private void OnTurnChanged(TurnChangeEvent turnChangeEvent)
+    public bool TryBuildStructure(PlanetData planetData, StructureType structure, EntityModel entityModel)
     {
-        
-        
-    }
-
-    private void HandleGameStart(GameStartEvent gameStartEvent)
-    {
-        
-    }
-    public bool BuildStructure(PlanetData planetData, StructureType structure)
-    {
-        if (CheckEntityInv(structure, out var recipe))
+        if (CheckEntityInv(structure, out var recipe, entityModel))
         { 
-            planetData.BuildStructure(structure);
+            //planetData.BuildStructure(structure);
             foreach (var req in recipe)
             {
-                currentEntity.GetModel().TakeResource(req.Key, req.Value);
+                entityModel.TakeResource(req.Key, req.Value);
             }
             return true;   
         }
         return false;
     }
 
-    private bool CheckEntityInv(StructureType structure, out Dictionary<ResourceType, int> requirement)
+    private bool CheckEntityInv(StructureType structure, out Dictionary<ResourceType, int> requirement, EntityModel entityModel)
     {
         bool canCraft = true;
         requirement = new();
@@ -56,7 +40,7 @@ public class Crafter
             {
                 for (int i = 0; i<structureRecipe.ResourceRequirement.Length-1; ++i)
                 {
-                    if (currentEntity.GetModel().Resources[structureRecipe.ResourceRequirement[i]] < structureRecipe.ResourceRequirementAmount[i])
+                    if (entityModel.Resources[structureRecipe.ResourceRequirement[i]] < structureRecipe.ResourceRequirementAmount[i])
                     {
                         canCraft = false;
                         return false;
