@@ -31,8 +31,8 @@ public interface IEntityController
     public bool TryAttack(PlanetData planet);
 
     public bool TryBuildStructure(PlanetData planet, StructureType structure);
-    //public bool TryBuildShip(PlanetData planet, ShipType ship, int amount);
-    public bool TryBuildShip(ShipType ship, int amount);
+    public bool TryBuildShip(PlanetData planet, ShipType ship, int amount);
+    //public bool TryBuildShip(ShipType ship, int amount);
     public bool TryStationShip(PlanetData planet, ShipType shipType, int amount);
 
     // Diplomacy
