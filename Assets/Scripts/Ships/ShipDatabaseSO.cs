@@ -8,12 +8,7 @@ public class ShipDatabaseSO : ScriptableObject
 
     public Dictionary<ShipType, ShipDataSO> Ships { get; private set; }
 
-    void OnEnable()
-    {
-        Init();
-    }
-
-    void Init()
+    private void OnEnable()
     {
         Ships = new Dictionary<ShipType, ShipDataSO>();
 

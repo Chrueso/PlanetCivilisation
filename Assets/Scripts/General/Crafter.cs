@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using Mono.Cecil;
 public class Crafter
 {
-    private StructureRecipesSO structureRecipes;
+    private StructureRecipeDatabaseSO structureRecipes;
     private EventBinding<GameStartEvent> gameStartBinding;
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
     //recipes
     
     private IEntityController currentEntity;
 
-    public Crafter(StructureRecipesSO structureRecipes)
+    public Crafter(StructureRecipeDatabaseSO structureRecipes)
     {
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -49,8 +49,8 @@ public class Crafter
         bool canCraft = true;
         requirement = new();
         int index = (int)structure;
-        StructureRecipeSO recipe = structureRecipes.RECIPES[index];
-        foreach (var structureRecipe in structureRecipes.RECIPES)
+        StructureRecipeSO recipe = structureRecipes.Recipes[index];
+        foreach (var structureRecipe in structureRecipes.Recipes)
         {
             if (structureRecipe.StructureType == structure)
             {

@@ -16,5 +16,9 @@ MonoBehaviour:
   Prefab: {fileID: 0}
   Type: 0
   AttackPower: 1
-  RequiredResources: []
+  RequiredResources:
+  - ResourceType: 0
+    Amount: 1
+  - ResourceType: 1
+    Amount: 1
   BuildTime: 5

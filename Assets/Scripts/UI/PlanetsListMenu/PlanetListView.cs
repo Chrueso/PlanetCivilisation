@@ -53,7 +53,7 @@ public class PlanetListView : ScreenBase
         foreach (PlanetData planet in ownedPlanets)
         {
             PlanetListElement row = Instantiate(planetListElement, layoutGroup);
-            row.setup(planet, onPlanetClicked); // Fill it with data
+            row.Init(planet, onPlanetClicked); // Fill it with data
             activeRows.Add(row.gameObject);
         }
     }
