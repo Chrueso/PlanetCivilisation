@@ -31,7 +31,7 @@ public class AIMoveAction : AIAction
 
             float hexScore = 0;
 
-            if (hex.Occupant != null && hex.Occupant is PlanetData planet && planet.FactionType != context.Model.FactionType)
+            if (hex.Occupant != null && hex.Occupant is PlanetData planet)
             {
                 bool isUninhabited = planet.FactionType == FactionType.Nothing;
                 bool isOwnedByMe = planet.FactionType == context.Model.FactionType;
@@ -42,16 +42,20 @@ public class AIMoveAction : AIAction
                 {    
                     planetScore = context.Model.EnoughShips(ShipType.Worker, context.GameConfig.MinWorkerShipNeededForColonize) ? 1f : 0f; 
                 }
+                else if (isOwnedByMe) //go back to build
+                {
+                    planetScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
+                }
                 else if (isOwnedByEnemy) //based on ship
                 {
                     int planetDefense = planet.CalculateDefensePower();
-                    planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f; 
+                    planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f;
                 }
 
                 float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
                 float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
 
-                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f); //prio closest
+                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f * planetScore); //prio closest if both planetscores equally similar
             }
             else //For empty hexes and own planet prefer hexes that are farther from recently visited hexes and closer to center of the map
             {

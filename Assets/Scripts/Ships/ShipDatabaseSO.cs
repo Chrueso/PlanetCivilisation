@@ -6,12 +6,10 @@ public class ShipDatabaseSO : ScriptableObject
 {
     [SerializeField] private List<ShipDataSO> ships = new();
 
-    public Dictionary<ShipType, ShipDataSO> Ships { get; private set; }
+    public Dictionary<ShipType, ShipDataSO> Ships { get; private set; } = new Dictionary<ShipType, ShipDataSO>();
 
     private void OnEnable()
     {
-        Ships = new Dictionary<ShipType, ShipDataSO>();
-
         foreach (var ship in ships)
         {
             if (ship == null) continue;
