@@ -144,14 +144,11 @@ public class GameManager : MonoBehaviour
 
     private void CreateActionTab()
     {
-        infoMenuController = new InfoMenuController(infoMenuView);
-        structuresController = new StructuresController(structuresMenuView);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, infoMenuController, structuresController, entityScoutShipPool);
         //infoMenuController = new InfoMenuController(infoMenuView);
         structuresMenuController = new StructuresMenuController(structuresMenuView);
         buildMenuController = new BuildMenuController(buildMenuView, structureRecipes);
         stationShipMenuController = new StationShipMenuController(stationShipMenuView, shipDatabase);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController, entityScoutShipPool);
 
         TryRegisterDisposable(structuresMenuController, actionsTabController, stationShipMenuController);
     }

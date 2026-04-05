@@ -15,11 +15,8 @@ public class ActionsTabController : IDisposable
     private EntityScoutShipPool scoutShipPool;
 
     private EventBinding<GameStartEvent> gameStartBinding;
-
-    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController,
-        InfoMenuController infoMenuController, StructuresController structuresController, EntityScoutShipPool scoutShipPool)
     public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, 
-        BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController)
+        BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController, EntityScoutShipPool scoutShipPool)
     {
         this.view = view;
 
@@ -104,10 +101,10 @@ public class ActionsTabController : IDisposable
 
     private void HandleMoveScoutButtonClicked()
     {
-        if (playerController == null) return;
+        if (entityController == null) return;
         EntityScoutShipView ssInstance = scoutShipPool.GetScoutShipInstance();
-        ssInstance.SetPos(playerController.GetView().transform.position);
-        if (playerController.TryMoveScoutShip(selectedHex, ssInstance))
+        ssInstance.SetPos(entityController.GetView().transform.position);
+        if (entityController.TryMoveScoutShip(selectedHex, ssInstance))
         {
             CloseView();
         }
