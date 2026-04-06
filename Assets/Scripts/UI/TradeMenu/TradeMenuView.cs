@@ -35,6 +35,7 @@ public class TradeMenuView : ScreenBase
 
     private void OnEnable()
     {
+
         CloseButton.onClick.AddListener(() => OnCloseClicked?.Invoke());
         ConfirmTradeButton.onClick.AddListener(() => OnConfirmTradeClicked?.Invoke());
 
