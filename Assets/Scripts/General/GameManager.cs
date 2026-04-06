@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SettingsView settingsView;
     [SerializeField] private BuildMenuView buildMenuView;
     [SerializeField] private StationShipMenuView stationShipMenuView;
+    [SerializeField] private TradeMenuView tradeMenuView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
     private Crafter crafterSystem;
+    private TradeMenuController tradeMenuController;
 
     //Game context
     private MapGrid mapGrid;
@@ -134,11 +136,12 @@ public class GameManager : MonoBehaviour
 
     private void CreateHUD()
     {
-        settingsController = new SettingsController(settingsView); //maybe should be mono persistant from main menu
+        settingsController = new SettingsController(settingsView);
         planetListController = new PlanetListController(planetListView, cameraController);
-        hudController = new HUDController(hudView, cameraController, planetListController, settingsController);
+        tradeMenuController = new TradeMenuController(tradeMenuView,diplomacySystem);
+        hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController);
 
-        TryRegisterDisposable(settingsController, planetListController, hudController);
+        TryRegisterDisposable(settingsController, planetListController, tradeMenuController, hudController);
     }
 
     private void CreateActionTab()
