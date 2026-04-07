@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52800145654ec1f43beeba9f162e3206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipBattleView
-  shipModel: {fileID: 0}
+  laserPrefab: {fileID: 122648, guid: a0f0a89f259e93c44aa0b04183eb223e, type: 3}
+  unitCount: 1
