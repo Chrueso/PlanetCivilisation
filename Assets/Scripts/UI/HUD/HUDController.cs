@@ -12,6 +12,7 @@ public class HUDController : IDisposable
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
+    private TradeMenuController tradeMenuController;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
@@ -19,13 +20,17 @@ public class HUDController : IDisposable
     private int currentEntityIndex = 0;
     private List<IEntityController> allEntities;
 
-    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController) 
+    // Store AI Models specifically for trading
+    private List<EntityModel> allAIModels = new List<EntityModel>();
+
+    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController, TradeMenuController tradeMenuController) 
     {
         this.view = view;
 
         this.cameraController = cameraController;
         this.planetListController = planetListController;
         this.settingsController = settingsController;
+        this.tradeMenuController = tradeMenuController;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -43,9 +48,12 @@ public class HUDController : IDisposable
         //Debug setup
         allEntities = new List<IEntityController>();
         allEntities.Add(gameStartEvent.PlayerController);
+        
+        allAIModels.Clear();
         foreach (var ai in gameStartEvent.AIControllers)
         {
             allEntities.Add(ai);
+            allAIModels.Add(ai.GetModel()); // Gather EntityModels specifically for Trade Menu
         }
     }
 
@@ -69,6 +77,7 @@ public class HUDController : IDisposable
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
         view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
         view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
+        view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
 
         DisableDebug();
     }
@@ -112,11 +121,16 @@ public class HUDController : IDisposable
 
     private void HandleEndTurnButtonClicked()
     {
-        //if (entityController == null) return;
-        //entityController.TryEndTurn();
-
         if (playerController == null) return;
         playerController.TryEndTurn();
+    }
+
+    private void HandleTradeButtonClicked() 
+    {
+        if (tradeMenuController != null)
+        {
+            tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
+        }
     }
 
     public void Dispose()

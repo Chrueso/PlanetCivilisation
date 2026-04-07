@@ -8,6 +8,7 @@ public class HUDView : ScreenBase
     public override bool ShouldShowScreenRaycastBlocker => false;
     public override bool ShouldHonorBackButton => false;
 
+    public Button TradeButton;
     public Button SettingsButton;
     public Button PlanetListButton;
     public Button HomeShipButton;
