@@ -97,9 +97,15 @@ public class EntityModel
             int mult = planet.Structures.Contains(StructureType.Extractor) ? gameConfig.ExtractorResourceMultiplier : 1;
             Resources[planet.PlanetResource[ResourceClass.Abundant]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Abundant]]  * mult) + increment);
             Resources[planet.PlanetResource[ResourceClass.Scarce]] += ((planet.GeneratedResource[planet.PlanetResource[ResourceClass.Scarce]] * mult) + increment);
-            if (!planet.CheckPlanetShipyardActive()) continue;
-            GetShipAfterTurnsPayload payload = planet.GetPlanetShipyardPayload();
-            if (!TryBuildShip(planet, payload.ShipToBeBuilt)) continue;
+            if (planet.Structures.Contains(StructureType.Shipyard))
+            {
+                AddShips(ShipType.Scout, 1);
+                AddShips(ShipType.Attacker, 1);
+                AddShips(ShipType.Worker, 1);
+            }
+            //if (!planet.CheckPlanetShipyardActive()) continue;
+            //GetShipAfterTurnsPayload payload = planet.GetPlanetShipyardPayload();
+            //if (!TryBuildShip(planet, payload.ShipToBeBuilt)) continue;
             
         }   
         Debug.Log($"Scouts : {Ships[ShipType.Scout]} | Assaults : {Ships[ShipType.Attacker]} | Workers : {Ships[ShipType.Worker]}");

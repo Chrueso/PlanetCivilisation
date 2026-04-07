@@ -46,7 +46,7 @@ public class PlanetData : IGridHexObject
         this.Relations = new();
         this.FactionType = faction;
 
-        this.Structures = new List<StructureType>() { StructureType.Shipyard };
+        this.Structures = new List<StructureType>() {  };
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
             {ShipType.Scout, 0},

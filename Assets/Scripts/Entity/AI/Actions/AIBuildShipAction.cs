@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[CreateAssetMenu(menuName = "AI/Actions/BuildShip")]
 public class AIBuildShipAction : AIAction
 {
     [SerializeField] private AnimationCurve maxShipCurve;

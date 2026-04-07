@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEngine.InputSystem.DefaultInputActions;
 
 public class TurnManager
@@ -94,8 +95,19 @@ public class TurnManager
         currentTurn++;
         if (currentTurn >= gameConfig.MaxTurns)
         {
-            Debug.Log("Someone won idk");
-            //return;
+            SceneManager.LoadScene("MainMenu");
+            IEntityController winner = null;
+            int binner = 0;
+            foreach (var thingy in entityControllerOrder)
+            {
+                int ownedPlanets = thingy.GetModel().OwnedPlanets.Count;
+                if (ownedPlanets > binner)
+                {
+                    binner = ownedPlanets;
+                    winner = thingy;
+                }
+            }
+            return;
         }
         turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 
         var prevTurnFaction = currentTurnFaction;

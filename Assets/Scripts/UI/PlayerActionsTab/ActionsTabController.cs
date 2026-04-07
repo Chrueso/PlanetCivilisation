@@ -146,7 +146,8 @@ public class ActionsTabController : IDisposable
 
     private void HandleDiplomacyButtonClicked()
     {
-        
+        if (entityController != null && selectedHex.Occupant is PlanetData planet)
+            tradeMenuController.OpenView(entityController.GetModel(), planet);
     }
 
     private void HandleStructuresButtonClicked()
@@ -159,9 +160,9 @@ public class ActionsTabController : IDisposable
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             // Only allow trading with AI controlled planets (Not player, not empty)
-            if (planet.FactionType != FactionType.Nothing && planet.FactionType != entityController.GetModel().FactionType)
+            if (planet.FactionType != FactionType.Nothing && planet.FactionType == entityController.GetModel().FactionType)
             {
-                tradeMenuController.OpenView(entityController.GetModel(), planet, allAIModels);
+                buildMenuController.OpenView(planet, entityController);
             }
             else
             {

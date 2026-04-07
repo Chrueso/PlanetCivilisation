@@ -9,6 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c95e319279c01bf4990647a890281ddd, type: 3}
+  m_Script: {fileID: 11500000, guid: c0b6ab1eb47e4d841b9a536f1f172161, type: 3}
   m_Name: BuildShip
   m_EditorClassIdentifier: Assembly-CSharp::AIBuildShipAction
+  maxShipCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

@@ -65,9 +65,12 @@ public class TradeMenuView : ScreenBase
     private void OnEnable()
     {
         CloseButton?.onClick.AddListener(() => OnCloseClicked?.Invoke());
-        
+
 
         // Trade
+        PlayerGiveIncreaseBtn?.onClick.AddListener(() => OnChangeTradeGiveAmountClicked?.Invoke(1));
+        PlayerGiveDecreaseBtn?.onClick.AddListener(() => OnChangeTradeGiveAmountClicked?.Invoke(-1));
+
         ConfirmTradeButton?.onClick.AddListener(() => OnConfirmTradeClicked?.Invoke());
         PlayerTradeIncreaseBtn?.onClick.AddListener(() => OnChangeTradeGiveAmountClicked?.Invoke(1));
         PlayerTradeDecreaseBtn?.onClick.AddListener(() => OnChangeTradeGiveAmountClicked?.Invoke(-1));
@@ -101,6 +104,9 @@ public class TradeMenuView : ScreenBase
         
         NAPButton?.onClick.RemoveAllListeners();
         FCPButton?.onClick.RemoveAllListeners();
+
+        PlayerGiveIncreaseBtn?.onClick.RemoveAllListeners();
+        PlayerGiveDecreaseBtn?.onClick.RemoveAllListeners();
     }
 
     public void SetupDropdowns(List<string> resourceNames)
@@ -127,7 +133,7 @@ public class TradeMenuView : ScreenBase
         if (RelationshipText != null) RelationshipText.text = $"Relationship: {relationshipStr}";
 
         // Update amounts
-        if (PlayerTradeGiveAmountText != null) PlayerTradeGiveAmountText.text = tradeGiveAmount.ToString();
+        //if (PlayerTradeGiveAmountText != null) PlayerTradeGiveAmountText.text = tradeGiveAmount.ToString();
         if (AITradeGiveAmountText != null) AITradeGiveAmountText.text = tradeReceiveAmount.ToString();
         if (PlayerGiftAmountText != null) PlayerGiftAmountText.text = giftAmount.ToString();
 
