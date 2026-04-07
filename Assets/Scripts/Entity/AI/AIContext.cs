@@ -43,6 +43,14 @@ public class AIContext
         }
     }
 
+    public bool HasResourceToBuildShip
+    {
+        get
+        {
+            return false;
+        }
+    }
+
     public AIContext(AIBrain brain, EntityController controller)
     {
         Brain = brain;

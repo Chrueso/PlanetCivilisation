@@ -44,7 +44,7 @@ public class AIMoveAction : AIAction
                 }
                 else if (isOwnedByMe) //go back to build
                 {
-                    planetScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
+                    float structureScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
 
                     //if planet ship count is less than 20 percent of current ships and ship count is close to max
 
@@ -52,11 +52,19 @@ public class AIMoveAction : AIAction
                     int maxShipCount = context.GameConfig.MaxStationedAssaultShips + context.GameConfig.MaxStationedWorkerShips;
                     int planetShipCount = planet.GetShipCount(ShipType.Attacker) + planet.GetShipCount(ShipType.Worker);
 
-                    if (planetShipCount <= shipCount * 0.2f)
+                    float maxScore = 0f;
+                    if (planetShipCount <= Mathf.Round(shipCount * 0.2f))
                     {
-                        // scor eiddk add
+                        maxScore = Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
                     }
 
+                    float buildShipScore = 0f;
+                    if (planet.Structures.Contains(StructureType.Shipyard) && context.HasResourceToBuildShip)
+                    {
+                        buildShipScore =  1 - Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
+                    }
+
+                    planetScore = Mathf.Clamp01(structureScore + maxScore + buildShipScore);
                 }
                 else if (isOwnedByEnemy) //based on ship
                 {
