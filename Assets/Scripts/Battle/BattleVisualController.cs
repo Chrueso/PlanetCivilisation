@@ -6,8 +6,10 @@ public class BattleVisualController : MonoBehaviour
 {
     [SerializeField] ShipModelDatabaseSO shipModelDb;
     [SerializeField] GameObject shipBattlePrefab;
+    [SerializeField] int shipMergeThreshold;
     List<GameObject> attackingShipModels;
     List<GameObject> defendingShipModels;
+    List<GameObject> allShipModels;
 
     public void setupBattle(Dictionary<ShipType, int> attackingShips, Dictionary<ShipType, int> defendingShips, FactionType attackerFaction, PlanetData targetPlanet, List<BattleStep> battleSteps)
     {
@@ -29,33 +31,29 @@ public class BattleVisualController : MonoBehaviour
     {
         attackingShipModels = new();
         defendingShipModels = new();
+        allShipModels = new();
 
         if (attackingShips.TryGetValue(ShipType.Attacker, out int attackerCount))
         {
+            int groupedAttackerCount = attackerCount / shipMergeThreshold;
+            int remainderAttackerCount = attackerCount % shipMergeThreshold;
+
             Debug.Log($"spawning {attackerCount} ships for attacker faction {attackerFaction}");
-            for (int i = 0; i < attackerCount; i++)
-            {
-                GameObject ship = Instantiate(shipBattlePrefab, targetPlanet.View.transform);
-                //make the ship & set its model
-                attackingShipModels.Add(ship);
-                //change this to attacker faction
-                ship.GetComponent<ShipBattleView>().ChangeModel(shipModelDb.GetModel(attackerFaction, ShipType.Attacker),ShipType.Attacker);
-                ship.transform.position = targetPlanet.CurrentHex.WorldPosition;
-            }
+
+            spawnShipGroup(groupedAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.grouped, attackingShipModels, new Color(1, 0, 0), targetPlanet);
+            if(remainderAttackerCount > 0) spawnShipGroup(remainderAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.single, attackingShipModels, new Color(1, 0, 0), targetPlanet);
         }
 
 
         foreach (var defendingShip in defendingShips)
         {
+            int groupedDefenderCount = defendingShip.Value / shipMergeThreshold;
+            int remainderDefenderCount = defendingShip.Value % shipMergeThreshold;
+
             Debug.Log($"spawning {defendingShip.Value} {defendingShip.Key} for defender faction {targetPlanet.FactionType}");
-            for (int i = 0; i < defendingShip.Value; i++)
-            {
-                GameObject ship = Instantiate(shipBattlePrefab, targetPlanet.View.transform);
-                //make the ship & set its model
-                defendingShipModels.Add(ship);
-                ship.GetComponent<ShipBattleView>().ChangeModel(shipModelDb.GetModel(targetPlanet.FactionType, defendingShip.Key),defendingShip.Key);
-                ship.transform.position = targetPlanet.CurrentHex.WorldPosition;
-            }
+
+            spawnShipGroup(groupedDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.grouped, defendingShipModels, new Color(0, 0, 1), targetPlanet);
+            if (remainderDefenderCount > 0) spawnShipGroup(remainderDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.single, defendingShipModels, new Color(0, 0, 1), targetPlanet);
         }
     }
 
@@ -104,18 +102,32 @@ public class BattleVisualController : MonoBehaviour
 
         foreach (var ship in attackingShipModels)
         {
-            var type = ship.GetComponent<ShipBattleView>().shipType;
-            if (!attackingShipsByType.ContainsKey(type))
-                attackingShipsByType[type] = new List<GameObject>();
-            attackingShipsByType[type].Add(ship);
+            ShipBattleView shipVisual = ship.GetComponent<ShipBattleView>();
+            ShipType type = shipVisual.shipType;
+
+            for(int i = 0; i < shipVisual.unitCount; i++)
+            {
+                if (!attackingShipsByType.ContainsKey(type))
+                {
+                    attackingShipsByType[type] = new List<GameObject>();
+                }
+                attackingShipsByType[type].Add(ship);
+            }
         }
 
         foreach (var ship in defendingShipModels)
         {
-            var type = ship.GetComponent<ShipBattleView>().shipType;
-            if (!defendingShipsByType.ContainsKey(type))
-                defendingShipsByType[type] = new List<GameObject>();
-            defendingShipsByType[type].Add(ship);
+            ShipBattleView shipVisual = ship.GetComponent<ShipBattleView>();
+            ShipType type = shipVisual.shipType;
+
+            for (int i = 0; i < shipVisual.unitCount; i++)
+            {
+                if (!defendingShipsByType.ContainsKey(type))
+                {
+                    defendingShipsByType[type] = new List<GameObject>();
+                }
+                defendingShipsByType[type].Add(ship);
+            }
         }
 
 
@@ -142,41 +154,19 @@ public class BattleVisualController : MonoBehaviour
 
                 stepSeq.Join(attackerShip.GetComponent<ShipBattleView>().TurnTo(dirAttack));
                 stepSeq.Join(defenderShip.GetComponent<ShipBattleView>().TurnTo(-dirAttack));
-                stepSeq.Append(VisualiseFighting(attackerShip, defenderShip, step.attackerWon, 0.3f));
-                stepSeq.Append(VisualiseFighting(attackerShip, defenderShip, step.attackerWon, 0.3f));
-                stepSeq.AppendInterval(0.2f);
-                groupSeq.Join(stepSeq);
+                stepSeq.Append(VisualiseFighting(attackerShip, defenderShip, step.attackerWon, 0.2f));
+                stepSeq.Append(VisualiseFighting(attackerShip, defenderShip, step.attackerWon, 0.2f));
+                stepSeq.AppendInterval(0.1f);
+                //groupSeq.Append(stepSeq);
+                groupSeq.Insert(j * 0.15f, stepSeq);
             }
 
             turnSeq.Append(groupSeq);
         }
 
-        //Sequence fadeSeq = DOTween.Sequence();
-        turnSeq.AppendCallback(() =>
-        {
-            foreach (var ship in attackingShipsByType.Values)
-            {
-                foreach (var s in ship)
-                {
-                    //MeshRenderer meshRenderer = s.GetComponentInChildren<MeshRenderer>();
-                    //Material mat = meshRenderer.material;
-                    //Debug.Log(mat.shader.name);
-                    Destroy(s);
-                }
-            }
-            foreach (var ship in defendingShipsByType.Values)
-            {
-                foreach (var s in ship)
-                {
-                    //MeshRenderer meshRenderer = s.GetComponentInChildren<MeshRenderer>();
-                    //Material mat = meshRenderer.material;
-                    //Debug.Log(mat.shader.name);
-                    Destroy(s);
-                }
-            }
-        });
+        Sequence fadeSeq = BuildFadeSequence(allShipModels,0.5f);
+        turnSeq.Append(fadeSeq);
 
-        //turnSeq.Append(fadeSeq);
     }
 
     private Tween VisualiseFighting(GameObject opponent1, GameObject opponent2, bool attackerWon, float delay)
@@ -188,10 +178,81 @@ public class BattleVisualController : MonoBehaviour
         seq.AppendInterval(0.2f);
         seq.AppendCallback(() =>
         {
-            if (attackerWon) Destroy(opponent2); else Destroy(opponent1);
+            if (attackerWon)
+            {
+
+                ShipBattleView visual = opponent2.GetComponent<ShipBattleView>();
+                visual.unitCount--;
+
+                if(visual.unitCount == 0) Destroy(visual.gameObject);
+            }
+            else
+            {
+                ShipBattleView visual = opponent1.GetComponent<ShipBattleView>();
+                visual.unitCount--;
+
+                if (visual.unitCount == 0) Destroy(visual.gameObject);
+            }
         }
         );
 
         return seq;
+    }
+
+    private Sequence BuildFadeSequence(List<GameObject> ships, float fadeDuration)
+    {
+        Sequence seq = DOTween.Sequence();
+        foreach (var ship in ships)
+        {
+            if(ship == null) continue;
+            MeshRenderer[] renderers = ship.GetComponentsInChildren<MeshRenderer>();
+            foreach (var r in renderers)
+            {
+                foreach (var mat in r.materials)
+                {
+                    Color color = new Color(0, 0, 0, 0);
+                    seq.Join(mat.DOColor(color,fadeDuration));
+                    
+                }
+            }
+        }
+
+        foreach (var ship in ships)
+        {
+            if (ship == null) continue;
+            seq.AppendCallback(() => Destroy(ship));
+        }
+        return seq;
+    }
+
+    private void spawnShipGroup(int spawnCount, FactionType faction , ShipType type, shipMergeTier shipTier, List<GameObject> associatedList, Color shipColor, PlanetData targetPlanet)
+    {
+        for (int i = 0; i < spawnCount; i++)
+        {
+            GameObject ship = Instantiate(shipBattlePrefab, targetPlanet.View.transform);
+            //make the ship & set its model
+            associatedList.Add(ship);
+            allShipModels.Add(ship);
+            //change this to attacker faction
+
+            ShipBattleView shipVisual = ship.GetComponent<ShipBattleView>();
+
+            shipVisual.ChangeModel(shipModelDb.GetModel(faction, type, shipTier), type);
+            shipVisual.ChangeColor(shipColor);
+
+            switch(shipTier)
+            {
+                case shipMergeTier.single:
+                    shipVisual.unitCount = 1;
+                    break;
+                case shipMergeTier.grouped:
+                    shipVisual.unitCount = shipMergeThreshold;
+                    break;
+            }
+
+            if (shipVisual.unitCount > 1) shipVisual.model.transform.localScale = new Vector3(2.0f,2.0f,2.0f);
+
+            ship.transform.position = targetPlanet.CurrentHex.WorldPosition;
+        }
     }
 }
