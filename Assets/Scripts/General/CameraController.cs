@@ -1,10 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.AdaptivePerformance.Provider;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
@@ -240,6 +237,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (playerIsPinching)
         {
             float scale = 1f;
@@ -264,6 +262,7 @@ public class CameraController : MonoBehaviour
             CameraInstance.orthographicSize = Mathf.Clamp(CameraInstance.orthographicSize * scale, 30, 100);
         }
         isDirty = false;
+        */
     }
 
     public void Disable() => DisableMovement();

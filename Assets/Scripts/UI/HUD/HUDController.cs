@@ -79,7 +79,9 @@ public class HUDController : IDisposable
         view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
         //view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
 
-        DisableDebug();
+
+        //DisableDebug();
+        EnableDebug();
     }
 
     public void OpenView()

@@ -16,11 +16,11 @@ MonoBehaviour:
   - shipType: 2
     shipTier: 0
     faction: 1
-    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+    modelPrefab: {fileID: 5205365460174704079, guid: 2e2051179bf45c34ca0d6c6043338e16, type: 3}
   - shipType: 2
     shipTier: 1
     faction: 1
-    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+    modelPrefab: {fileID: 802896236503639549, guid: 612f8a3576d5ac944af4326daecea8da, type: 3}
   - shipType: 1
     shipTier: 0
     faction: 1
@@ -36,40 +36,40 @@ MonoBehaviour:
   - shipType: 2
     shipTier: 0
     faction: 2
-    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+    modelPrefab: {fileID: 2524784567019875292, guid: dc5d43ced1b979c4ea476b8d8f221e0b, type: 3}
   - shipType: 2
     shipTier: 1
     faction: 2
-    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+    modelPrefab: {fileID: 2441135294061811824, guid: 7a31e90a948d0214886e215435296d1b, type: 3}
   - shipType: 1
     shipTier: 0
     faction: 2
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 7410010191608258126, guid: c2479ee91919aae4c9180f7772965a95, type: 3}
   - shipType: 1
     shipTier: 1
     faction: 2
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 6814576063611083937, guid: d08d6889b9992cc4ab144571cd43f3c2, type: 3}
   - shipType: 0
     shipTier: 0
     faction: 2
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 919132149155446097, guid: 33288d5d9cb48974ca5181eec1b6ebab, type: 3}
   - shipType: 2
     shipTier: 0
     faction: 3
-    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+    modelPrefab: {fileID: 919132149155446097, guid: 9caa9e853419a304da0d5fdd52a9a893, type: 3}
   - shipType: 2
     shipTier: 1
-    faction: 3
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
-  - shipType: 0
-    shipTier: 0
-    faction: 3
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
-  - shipType: 1
-    shipTier: 0
     faction: 3
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
   - shipType: 0
     shipTier: 0
     faction: 3
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 919132149155446097, guid: 091be2ffaf86b5d4b96451baa1d8a702, type: 3}
+  - shipType: 1
+    shipTier: 0
+    faction: 3
+    modelPrefab: {fileID: 919132149155446097, guid: 9d60806aa924ea542811db24372b42da, type: 3}
+  - shipType: 0
+    shipTier: 0
+    faction: 3
+    modelPrefab: {fileID: 919132149155446097, guid: 98ac919b945fb97438ed6118ae7127db, type: 3}

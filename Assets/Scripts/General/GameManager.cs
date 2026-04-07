@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     //For debugging purposes
-    [SerializeField] bool isDebug = false;
+    [SerializeField] bool isDebug = true;
     private EventBinding<HUDEntityChangeEvent> HUDEntityChangeBinding;
 
     public string GalaxyName { get; private set; }
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
         planetListController = new PlanetListController(planetListView, cameraController);
         tradeMenuController = new TradeMenuController(tradeMenuView,diplomacySystem);
         hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController);
-
+        hudController.EnableDebug();
         TryRegisterDisposable(settingsController, planetListController, tradeMenuController, hudController);
     }
 
@@ -247,7 +247,8 @@ public class GameManager : MonoBehaviour
     private void OnValidate()
     {
         if (hudController == null) return;
-
+        hudController.EnableDebug();
+        /*
         if (isDebug)
         {
             hudController.EnableDebug();
@@ -255,7 +256,7 @@ public class GameManager : MonoBehaviour
         else
         {
             hudController.DisableDebug();
-        }
+        }*/
     }
 
     public void HandleHUDEntityChange(HUDEntityChangeEvent HUDEntityChangeEvent)

@@ -50,7 +50,7 @@ public class PlanetData : IGridHexObject
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
             {ShipType.Scout, 0},
-            {ShipType.Attacker, 0},
+            {ShipType.Attacker, 2},
             {ShipType.Worker, 0 }
         };
 
