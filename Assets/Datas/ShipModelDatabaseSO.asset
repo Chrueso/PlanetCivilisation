@@ -14,29 +14,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShipModelDatabaseSO
   modelEntries:
   - shipType: 2
+    shipTier: 0
+    faction: 1
+    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+  - shipType: 2
+    shipTier: 1
     faction: 1
     modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
   - shipType: 1
+    shipTier: 0
+    faction: 1
+    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+  - shipType: 1
+    shipTier: 1
     faction: 1
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
   - shipType: 0
+    shipTier: 0
     faction: 1
     modelPrefab: {fileID: 919132149155446097, guid: bb4f556a3a931bb44a3036d347ea32fd, type: 3}
   - shipType: 2
+    shipTier: 0
+    faction: 2
+    modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
+  - shipType: 2
+    shipTier: 1
     faction: 2
     modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
   - shipType: 1
+    shipTier: 0
+    faction: 2
+    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+  - shipType: 1
+    shipTier: 1
     faction: 2
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
   - shipType: 0
+    shipTier: 0
     faction: 2
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
   - shipType: 2
+    shipTier: 0
     faction: 3
     modelPrefab: {fileID: 919132149155446097, guid: 200151328f1cfc74aaecea477b9baca5, type: 3}
-  - shipType: 1
+  - shipType: 2
+    shipTier: 1
     faction: 3
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
   - shipType: 0
+    shipTier: 0
+    faction: 3
+    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+  - shipType: 1
+    shipTier: 0
+    faction: 3
+    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+  - shipType: 0
+    shipTier: 0
     faction: 3
     modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}

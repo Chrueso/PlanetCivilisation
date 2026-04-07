@@ -5,6 +5,7 @@ public class ShipBattleView : MonoBehaviour
 {
     public ShipType shipType { get; private set; }
     public GameObject model { get; private set; }
+    public int unitCount = 1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -41,4 +42,17 @@ public class ShipBattleView : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(dir);
         return transform.DORotateQuaternion(rot, duration).SetEase(Ease.InOutSine);
     }
+
+    public void ChangeColor(Color newColor)
+    {
+        MeshRenderer[] renderers = model.GetComponentsInChildren<MeshRenderer>();
+        foreach (var renderer in renderers)
+        {
+            foreach(var mat in renderer.materials)
+            {
+                mat.color = newColor;
+            }
+        }
+    }
+
 }
