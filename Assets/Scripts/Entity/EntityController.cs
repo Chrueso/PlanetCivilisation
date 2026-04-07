@@ -64,7 +64,7 @@ public class EntityController : IEntityController, IDisposable
     private void HandleTurnChange(TurnChangeEvent turnChangeEvent)
     {
         IsCurrentTurn = turnChangeEvent.CurrentTurnFaction == model.FactionType;
-        
+
         if (IsCurrentTurn)
         {
             model.CalculateResourceGain();

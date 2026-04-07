@@ -3,7 +3,11 @@ using UnityEngine;
 
 public interface IEntityController
 {
+    public bool IsCurrentTurn { get; }
+
     public bool IsActivePlayer { get; set; }
+
+    public HashSet<GridHex> HexesInMoveRadius { get; }
 
     public EntityModel GetModel();
 

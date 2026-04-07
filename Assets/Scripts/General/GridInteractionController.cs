@@ -94,7 +94,6 @@ public class GridInteractionController : MonoBehaviour
                 selectedHex = hex;
                 ShowSelectionView();
                 OnHexSelected?.Invoke(selectedHex);
-
                 //Debug.Log(HexGridXZ<GridHex>.Distance(player.CurrentHex.GridPositionCube, hex.GridPositionCube)); //show distance from current hex
             }
             else

@@ -10,6 +10,15 @@ public class MapGrid : MonoBehaviour
     public GridHexView HexView => hexViewPrefab;
     public float CellSize {  get; private set; }
 
+    public void LinkNeighbours()
+    {
+        if (Grid == null || Grid.GridArray.Length == 0) return;
+
+        foreach (GridHex hex in Grid.GridArray)
+        {
+            hex.SetNeighbours(Grid.GetAllNeighbours(hex.GridPositionCube));
+        }
+    }
     public void GenerateGrid(int width, int height, float cellSize)
     {
         CellSize = cellSize;

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -14,20 +16,24 @@ public class GridHexView : MonoBehaviour
 
     [SerializeField] private Material material;
     [SerializeField] private Material fogMaterial;
-    [SerializeField] private float outlineThickness = 0.1f;
-    [SerializeField] private Color outlineColor = Color.cyan;
-    [SerializeField] private Color hexColor = Color.black;
+    [SerializeField] private float defaultoutlineThickness = 0.1f;
+    [SerializeField] private Color defaultoutlineColor = Color.cyan;
+    [SerializeField] private Color defaulthexColor = Color.black;
 
-    public float OutlineThickness => outlineThickness;
+    private float outlineThickness;
+    private Color outlineColor;
+    private Color hexColor;
 
-    private Dictionary<string, bool> edgeBoolValues = new Dictionary<string, bool>()
+    public float OutlineThickness => defaultoutlineThickness;
+
+    private Dictionary<NeighbourDir, string> edgeBoolValues = new Dictionary<NeighbourDir, string>()
     {
-        { "_Edge0", true }, // left
-        { "_Edge1", true }, // top left
-        { "_Edge2", true }, // top right
-        { "_Edge3", true }, // right
-        { "_Edge4", true }, // bottom right
-        { "_Edge5", true } // bottom left
+        { NeighbourDir.RIGHT,         "_Edge0" },
+        { NeighbourDir.TOP_RIGHT,     "_Edge1" },
+        { NeighbourDir.TOP_LEFT,    "_Edge2" },
+        { NeighbourDir.LEFT,        "_Edge3" },
+        { NeighbourDir.BOTTOM_LEFT, "_Edge4" },
+        { NeighbourDir.BOTTOM_RIGHT,  "_Edge5" },
     };
 
     public void Init(float cellSize)
@@ -37,6 +43,10 @@ public class GridHexView : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();    
         meshFilter.mesh = new Mesh();
         propertyBlock = new MaterialPropertyBlock();
+
+        outlineThickness = defaultoutlineThickness;
+        outlineColor = defaultoutlineColor;
+        hexColor = defaulthexColor;
 
         GenerateMesh();
         UpdateMaterial();
@@ -113,12 +123,20 @@ public class GridHexView : MonoBehaviour
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
 
+    public void RestoreDefaultMaterial()
+    {
+        outlineThickness = defaultoutlineThickness;
+        outlineColor = defaultoutlineColor;
+        hexColor = defaulthexColor;
+
+        UpdateMaterial();
+    }
+
     public void EnableEdges(MaterialPropertyBlock propertyBlock, bool value)
     {
         foreach (var key in edgeBoolValues.Keys.ToList()) // ToList() snapshots the keys
         {
-            edgeBoolValues[key] = value;
-            propertyBlock.SetFloat(key, value ? 1f : 0f);
+            propertyBlock.SetFloat(edgeBoolValues[key], value ? 1f : 0f);
         }
     }
 
@@ -130,6 +148,19 @@ public class GridHexView : MonoBehaviour
     public void HideFog()
     {
         UpdateMaterial();
+    }
+
+    public void ChangeOutlineColor(Color color)
+    {
+        outlineColor = color;
+        propertyBlock.SetColor("_OutlineColor", outlineColor);
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void HideEdge(NeighbourDir dir)
+    {
+        propertyBlock.SetFloat(edgeBoolValues[dir], 0f);
+        meshRenderer.SetPropertyBlock(propertyBlock);
     }
 
 }

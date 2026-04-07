@@ -3,8 +3,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public enum NeighbourDir
+{
+    LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT
+}
+
 public class HexGridXZ<TGridObject>
 {
+    public static readonly NeighbourDir[] NeighbourDirArray = (NeighbourDir[])System.Enum.GetValues(typeof(NeighbourDir));
+
+    public static Dictionary<NeighbourDir, Vector3Int> CubeNeighbourDir = new()
+{
+    { NeighbourDir.BOTTOM_RIGHT, new Vector3Int( 1, -1,  0) },
+    { NeighbourDir.RIGHT,    new Vector3Int( 1,  0, -1) },
+    { NeighbourDir.TOP_RIGHT, new Vector3Int( 0,  1, -1) },
+    { NeighbourDir.TOP_LEFT,  new Vector3Int(-1,  1,  0) },
+    { NeighbourDir.LEFT,     new Vector3Int(-1,  0,  1) },
+    { NeighbourDir.BOTTOM_LEFT,  new Vector3Int( 0, -1,  1) },
+};
+
     public static readonly float HEX_VERTICAL_OFFSET_MULT = 0.75f;
     public int Width { get; private set; }
     public int Height { get; private set; }
@@ -62,6 +79,27 @@ public class HexGridXZ<TGridObject>
         TotalWorldHeight = HexHeight * (HEX_VERTICAL_OFFSET_MULT * (Height - 1) + 1);
 
         if (IsDebug) ShowDebug();
+    }
+
+    public TGridObject GetNeighbour(Vector3Int cube, NeighbourDir dir)
+    {
+        Vector3Int neighbourDir = CubeNeighbourDir[dir];
+        Vector3Int objCube = new Vector3Int(cube.x + neighbourDir.x, cube.y + neighbourDir.y, cube.z + neighbourDir.z);
+        Vector2Int objOddR = CubeToOddR(objCube.x, objCube.y);
+
+        return GetGridObject(objOddR.x, objOddR.y);
+    }
+
+    public Dictionary<NeighbourDir, TGridObject> GetAllNeighbours(Vector3Int cube)
+    {
+        Dictionary<NeighbourDir, TGridObject> dict = new Dictionary<NeighbourDir, TGridObject>();
+        foreach (var dir in NeighbourDirArray)
+        {
+            TGridObject neighbour = GetNeighbour(cube, dir);
+            dict.Add(dir, neighbour);
+        }
+
+        return dict;    
     }
 
     public static Vector3 GetWorldPosition(int x, int z, float cellSize, Vector3 originPos)
