@@ -24,11 +24,11 @@ MonoBehaviour:
   - shipType: 1
     shipTier: 0
     faction: 1
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 7881257329231829023, guid: 9ef1733d54d7aa3438074ab848fdbcec, type: 3}
   - shipType: 1
     shipTier: 1
     faction: 1
-    modelPrefab: {fileID: 919132149155446097, guid: 454e199fb6fc0a94cb78c8fb88fac237, type: 3}
+    modelPrefab: {fileID: 7410010191608258126, guid: c2479ee91919aae4c9180f7772965a95, type: 3}
   - shipType: 0
     shipTier: 0
     faction: 1

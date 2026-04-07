@@ -40,8 +40,8 @@ public class BattleVisualController : MonoBehaviour
 
             Debug.Log($"spawning {attackerCount} ships for attacker faction {attackerFaction}");
 
-            spawnShipGroup(groupedAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.grouped, attackingShipModels, new Color(1, 0, 0), targetPlanet);
-            if(remainderAttackerCount > 0) spawnShipGroup(remainderAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.single, attackingShipModels, new Color(1, 0, 0), targetPlanet);
+            spawnShipGroup(groupedAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.grouped, attackingShipModels, targetPlanet);
+            if(remainderAttackerCount > 0) spawnShipGroup(remainderAttackerCount, attackerFaction, ShipType.Attacker, shipMergeTier.single, attackingShipModels, targetPlanet);
         }
 
 
@@ -52,8 +52,8 @@ public class BattleVisualController : MonoBehaviour
 
             Debug.Log($"spawning {defendingShip.Value} {defendingShip.Key} for defender faction {targetPlanet.FactionType}");
 
-            spawnShipGroup(groupedDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.grouped, defendingShipModels, new Color(0, 0, 1), targetPlanet);
-            if (remainderDefenderCount > 0) spawnShipGroup(remainderDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.single, defendingShipModels, new Color(0, 0, 1), targetPlanet);
+            spawnShipGroup(groupedDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.grouped, defendingShipModels, targetPlanet);
+            if (remainderDefenderCount > 0) spawnShipGroup(remainderDefenderCount, targetPlanet.FactionType, defendingShip.Key, shipMergeTier.single, defendingShipModels, targetPlanet);
         }
     }
 
@@ -171,9 +171,14 @@ public class BattleVisualController : MonoBehaviour
 
     private Tween VisualiseFighting(GameObject opponent1, GameObject opponent2, bool attackerWon, float delay)
     {
+        ShipBattleView opponent1Visual = opponent1.GetComponent<ShipBattleView>();
+        ShipBattleView opponent2Visual = opponent2.GetComponent<ShipBattleView>();
+
         Sequence seq = DOTween.Sequence();
         //yield return new WaitForSeconds(delay);
-        seq.Join(opponent1.transform.DOShakePosition(0.5f, 0.5f).SetEase(Ease.InOutSine));
+        seq.Join(opponent1Visual.Shoot(opponent2, 0.5f));
+        seq.Join(opponent2Visual.Shoot(opponent1, 0.5f));
+        seq.Append(opponent1.transform.DOShakePosition(0.5f, 0.5f).SetEase(Ease.InOutSine));
         seq.Join(opponent2.transform.DOShakePosition(0.5f, 0.5f).SetEase(Ease.InOutSine));
         seq.AppendInterval(0.2f);
         seq.AppendCallback(() =>
@@ -202,18 +207,25 @@ public class BattleVisualController : MonoBehaviour
     private Sequence BuildFadeSequence(List<GameObject> ships, float fadeDuration)
     {
         Sequence seq = DOTween.Sequence();
+
+        MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+
         foreach (var ship in ships)
         {
-            if(ship == null) continue;
+            if (ship == null) continue;
             MeshRenderer[] renderers = ship.GetComponentsInChildren<MeshRenderer>();
+
             foreach (var r in renderers)
             {
-                foreach (var mat in r.materials)
+                r.GetPropertyBlock(mpb);
+                Color startColor = mpb.GetColor("_BaseColor"); // or _Color fallback
+
+                // Animate the color using DOTween
+                seq.Join(DOTween.To(() => startColor, x =>
                 {
-                    Color color = new Color(0, 0, 0, 0);
-                    seq.Join(mat.DOColor(color,fadeDuration));
-                    
-                }
+                    mpb.SetColor("_BaseColor", x);
+                    r.SetPropertyBlock(mpb);
+                }, new Color(0, 0, 0, 0), fadeDuration));
             }
         }
 
@@ -222,10 +234,11 @@ public class BattleVisualController : MonoBehaviour
             if (ship == null) continue;
             seq.AppendCallback(() => Destroy(ship));
         }
+
         return seq;
     }
 
-    private void spawnShipGroup(int spawnCount, FactionType faction , ShipType type, shipMergeTier shipTier, List<GameObject> associatedList, Color shipColor, PlanetData targetPlanet)
+    private void spawnShipGroup(int spawnCount, FactionType faction , ShipType type, shipMergeTier shipTier, List<GameObject> associatedList, PlanetData targetPlanet)
     {
         for (int i = 0; i < spawnCount; i++)
         {
@@ -237,8 +250,9 @@ public class BattleVisualController : MonoBehaviour
 
             ShipBattleView shipVisual = ship.GetComponent<ShipBattleView>();
 
+            shipVisual.setFaction(faction);
             shipVisual.ChangeModel(shipModelDb.GetModel(faction, type, shipTier), type);
-            shipVisual.ChangeColor(shipColor);
+            shipVisual.ChangeColor(shipVisual.GetColor(faction));
 
             switch(shipTier)
             {
@@ -250,7 +264,7 @@ public class BattleVisualController : MonoBehaviour
                     break;
             }
 
-            if (shipVisual.unitCount > 1) shipVisual.model.transform.localScale = new Vector3(2.0f,2.0f,2.0f);
+            if (shipVisual.unitCount > 1) shipVisual.model.transform.localScale *= 1.5f;
 
             ship.transform.position = targetPlanet.CurrentHex.WorldPosition;
         }
