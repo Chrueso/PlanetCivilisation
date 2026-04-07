@@ -1736,6 +1736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c25be33e16facd46a1e78c10ed019fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDView
+  TradeButton: {fileID: 0}
   SettingsButton: {fileID: 4945394009403822728}
   PlanetListButton: {fileID: 5759433271312679176}
   HomeShipButton: {fileID: 5324459326910975213}
@@ -2317,7 +2318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00001565, y: -0.000091552734}
+  m_AnchoredPosition: {x: -0.00001565, y: 0.00018310547}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8358965271976222993
@@ -6130,7 +6131,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3513722338178169202}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9511396
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
