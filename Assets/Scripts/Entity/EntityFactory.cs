@@ -63,7 +63,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig, shipDatabase);
 
         brain = new AIBrain(controller, actions);
 
@@ -89,7 +89,7 @@ public class EntityFactory
         spawnPos.y = model.yValue;
         view.transform.position = spawnPos;
 
-        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig);
+        EntityController controller = new EntityController(model, view, commandInvoker, turnManager, battleManager, diplomacySystem, crafterSystem, gameConfig, shipDatabase);
 
         return controller;
     }

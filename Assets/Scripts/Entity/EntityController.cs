@@ -16,6 +16,7 @@ public class EntityController : IEntityController, IDisposable
 
     //gameconfig
     public GameConfigSO GameConfig { get; private set; }
+    public ShipDatabaseSO shipDatabase { get; private set; }
 
     //Context
     public bool IsCurrentTurn { get; private set; }

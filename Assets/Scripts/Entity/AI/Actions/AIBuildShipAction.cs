@@ -24,6 +24,17 @@ public class AIBuildShipAction : AIAction
     public override void Execute(AIContext context)
     {
         //Choose what ship to build?
-        //context.Controller.TryBuildShip();
+        ShipType ship = ShipType.Attacker;
+        if (context.Model.Ships[ShipType.Attacker] < context.GameConfig.MaxHeldAssaultShips)
+        {
+            ship = ShipType.Attacker;
+        } else if (context.Model.Ships[ShipType.Worker] < context.GameConfig.MaxHeldWorkerShips)
+        {
+            ship = ShipType.Worker;
+        } else if (context.Model.Ships[ShipType.Scout] < context.GameConfig.MaxHeldScoutShips)
+        {
+            ship = ShipType.Scout;
+        }
+        context.Controller.TryBuildShip(context.CurrentPlanet, ship, 1);
     }
 }

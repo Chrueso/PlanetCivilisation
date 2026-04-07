@@ -47,7 +47,21 @@ public class AIContext
     {
         get
         {
-            return false;
+            bool enough = true;
+            int i = 0;
+            foreach (var req in Controller.shipDatabase.GetShip(ShipType.Scout).RequiredResources)
+            {
+                ResourceType type = Controller.shipDatabase.GetShip(ShipType.Scout).RequiredResources[i].ResourceType;
+                int amount = Controller.shipDatabase.GetShip(ShipType.Scout).RequiredResources[i].Amount;
+                ++i;
+                if (Model.Resources[type] < amount)
+                {
+                    enough = false;
+                    break;
+                }
+
+            }
+            return enough;
         }
     }
 
