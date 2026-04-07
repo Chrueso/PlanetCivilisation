@@ -33,8 +33,7 @@ public class EntityController : IEntityController, IDisposable
     private EventBinding<TurnChangeEvent> turnChangeEventBinding;
     public bool IsActivePlayer { get; set; }
 
-    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, 
-        Crafter crafter, GameConfigSO gameConfig)
+    public EntityController(EntityModel model, EntityView view, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem,  Crafter crafter, GameConfigSO gameConfig, ShipDatabaseSO shipDatabase)
     {
         this.model = model;
         this.view = view;
@@ -43,6 +42,7 @@ public class EntityController : IEntityController, IDisposable
         this.battleManager = battleManager;
         this.diplomacySystem = diplomacySystem;
         this.GameConfig = gameConfig;
+        this.shipDatabase = shipDatabase;
         this.Crafter = crafter;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
