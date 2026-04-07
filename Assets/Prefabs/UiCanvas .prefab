@@ -1222,7 +1222,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7791624221005582921}
   m_HandleRect: {fileID: 2349412512013623335}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3089,17 +3089,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TradeMenuView
   CloseButton: {fileID: 5302540388687627429}
-  ConfirmTradeButton: {fileID: 2499507681793614151}
+  tabGroup: {fileID: 0}
   SelectedFactionText: {fileID: 1719980371057211024}
   RelationshipText: {fileID: 2929792228836387462}
-  PrevFactionButton: {fileID: 8044287573079327459}
-  NextFactionButton: {fileID: 3661089860515856718}
-  PlayerGiveAmountText: {fileID: 7347992172324981288}
-  PlayerGiveIncreaseBtn: {fileID: 404800456878406012}
-  PlayerGiveDecreaseBtn: {fileID: 1608922831378295934}
-  PlayerGiveDropdown: {fileID: 431216998325219595}
-  AIGiveAmountText: {fileID: 8750298129045845064}
-  AIGiveDropdown: {fileID: 3888578118951749948}
+  ConfirmTradeButton: {fileID: 2499507681793614151}
+  PlayerTradeGiveAmountText: {fileID: 0}
+  PlayerTradeIncreaseBtn: {fileID: 0}
+  PlayerTradeDecreaseBtn: {fileID: 0}
+  PlayerTradeDropdown: {fileID: 0}
+  AITradeGiveAmountText: {fileID: 0}
+  AITradeDropdown: {fileID: 0}
+  ConfirmGiftButton: {fileID: 0}
+  PlayerGiftAmountText: {fileID: 0}
+  PlayerGiftIncreaseBtn: {fileID: 0}
+  PlayerGiftDecreaseBtn: {fileID: 0}
+  PlayerGiftDropdown: {fileID: 0}
+  NAPButton: {fileID: 0}
+  FCPButton: {fileID: 0}
 --- !u!1 &2514950436960266055
 GameObject:
   m_ObjectHideFlags: 0
@@ -3966,7 +3972,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00001565, y: -0.00024414062}
+  m_AnchoredPosition: {x: -0.00001565, y: 0.00024414062}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &597894732280419664
@@ -10907,7 +10913,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c25be33e16facd46a1e78c10ed019fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDView
-  TradeButton: {fileID: 500526183097080765}
   SettingsButton: {fileID: 6545737575611894507}
   PlanetListButton: {fileID: 1631997816535872031}
   HomeShipButton: {fileID: 7183587349385642340}
