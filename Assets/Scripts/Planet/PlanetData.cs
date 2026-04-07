@@ -38,7 +38,7 @@ public class PlanetData : IGridHexObject
         this.GeneratedResource = new Dictionary<ResourceType, int>() {
             {resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
             { resource[ResourceClass.Scarce], UnityEngine.Random.Range(gameConfig.MinScarceResourceGen, gameConfig.MaxScarceResourceGen) } };
-        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 0 }, { ResourceType.Rations, 0 } };
+        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 5 }, { ResourceType.Rations, 5 } }; // to test trade
         this.Relations = new();
         this.FactionType = faction;
 

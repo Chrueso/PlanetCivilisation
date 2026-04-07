@@ -85,10 +85,35 @@ public class TradeMenuController
 
     private void HandleTradeAmountChange(int delta)
     {
+        ResourceType playerGivesType = view.GetPlayerTradeResource();
+        int playerMaxAffordable = playerModel != null && playerModel.Resources.TryGetValue(playerGivesType, out int inv) ? inv : 0;
+
+        float exchangeRate = 1.0f;
+        if (currentPlanet != null && currentPlanet.Relations != null && currentPlanet.Relations.TryGetValue(playerModel.FactionType, out RelationshipLevel rel))
+        {
+            if (rel == RelationshipLevel.HOSTILE) exchangeRate = 0.5f;
+            else if (rel == RelationshipLevel.FRIENDLY) exchangeRate = 2.0f;
+        }
+
+        // max ai can give
+        ResourceType aiGivesType = view.GetAITradeResource();
+        int aiMaxAffordable = 0;
+        if (currentPlanet != null && currentPlanet.ResourceInventory.TryGetValue(aiGivesType, out int planetHas))
+        {
+            aiMaxAffordable = planetHas;
+        }
+
+        // Convert what the AI can afford back into what the PLAYER gives to reach that limit
+        // (aiGives = playerGives * exchangeRate) -> (playerGivesLimit = aiGivesMax / exchangeRate)
+        int playerGiveLimitForAI = exchangeRate > 0 ? (int)Mathf.Floor(aiMaxAffordable / exchangeRate) : 0;
+
+        // The absolute ceiling is the lowest of either what the player can afford OR what the AI can afford
+        int absoluteMax = Mathf.Min(playerMaxAffordable, playerGiveLimitForAI);
+
+        // Apply delta and clamp
         currentTradeGiveAmount += delta;
-        ResourceType selectedGiveResource = view.GetPlayerTradeResource();
-        int maxAffordable = playerModel != null && playerModel.Resources.TryGetValue(selectedGiveResource, out int inv) ? inv : 0;
-        currentTradeGiveAmount = Mathf.Clamp(currentTradeGiveAmount, 0, maxAffordable);
+        currentTradeGiveAmount = Mathf.Clamp(currentTradeGiveAmount, 0, absoluteMax);
+
         RefreshView();
     }
 

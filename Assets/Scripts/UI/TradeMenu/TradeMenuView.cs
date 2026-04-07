@@ -13,8 +13,6 @@ public class TradeMenuView : ScreenBase
     [Header("Faction Selection")]
     public TMP_Text SelectedFactionText;
     public TMP_Text RelationshipText;
-    public Button PrevFactionButton;
-    public Button NextFactionButton;
 
     [Header("TAB 1: TRADING")]
     public Button ConfirmTradeButton;
@@ -56,8 +54,6 @@ public class TradeMenuView : ScreenBase
     {
         CloseButton?.onClick.AddListener(() => OnCloseClicked?.Invoke());
         
-        PrevFactionButton?.onClick.AddListener(() => OnChangeFactionClicked?.Invoke(-1));
-        NextFactionButton?.onClick.AddListener(() => OnChangeFactionClicked?.Invoke(1));
 
         // Trade
         ConfirmTradeButton?.onClick.AddListener(() => OnConfirmTradeClicked?.Invoke());
@@ -81,8 +77,6 @@ public class TradeMenuView : ScreenBase
     {
         CloseButton?.onClick.RemoveAllListeners();
         ConfirmTradeButton?.onClick.RemoveAllListeners();
-        PrevFactionButton?.onClick.RemoveAllListeners();
-        NextFactionButton?.onClick.RemoveAllListeners();
         PlayerTradeIncreaseBtn?.onClick.RemoveAllListeners();
         PlayerTradeDecreaseBtn?.onClick.RemoveAllListeners();
         PlayerTradeDropdown?.onValueChanged.RemoveAllListeners();
