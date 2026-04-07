@@ -70,7 +70,7 @@ public class ActionsTabView : ScreenBase
 
         if (isOwnedByMe)
         {
-            //StationShipsButton.gameObject.SetActive(true);
+            StationShipsButton.gameObject.SetActive(true);
 
             bool hasStructure = planet.Structures.Count > 0;
             BuildButton.gameObject.SetActive(true);

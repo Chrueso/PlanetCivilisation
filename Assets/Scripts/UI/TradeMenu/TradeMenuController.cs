@@ -43,16 +43,16 @@ public class TradeMenuController
     }
 
     // Now accepts a list of all AI entities so we can cycle through them
-    public void OpenView(EntityModel player, List<EntityModel> ais)
+    public void OpenView(EntityModel player)
     {
-        if (player == null || ais == null || ais.Count == 0) return;
+        if (player == null) return;
 
         playerModel = player;
-        aiModels = ais;
+        //aiModels = ais;
         
         currentFactionIndex = 0;
         currentGiveAmount = 0;
-        currentTargetAI = aiModels[currentFactionIndex];
+        currentTargetAI = null; 
 
         RefreshView();
         GameScreenManager.Push(view);
@@ -78,7 +78,7 @@ public class TradeMenuController
         else if (currentFactionIndex >= aiModels.Count)
             currentFactionIndex = 0;
 
-        currentTargetAI = aiModels[currentFactionIndex];
+        currentTargetAI = null;
         currentGiveAmount = 0; // Reset amount when changing faction
         RefreshView();
     }

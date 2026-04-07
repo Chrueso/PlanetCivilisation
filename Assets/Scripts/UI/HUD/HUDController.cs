@@ -129,7 +129,7 @@ public class HUDController : IDisposable
     {
         if (tradeMenuController != null)
         {
-            tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
+            //tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
         }
     }
 

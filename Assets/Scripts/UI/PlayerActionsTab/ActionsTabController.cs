@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ActionsTabController : IDisposable
 {
@@ -10,13 +12,13 @@ public class ActionsTabController : IDisposable
     private InfoMenuView infoMenuView;
     private BuildMenuController buildMenuController;
     private StationShipMenuController stationShipMenuController;
-
+    private TradeMenuController tradeMenuController;
+    
     private GridHex selectedHex;
     private EntityScoutShipPool scoutShipPool;
 
     private EventBinding<GameStartEvent> gameStartBinding;
-    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, 
-        BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController, EntityScoutShipPool scoutShipPool)
+    public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController, EntityScoutShipPool scoutShipPool, TradeMenuController tradeMenuController)
     {
         this.view = view;
 
@@ -26,11 +28,13 @@ public class ActionsTabController : IDisposable
         this.infoMenuView = infoMenuView;
         this.buildMenuController = buildMenuController;
         this.stationShipMenuController = stationShipMenuController;
+        this.tradeMenuController = tradeMenuController;
 
         gridInteractionController.OnHexSelected += HandleHexSelected;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
+        
     }
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
@@ -149,7 +153,11 @@ public class ActionsTabController : IDisposable
 
     private void HandleDiplomacyButtonClicked()
     {
-
+        if (entityController == null) return;
+        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
+        {
+            tradeMenuController.OpenView(entityController.GetModel());
+        }
     }
 
     private void HandleStructuresButtonClicked()
