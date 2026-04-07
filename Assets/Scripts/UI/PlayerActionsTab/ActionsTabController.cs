@@ -41,7 +41,7 @@ public class ActionsTabController : IDisposable
     {
         entityController = gameStartEvent.PlayerController;
         Debug.Log("ActionTabController recieved entity controller");
-
+        
         ConnectView();
     }
 
@@ -156,7 +156,7 @@ public class ActionsTabController : IDisposable
         if (entityController == null) return;
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            tradeMenuController.OpenView(entityController.GetModel());
+            tradeMenuController.OpenView(entityController.GetModel(), planet);
         }
     }
 

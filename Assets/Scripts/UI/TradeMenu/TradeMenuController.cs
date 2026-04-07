@@ -7,6 +7,9 @@ public class TradeMenuController
     private EntityModel playerModel;
     private DiplomacySystem diplomacySystem;
 
+    // planet
+    private PlanetData planetTradingWith;
+
     // AI Context
     private List<EntityModel> aiModels = new List<EntityModel>();
     private EntityModel currentTargetAI;
@@ -43,7 +46,7 @@ public class TradeMenuController
     }
 
     // Now accepts a list of all AI entities so we can cycle through them
-    public void OpenView(EntityModel player)
+    public void OpenView(EntityModel player, PlanetData planet)
     {
         if (player == null) return;
 
@@ -52,7 +55,7 @@ public class TradeMenuController
         
         currentFactionIndex = 0;
         currentGiveAmount = 0;
-        currentTargetAI = null; 
+        planetTradingWith = planet;
 
         RefreshView();
         GameScreenManager.Push(view);
@@ -63,6 +66,7 @@ public class TradeMenuController
         GameScreenManager.Pop();
         currentTargetAI = null;
         playerModel = null;
+        planetTradingWith = null;
         aiModels.Clear();
     }
 
