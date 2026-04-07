@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AI/Actions/Move")]
@@ -7,6 +6,7 @@ public class AIMoveAction : AIAction
 {
     [SerializeField] private AnimationCurve attackCurve;
     [SerializeField] private AnimationCurve centerCurve;
+    [SerializeField] private AnimationCurve maxShipCurve; //if shipcount closer to max ship then higher score
 
     public override float CalculateUtility(AIContext context)
     {
@@ -31,7 +31,7 @@ public class AIMoveAction : AIAction
 
             float hexScore = 0;
 
-            if (hex.Occupant != null && hex.Occupant is PlanetData planet && planet.FactionType != context.Model.FactionType)
+            if (hex.Occupant != null && hex.Occupant is PlanetData planet)
             {
                 bool isUninhabited = planet.FactionType == FactionType.Nothing;
                 bool isOwnedByMe = planet.FactionType == context.Model.FactionType;
@@ -42,16 +42,40 @@ public class AIMoveAction : AIAction
                 {    
                     planetScore = context.Model.EnoughShips(ShipType.Worker, context.GameConfig.MinWorkerShipNeededForColonize) ? 1f : 0f; 
                 }
+                else if (isOwnedByMe) //go back to build
+                {
+                    float structureScore = context.HasResourceToBuildStructures && planet.Structures.Count == 0 ? 1f : 0f;
+
+                    //if planet ship count is less than 20 percent of current ships and ship count is close to max
+
+                    int shipCount = context.Model.Ships[ShipType.Attacker] + context.Model.Ships[ShipType.Worker];
+                    int maxShipCount = context.GameConfig.MaxStationedAssaultShips + context.GameConfig.MaxStationedWorkerShips;
+                    int planetShipCount = planet.GetShipCount(ShipType.Attacker) + planet.GetShipCount(ShipType.Worker);
+
+                    float maxScore = 0f;
+                    if (planetShipCount <= Mathf.Round(shipCount * 0.2f))
+                    {
+                        maxScore = Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
+                    }
+
+                    float buildShipScore = 0f;
+                    if (planet.Structures.Contains(StructureType.Shipyard) && context.HasResourceToBuildShip)
+                    {
+                        buildShipScore =  1 - Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
+                    }
+
+                    planetScore = Mathf.Clamp01(structureScore + maxScore + buildShipScore);
+                }
                 else if (isOwnedByEnemy) //based on ship
                 {
                     int planetDefense = planet.CalculateDefensePower();
-                    planetScore = planetDefense > 0 ? attackCurve.Evaluate((float)context.AttackPower / planetDefense) : 1f; 
+                    planetScore = planetDefense > 0 ? Mathf.Clamp01(attackCurve.Evaluate((float)context.AttackPower / planetDefense)) : 1f;
                 }
 
                 float distance = HexGridXZ< GridHex>.Distance(context.CurrentHex.GridPositionCube, hex.GridPositionCube);
                 float closestDistanceScore = 1 - Mathf.Clamp01(distance / context.Model.MoveRadius);
 
-                hexScore = (planetScore * 0.8f) + (closestDistanceScore * 0.1f); //prio closest
+                hexScore = (planetScore * 0.9f) + (closestDistanceScore * 0.1f * planetScore); //prio closest if both planetscores equally similar
             }
             else //For empty hexes and own planet prefer hexes that are farther from recently visited hexes and closer to center of the map
             {
@@ -65,11 +89,11 @@ public class AIMoveAction : AIAction
                 float directionScore = (Vector3.Dot(lastDirection, candidateDirection) + 1f) * 0.5f; // remap -1,1 to 0,1
 
                 float distanceFromCenter = HexGridXZ<GridHex>.Distance(hex.GridPositionCube, centerHex.GridPositionCube);
-                float centerScore = centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter);
+                float centerScore = Mathf.Clamp01(centerCurve.Evaluate(distanceFromCenter / maxDistanceFromCenter));
 
                 float hexRecencyScore = context.VisitedHexes.ContainsKey(hex) ? context.VisitedHexes[hex] : 0f; // prefer unvisited hexes
 
-                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.1f) - hexRecencyScore);
+                hexScore += Mathf.Clamp01((lastHexScore * directionScore * centerScore * 0.5f) - hexRecencyScore);
             }
 
             //Debug.Log("Hexscore " + hexScore);

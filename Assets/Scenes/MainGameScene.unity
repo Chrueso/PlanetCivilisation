@@ -822,7 +822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 271833096484826657, guid: e8d614a7fc2004f44a59067e9951f67a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0.000091552734
       objectReference: {fileID: 0}
     - target: {fileID: 391700843171068575, guid: e8d614a7fc2004f44a59067e9951f67a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1495,7 +1495,7 @@ PrefabInstance:
       objectReference: {fileID: 2727184262382023972}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: aIActions.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: battleVisualController
@@ -1516,7 +1516,11 @@ PrefabInstance:
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: 'aIActions.Array.data[3]'
       value: 
-      objectReference: {fileID: 11400000, guid: 02a62bac003fddb49ab2ac6dae216e62, type: 2}
+      objectReference: {fileID: 11400000, guid: 89effaba6b9fdf6438e84284c8e8a992, type: 2}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: 'aIActions.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f285a378d00741f459908712b66646dd, type: 2}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: gridInteractionController
       value: 

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class AIBuildShipAction : AIAction
+[CreateAssetMenu(menuName = "AI/Actions/StationShip")]
+public class AIStationShipAction : AIAction
 {
     [SerializeField] private AnimationCurve maxShipCurve;
 
@@ -12,9 +13,9 @@ public class AIBuildShipAction : AIAction
             int maxShipCount = context.GameConfig.MaxStationedAssaultShips + context.GameConfig.MaxStationedWorkerShips;
             int planetShipCount = context.CurrentPlanet.GetShipCount(ShipType.Attacker) + context.CurrentPlanet.GetShipCount(ShipType.Worker);
 
-            if (context.CurrentPlanet.Structures.Contains(StructureType.Shipyard) && context.HasResourceToBuildShip)
+            if (planetShipCount <= Mathf.Round(shipCount * 0.2f))
             {
-                return 1 - Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
+                return Mathf.Clamp01(maxShipCurve.Evaluate((float)shipCount / maxShipCount));
             }
         }
 
@@ -23,7 +24,7 @@ public class AIBuildShipAction : AIAction
 
     public override void Execute(AIContext context)
     {
-        //Choose what ship to build?
-        //context.Controller.TryBuildShip();
+        context.Controller.TryStationShip(context.CurrentPlanet, ShipType.Worker, (int)Mathf.Round((float)context.Model.Ships[ShipType.Worker] * 0.2f));
+        context.Controller.TryStationShip(context.CurrentPlanet, ShipType.Attacker, (int)Mathf.Round((float)context.Model.Ships[ShipType.Worker] * 0.2f));
     }
 }

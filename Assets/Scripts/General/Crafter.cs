@@ -1,20 +1,15 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using Mono.Cecil;
+
 public class Crafter
 {
-    private StructureRecipeDatabaseSO structureRecipes;
-    private EventBinding<GameStartEvent> gameStartBinding;
-    private EventBinding<TurnChangeEvent> turnChangeEventBinding;
-    //recipes
+    public StructureRecipeDatabaseSO StructureRecipes { get; private set; }
 
     public Crafter(StructureRecipeDatabaseSO structureRecipes)
     {
-        this.structureRecipes = structureRecipes;
+        this.StructureRecipes = structureRecipes;
     }
 
-    public bool TryBuildStructure(PlanetData planetData, StructureType structure, EntityModel entityModel)
+    public bool TryBuildStructure(StructureType structure, EntityModel entityModel)
     {
         if (CheckEntityInv(structure, out var recipe, entityModel))
         { 
@@ -33,8 +28,8 @@ public class Crafter
         bool canCraft = true;
         requirement = new();
         int index = (int)structure;
-        StructureRecipeSO recipe = structureRecipes.Recipes[index];
-        foreach (var structureRecipe in structureRecipes.Recipes)
+        StructureRecipeSO recipe = StructureRecipes.Recipes[index];
+        foreach (var structureRecipe in StructureRecipes.Recipes)
         {
             if (structureRecipe.StructureType == structure)
             {
