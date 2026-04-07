@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
 
     private bool eventsEnabled = true;
     private bool waitForReset = false;
-    private bool playerIsPinching = true;   
+    private bool playerIsPinching = false;   
     public bool CameraMoving { get; private set; }
     public Camera CameraInstance { get; private set; }
     private Vector3 startingPos = Vector2.zero;
@@ -197,12 +197,14 @@ public class CameraController : MonoBehaviour
         {
             LastScreenPos1 = LastScreenPos2;
             CurrentScreenPos1 = CurrentScreenPos2;
+            trackedGestures[e.FingerId] = trackedGestures[2];
             playerIsPinching = false;
         }
         else if (e.FingerId == 2)
         {
             LastScreenPos2 = Vector3.zero;
             CurrentScreenPos2 = Vector3.zero;
+            trackedGestures.Remove(e.FingerId);
             playerIsPinching = false;
         }
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
