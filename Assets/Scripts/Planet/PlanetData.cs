@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum ResourceClass
@@ -27,10 +26,7 @@ public class PlanetData : IGridHexObject
     private ShipDatabaseSO shipDatabase;
 
     private GameConfigSO gameConfig;
-    private GetShipAfterTurnsPayload shipBuildQueue = new(0);
     public PlanetView View { get; private set; }
-
-    public event Action OnDataChanged;
 
     public PlanetData(PlanetView view, ShipDatabaseSO shipDatabase, string planetName, FactionType faction, Dictionary<ResourceClass, ResourceType> resource, GameConfigSO gameConfig, GridHex hex = null)
     {
@@ -40,18 +36,18 @@ public class PlanetData : IGridHexObject
         this.PlanetName = planetName;
         this.PlanetResource = resource;
         this.GeneratedResource = new Dictionary<ResourceType, int>() {
-            { resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
+            {resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
             { resource[ResourceClass.Scarce], UnityEngine.Random.Range(gameConfig.MinScarceResourceGen, gameConfig.MaxScarceResourceGen) } };
-        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 10 }, { ResourceType.Rations, 10 } };
+        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 5 }, { ResourceType.Rations, 5 } }; // to test trade
         this.Relations = new();
         this.FactionType = faction;
 
-        this.Structures = new List<StructureType>() { StructureType.Shipyard };
+        this.Structures = new List<StructureType>();
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
             {ShipType.Scout, 0},
-            {ShipType.Attacker, 0},
-            {ShipType.Worker, 0 }
+            {ShipType.Attacker, 5},
+            {ShipType.Worker, 3 }
         };
 
         this.Affection = new Dictionary<FactionType, int>() {
@@ -69,20 +65,17 @@ public class PlanetData : IGridHexObject
     {
         IsHiddenForPlayer = false;
         View.Show();
-        OnDataChanged?.Invoke();
     }
 
     public void Hide()
     {
         IsHiddenForPlayer = true;
         View.Hide();
-        OnDataChanged?.Invoke();
     }
     
     public void SetFaction(FactionType factionType)
     {
         this.FactionType = factionType;
-        OnDataChanged?.Invoke();
     }
 
     public void AddShips(ShipType shipType, int amount)
@@ -105,7 +98,6 @@ public class PlanetData : IGridHexObject
         {
             StationedShips.Add(shipType, amount);
         }
-        OnDataChanged?.Invoke();
     }
 
     public void RemoveShips(ShipType shipType, int amount)
@@ -114,7 +106,6 @@ public class PlanetData : IGridHexObject
         {
             StationedShips[shipType] -= Mathf.Max(0, shipAmount-amount);
         }
-        OnDataChanged?.Invoke();
     }
 
     public int GetShipCount(ShipType shipType)
@@ -141,10 +132,8 @@ public class PlanetData : IGridHexObject
         if (this.Affection.TryGetValue(rizzler, out int currAffection))
         {
             this.Affection[rizzler] = Math.Clamp(currAffection + affection, 0, 100);
-            Debug.Log($"Rizzer {rizzler} | How much rizz {affection}");
             UpdateRelations();
         }
-        OnDataChanged?.Invoke();
     }
 
     private void UpdateRelations()
@@ -166,19 +155,12 @@ public class PlanetData : IGridHexObject
                 Relations[relations.Key] = RelationshipLevel.FRIENDLY;
             }
         }
-        OnDataChanged?.Invoke();
     }
 
-    public bool BuildStructure(StructureType structure)
-    { 
-        if (this.Structures.Contains(StructureType.Shipyard) ||
-            this.Structures.Contains(StructureType.Extractor) || 
-            this.Structures.Contains(StructureType.Teleporter)) return false;
-        if (this.Structures.Contains(structure)) return false;
+    public void BuildStructure(StructureType structure)
+    {
+        if (this.Structures.Contains(structure)) return;
         this.Structures.Add(structure);
-        OnDataChanged?.Invoke();
-        return true;
-        
     }
 
     public void GainResource(ResourceType resource, int amount)
@@ -187,7 +169,6 @@ public class PlanetData : IGridHexObject
         {
             ResourceInventory[resource] = Mathf.Clamp(inventory+amount, 0, 8000);
         }
-        OnDataChanged?.Invoke();
     }
 
     public void RemoveResource(ResourceType resource, int amount)
@@ -197,28 +178,9 @@ public class PlanetData : IGridHexObject
             if (inventory < amount) return;
             ResourceInventory[resource] = Mathf.Max(inventory - amount, 0);
         }
-        OnDataChanged?.Invoke();
-    }
-    
-    public void AddToShipQueue(GetShipAfterTurnsPayload payload)
-    {
-        shipBuildQueue = payload;
-    }
-    public GetShipAfterTurnsPayload GetPlanetShipyardPayload()
-    {
-        return shipBuildQueue;
-    }
-    public bool CheckPlanetShipyardActive()
-    {
-        return shipBuildQueue.Active;
     }
 
-    public void ProgressShipBuilding()
-    {
-        shipBuildQueue.DecrementAmount();
-    }
-
-    public void AddPact(PactType pactType, FactionType faction)
+    public void AddPact(PactType pactType)
     {
         switch (pactType)
         {
@@ -226,10 +188,9 @@ public class PlanetData : IGridHexObject
                 HasNAPact = true;
                 break;
             case PactType.FCP:
-                FactionType = faction;
+                //FactionType = GameManager.Instance.turnManager.currentFaction.FactionType;
                 break;
         }
-        OnDataChanged?.Invoke();
     }
 
     public void RemovePact(PactType pactType)
@@ -240,6 +201,5 @@ public class PlanetData : IGridHexObject
                 HasNAPact = false;
                 break;
         }
-        OnDataChanged?.Invoke();
     }
 }
