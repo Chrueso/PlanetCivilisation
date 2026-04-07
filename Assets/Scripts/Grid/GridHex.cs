@@ -11,7 +11,7 @@ public class GridHex : IHideable
     public GridHexView View;
     public bool IsHiddenForPlayer = false;
 
-    public Dictionary<NeighbourDir, GridHex> Neighbours { get; private set; } = new Dictionary<NeighbourDir, GridHex>();
+    public Dictionary<GridHexDir, GridHex> Neighbours { get; private set; } = new Dictionary<GridHexDir, GridHex>();
 
     public bool IsHighlighted { get; private set; } = false;
     public Color HighlightColor = Color.white; 
@@ -25,7 +25,7 @@ public class GridHex : IHideable
         Occupant = occupant;
     }
 
-    public void SetNeighbours(Dictionary<NeighbourDir, GridHex> neighbours)
+    public void SetNeighbours(Dictionary<GridHexDir, GridHex> neighbours)
     {
         Neighbours.Clear();
         Neighbours = neighbours;
@@ -49,7 +49,7 @@ public class GridHex : IHideable
     public void ShowHighlight(Color color)
     {
         IsHighlighted = true;
-        View.ChangeOutlineColor(color);
+        View.SetEdgeColors(color);
     }
 
     public void OffHighlight()

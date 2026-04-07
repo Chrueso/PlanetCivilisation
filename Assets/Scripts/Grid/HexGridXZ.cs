@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public enum NeighbourDir
+public enum GridHexDir
 {
     LEFT, TOP_LEFT, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT
 }
 
 public class HexGridXZ<TGridObject>
 {
-    public static readonly NeighbourDir[] NeighbourDirArray = (NeighbourDir[])System.Enum.GetValues(typeof(NeighbourDir));
+    public static readonly GridHexDir[] NeighbourDirArray = (GridHexDir[])System.Enum.GetValues(typeof(GridHexDir));
 
-    public static Dictionary<NeighbourDir, Vector3Int> CubeNeighbourDir = new()
+    public static Dictionary<GridHexDir, Vector3Int> CubeNeighbourDir = new()
 {
-    { NeighbourDir.BOTTOM_RIGHT, new Vector3Int( 1, -1,  0) },
-    { NeighbourDir.RIGHT,    new Vector3Int( 1,  0, -1) },
-    { NeighbourDir.TOP_RIGHT, new Vector3Int( 0,  1, -1) },
-    { NeighbourDir.TOP_LEFT,  new Vector3Int(-1,  1,  0) },
-    { NeighbourDir.LEFT,     new Vector3Int(-1,  0,  1) },
-    { NeighbourDir.BOTTOM_LEFT,  new Vector3Int( 0, -1,  1) },
+    { GridHexDir.BOTTOM_RIGHT, new Vector3Int( 1, -1,  0) },
+    { GridHexDir.RIGHT,    new Vector3Int( 1,  0, -1) },
+    { GridHexDir.TOP_RIGHT, new Vector3Int( 0,  1, -1) },
+    { GridHexDir.TOP_LEFT,  new Vector3Int(-1,  1,  0) },
+    { GridHexDir.LEFT,     new Vector3Int(-1,  0,  1) },
+    { GridHexDir.BOTTOM_LEFT,  new Vector3Int( 0, -1,  1) },
 };
 
     public static readonly float HEX_VERTICAL_OFFSET_MULT = 0.75f;
@@ -81,7 +81,7 @@ public class HexGridXZ<TGridObject>
         if (IsDebug) ShowDebug();
     }
 
-    public TGridObject GetNeighbour(Vector3Int cube, NeighbourDir dir)
+    public TGridObject GetNeighbour(Vector3Int cube, GridHexDir dir)
     {
         Vector3Int neighbourDir = CubeNeighbourDir[dir];
         Vector3Int objCube = new Vector3Int(cube.x + neighbourDir.x, cube.y + neighbourDir.y, cube.z + neighbourDir.z);
@@ -90,9 +90,9 @@ public class HexGridXZ<TGridObject>
         return GetGridObject(objOddR.x, objOddR.y);
     }
 
-    public Dictionary<NeighbourDir, TGridObject> GetAllNeighbours(Vector3Int cube)
+    public Dictionary<GridHexDir, TGridObject> GetAllNeighbours(Vector3Int cube)
     {
-        Dictionary<NeighbourDir, TGridObject> dict = new Dictionary<NeighbourDir, TGridObject>();
+        Dictionary<GridHexDir, TGridObject> dict = new Dictionary<GridHexDir, TGridObject>();
         foreach (var dir in NeighbourDirArray)
         {
             TGridObject neighbour = GetNeighbour(cube, dir);

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,7 +12,8 @@ public class GridInteractionController : MonoBehaviour
     private MapGrid mapGrid;
     private GridHex selectedHex;
     
-    private EntityModel player;
+    private EntityModel playerModel;
+    private IEntityController playerController;
 
     private bool touchStartedOnUI = false;
 
@@ -20,6 +22,8 @@ public class GridInteractionController : MonoBehaviour
 
     public event Action<GridHex> OnHexSelected;
     private EventBinding<GameStartEvent> gameStartBinding;
+
+    private List<GridHex> highlightedHexes = new List<GridHex>();
 
     public void Init(CameraController cameraController)
     {
@@ -43,10 +47,28 @@ public class GridInteractionController : MonoBehaviour
     private void HandleGameStart(GameStartEvent gameStartEvent)
     {
         this.mapGrid = gameStartEvent.MapGrid;
-        this.player = gameStartEvent.PlayerController.GetModel();
+        this.playerModel = gameStartEvent.PlayerController.GetModel();
+        this.playerController = gameStartEvent.PlayerController;
 
         Debug.Log("GridInteractionController received game map");
         CreateSelectionHexView();
+    }
+
+    public void ShowMoveRadius()
+    {
+        if (playerController == null) return;
+        if (!playerController.IsActivePlayer && !playerController.IsCurrentTurn) return;
+
+        foreach (GridHex hex in playerController.HexesInMoveRadius)
+        {
+            hex.ShowHighlight(Color.blue);
+            highlightedHexes.Add(hex);
+        }
+
+        foreach (GridHex hex in playerController.HexesInMoveRadius)
+        {
+            hex.FixEdges();
+        }
     }
 
     private void CreateSelectionHexView()
@@ -93,6 +115,7 @@ public class GridInteractionController : MonoBehaviour
                 UnselectHex(); // diff hex swap
                 selectedHex = hex;
                 ShowSelectionView();
+                ShowMoveRadius();
                 OnHexSelected?.Invoke(selectedHex);
                 //Debug.Log(HexGridXZ<GridHex>.Distance(player.CurrentHex.GridPositionCube, hex.GridPositionCube)); //show distance from current hex
             }
@@ -138,6 +161,11 @@ public class GridInteractionController : MonoBehaviour
             selectedHex = null;
             GameScreenManager.Pop();
 
+        }
+
+        foreach (GridHex hex in highlightedHexes)
+        {
+            hex.OffHighlight();
         }
     }
 }

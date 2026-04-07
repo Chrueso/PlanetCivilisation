@@ -69,35 +69,12 @@ public class ActionsTabController : IDisposable
     public void OpenView()
     {
         view.UpdateCurrentHex(selectedHex);
-        ShowMoveRadius();
         GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
         gridInteractionController.UnselectHex();
-
-        foreach (GridHex hex in highlightedHexes)
-        {
-            hex.OffHighlight();
-        }
-    }
-
-    public void ShowMoveRadius()
-    {
-        if (entityController == null) return;
-        if (!entityController.IsActivePlayer && !entityController.IsCurrentTurn) return;
-
-        foreach (GridHex hex in entityController.HexesInMoveRadius)
-        {
-            hex.ShowHighlight(Color.blue);
-            highlightedHexes.Add(hex);
-        }
-
-        foreach (GridHex hex in entityController.HexesInMoveRadius)
-        {
-            hex.FixEdges();
-        }
     }
 
     public void HandleHexSelected(GridHex selectedHex)

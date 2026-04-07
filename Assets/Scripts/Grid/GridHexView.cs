@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -26,14 +25,24 @@ public class GridHexView : MonoBehaviour
 
     public float OutlineThickness => defaultoutlineThickness;
 
-    private Dictionary<NeighbourDir, string> edgeBoolValues = new Dictionary<NeighbourDir, string>()
+    private Dictionary<GridHexDir, string> edgeBools = new Dictionary<GridHexDir, string>()
     {
-        { NeighbourDir.RIGHT,         "_Edge0" },
-        { NeighbourDir.TOP_RIGHT,     "_Edge1" },
-        { NeighbourDir.TOP_LEFT,    "_Edge2" },
-        { NeighbourDir.LEFT,        "_Edge3" },
-        { NeighbourDir.BOTTOM_LEFT, "_Edge4" },
-        { NeighbourDir.BOTTOM_RIGHT,  "_Edge5" },
+        { GridHexDir.RIGHT,         "_Edge0" },
+        { GridHexDir.TOP_RIGHT,     "_Edge1" },
+        { GridHexDir.TOP_LEFT,    "_Edge2" },
+        { GridHexDir.LEFT,        "_Edge3" },
+        { GridHexDir.BOTTOM_LEFT, "_Edge4" },
+        { GridHexDir.BOTTOM_RIGHT,  "_Edge5" },
+    };
+
+    private Dictionary<GridHexDir, string> edgeColors = new Dictionary<GridHexDir, string>()
+    {
+        { GridHexDir.RIGHT,         "_Edge0Color" },
+        { GridHexDir.TOP_RIGHT,     "_Edge1Color" },
+        { GridHexDir.TOP_LEFT,    "_Edge2Color" },
+        { GridHexDir.LEFT,        "_Edge3Color" },
+        { GridHexDir.BOTTOM_LEFT, "_Edge4Color" },
+        { GridHexDir.BOTTOM_RIGHT,  "_Edge5Color" },
     };
 
     public void Init(float cellSize)
@@ -115,10 +124,10 @@ public class GridHexView : MonoBehaviour
 
         propertyBlock.SetFloat("_Radius", cellSize * 0.5f);
         propertyBlock.SetFloat("_Thickness", outlineThickness);
-        propertyBlock.SetColor("_OutlineColor", outlineColor);
+        //propertyBlock.SetColor("_OutlineColor", outlineColor);
         propertyBlock.SetColor("_HexColor", hexColor);
-
-        EnableEdges(propertyBlock, true);
+        SetEdgeColors(outlineColor);
+        EnableEdges(true);
 
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
@@ -132,11 +141,26 @@ public class GridHexView : MonoBehaviour
         UpdateMaterial();
     }
 
-    public void EnableEdges(MaterialPropertyBlock propertyBlock, bool value)
+    public void SetEdgeColors(Color color)
     {
-        foreach (var key in edgeBoolValues.Keys.ToList()) // ToList() snapshots the keys
+        foreach (var key in edgeColors.Keys.ToList()) // ToList() snapshots the keys
         {
-            propertyBlock.SetFloat(edgeBoolValues[key], value ? 1f : 0f);
+            propertyBlock.SetColor(edgeColors[key], color);
+        }
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void SetEdgeColor(GridHexDir dir, Color color)
+    {
+        propertyBlock.SetColor(edgeColors[dir], color);
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void EnableEdges(bool value)
+    {
+        foreach (var key in edgeBools.Keys.ToList()) // ToList() snapshots the keys
+        {
+            propertyBlock.SetFloat(edgeBools[key], value ? 1f : 0f);
         }
     }
 
@@ -150,17 +174,21 @@ public class GridHexView : MonoBehaviour
         UpdateMaterial();
     }
 
-    public void ChangeOutlineColor(Color color)
-    {
-        outlineColor = color;
-        propertyBlock.SetColor("_OutlineColor", outlineColor);
-        meshRenderer.SetPropertyBlock(propertyBlock);
-    }
+    //public void ChangeOutlineColor(Color color)
+    //{
+    //    outlineColor = color;
+    //    propertyBlock.SetColor("_OutlineColor", outlineColor);
+    //    meshRenderer.SetPropertyBlock(propertyBlock);
+    //}
 
-    public void HideEdge(NeighbourDir dir)
+    public void HideEdge(GridHexDir dir)
     {
-        propertyBlock.SetFloat(edgeBoolValues[dir], 0f);
+        //propertyBlock.SetFloat(edgeBools[dir], 0f);
+        //meshRenderer.SetPropertyBlock(propertyBlock);
+
+        propertyBlock.SetColor(edgeColors[dir], defaultoutlineColor);
         meshRenderer.SetPropertyBlock(propertyBlock);
+
     }
 
 }
