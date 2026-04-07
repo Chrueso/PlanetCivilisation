@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
         structuresMenuController = new StructuresMenuController(structuresMenuView);
         buildMenuController = new BuildMenuController(buildMenuView, structureRecipes);
         stationShipMenuController = new StationShipMenuController(stationShipMenuView, shipDatabase);
-        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController);
+        actionsTabController = new ActionsTabController(actionsTabView, gridInteractionController, structuresMenuController, infoMenuView, buildMenuController, stationShipMenuController, tradeMenuController);
 
         TryRegisterDisposable(structuresMenuController, actionsTabController, stationShipMenuController);
     }

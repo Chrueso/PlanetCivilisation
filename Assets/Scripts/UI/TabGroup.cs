@@ -15,12 +15,12 @@ public class TabGroup : MonoBehaviour
 
     private void Init()
     {
-        toggleGroup = GetComponentInChildren<ToggleGroup>();    
+        //toggleGroup = GetComponentInChildren<ToggleGroup>();    
 
-        tabs.Clear();
+        //tabs.Clear();
         pages.Clear();
 
-        tabs.AddRange(GetComponentsInChildren<Toggle>());
+        //tabs.AddRange(GetComponentsInChildren<Toggle>());
         pages.AddRange(GetComponentsInChildren<CanvasGroup>());
     }
 
@@ -32,6 +32,14 @@ public class TabGroup : MonoBehaviour
     private void OnValidate()
     {
         Init();
+        pageIndex = Mathf.Clamp(pageIndex, 0, tabs.Count - 1);
+
+        if (pageIndex < 0 || tabs == null || tabs.Count == 0 || pageIndex >= tabs.Count)
+        {
+            return;
+        }
+
+
         OpenPage(pageIndex);
         tabs[pageIndex].SetIsOnWithoutNotify(true);
     }
@@ -69,7 +77,7 @@ public class TabGroup : MonoBehaviour
     {
         EnsureIndexIsRange(index);
 
-        for (int i = 0; i < pages.Count; i ++)
+        for (int i = 0; i < pages.Count; i++)
         {
             bool isActivePage = (i == pageIndex);
 
