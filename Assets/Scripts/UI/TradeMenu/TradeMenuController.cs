@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Linq;
 
-public class TradeMenuController
+public class TradeMenuController                            
 {
     private TradeMenuView view;
     private EntityModel playerModel;
@@ -34,10 +35,20 @@ public class TradeMenuController
     private void ConnectView()
     {
         view.OnCloseClicked = CloseView;
-        view.OnChangeFactionClicked = HandleFactionCycle;
-        view.OnChangeGiveAmountClicked = HandleAmountChange;
+        
+        // Trade bindings
+        view.OnChangeTradeGiveAmountClicked = HandleTradeAmountChange;
         view.OnConfirmTradeClicked = TryExecuteTrade;
-        view.OnResourceDropdownChanged = RefreshView;
+        view.OnTradeResourceDropdownChanged = RefreshView;
+
+        // Gift bindings
+        view.OnChangeGiftGiveAmountClicked = HandleGiftAmountChange;
+        view.OnConfirmGiftClicked = TryExecuteGift;
+        view.OnGiftResourceDropdownChanged = RefreshView;
+
+        // Pact bindings
+        view.OnNAPClicked = () => TryExecutePact(PactType.NAP);
+        view.OnFCPClicked = () => TryExecutePact(PactType.FCP);
     }
 
     private void InitializeDropdowns()
@@ -67,49 +78,66 @@ public class TradeMenuController
         pResourceType = offeredResource == ResourceType.Metals ? ResourceType.Rations : ResourceType.Metals;
 
         RefreshView();
+        if (view.tabGroup != null)
+        {
+            view.tabGroup.JumpToPage(startingTabIndex);
+        }
+
         GameScreenManager.Push(view);
     }
 
     public void CloseView()
     {
         GameScreenManager.Pop();
-        currentTargetAI = null;
+        currentPlanet = null;
+        planetOwnerAI = null;
         playerModel = null;
         planetTradingWith = null;
         aiModels.Clear();
     }
 
-    private void HandleFactionCycle(int direction)
+    private void HandleTradeAmountChange(int delta)
     {
-        if (aiModels == null || aiModels.Count == 0) return;
+        ResourceType playerGivesType = view.GetPlayerTradeResource();
+        int playerMaxAffordable = playerModel != null && playerModel.Resources.TryGetValue(playerGivesType, out int inv) ? inv : 0;
 
-        currentFactionIndex += direction;
+        float exchangeRate = 1.0f;
+        if (currentPlanet != null && currentPlanet.Relations != null && currentPlanet.Relations.TryGetValue(playerModel.FactionType, out RelationshipLevel rel))
+        {
+            if (rel == RelationshipLevel.HOSTILE) exchangeRate = 0.5f;
+            else if (rel == RelationshipLevel.FRIENDLY) exchangeRate = 2.0f;
+        }
 
-        // Wrap around array
-        if (currentFactionIndex < 0)
-            currentFactionIndex = aiModels.Count - 1;
-        else if (currentFactionIndex >= aiModels.Count)
-            currentFactionIndex = 0;
+        // max ai can give
+        ResourceType aiGivesType = view.GetAITradeResource();
+        int aiMaxAffordable = 0;
+        if (currentPlanet != null && currentPlanet.ResourceInventory.TryGetValue(aiGivesType, out int planetHas))
+        {
+            aiMaxAffordable = planetHas;
+        }
+
+        // Convert what the AI can afford back into what the PLAYER gives to reach that limit
+        // (aiGives = playerGives * exchangeRate) -> (playerGivesLimit = aiGivesMax / exchangeRate)
+        int playerGiveLimitForAI = exchangeRate > 0 ? (int)Mathf.Floor(aiMaxAffordable / exchangeRate) : 0;
+
+        // The absolute ceiling is the lowest of either what the player can afford OR what the AI can afford
+        int absoluteMax = Mathf.Min(playerMaxAffordable, playerGiveLimitForAI);
+
+        // Apply delta and clamp
+        currentTradeGiveAmount += delta;
+        currentTradeGiveAmount = Mathf.Clamp(currentTradeGiveAmount, 0, absoluteMax);
 
         currentTargetAI = null;
         currentGiveAmount = 0; // Reset amount when changing faction
         //RefreshView();
     }
 
-    private void HandleAmountChange(int delta)
+    private void HandleGiftAmountChange(int delta)
     {
-        currentGiveAmount += delta;
-
-        // Clamp below 0 or above what player can afford
-        ResourceType selectedGiveResource = view.GetPlayerSelectedResource();
-        int maxAffordable = 0;
-
-        if (playerModel != null && playerModel.Resources.TryGetValue(selectedGiveResource, out int currentInv))
-        {
-            maxAffordable = currentInv;
-        }
-
-        currentGiveAmount = Mathf.Clamp(currentGiveAmount, 0, maxAffordable);
+        currentGiftGiveAmount += delta;
+        ResourceType selectedGiftResource = view.GetPlayerGiftResource();
+        int maxAffordable = playerModel != null && playerModel.Resources.TryGetValue(selectedGiftResource, out int inv) ? inv : 0;
+        currentGiftGiveAmount = Mathf.Clamp(currentGiftGiveAmount, 0, maxAffordable);
         RefreshView();
     }
 
@@ -135,8 +163,20 @@ public class TradeMenuController
         int pGiveAmount = currentGiveAmount;
 
         float exchangeRate = 1.0f;
+        if (currentPlanet.Relations != null && currentPlanet.Relations.TryGetValue(playerModel.FactionType, out RelationshipLevel rel))
+        {
+            if (rel == RelationshipLevel.HOSTILE) exchangeRate = 0.5f;
+            else if (rel == RelationshipLevel.FRIENDLY) exchangeRate = 2.0f;
+        }
+
+        int aiGiveAmount = (int)Mathf.Floor(currentTradeGiveAmount * exchangeRate);
+
+        // Execute local trade (Wallet <-> PlanetInventory)
+        playerModel.TakeResource(pGiveType, currentTradeGiveAmount);
+        playerModel.GainResource(aiGiveType, aiGiveAmount);
         
-        int aiGiveAmount = (int)Mathf.Floor(pGiveAmount * exchangeRate);
+        currentPlanet.RemoveResource(aiGiveType, aiGiveAmount);
+        currentPlanet.GainResource(pGiveType, currentTradeGiveAmount);
 
         TradeDeal deal = new TradeDeal(
             trade1_type: offeredResource,

@@ -263,12 +263,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a3c930fe743614aa23e36a6961cc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TabGroup
-  pageIndex: 0
+  pageIndex: -1
   toggleGroup: {fileID: 2769018553210738683}
-  tabs:
-  - {fileID: 8698611516610457827}
-  - {fileID: 2450387334797139612}
-  - {fileID: 676364366065359089}
+  tabs: []
   pages:
   - {fileID: 1512232793139888388}
   - {fileID: 5548340994138343670}
@@ -949,9 +946,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6524325352832858487}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &7181010781265967974
 GameObject:

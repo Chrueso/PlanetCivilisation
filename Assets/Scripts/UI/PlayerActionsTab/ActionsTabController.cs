@@ -52,7 +52,7 @@ public class ActionsTabController : IDisposable
             Debug.Log("ActionTab entityController is null!");
             return;
         }
-        
+
         view.Init(entityController);
 
         view.CloseButton.onClick.AddListener(CloseView);
@@ -78,16 +78,9 @@ public class ActionsTabController : IDisposable
         gridInteractionController.UnselectHex();
     }
 
-    public void HandleHexSelected(GridHex selectedHex)
+    public void HandleHexSelected(GridHex h)
     {
-        if (this.selectedHex !=null && this.selectedHex.Occupant != null)
-            this.selectedHex.Occupant.OnDataChanged -= view.UpdateView;
-
-        this.selectedHex = selectedHex;
-
-        if (selectedHex.Occupant != null)
-            selectedHex.Occupant.OnDataChanged += view.UpdateView;
-
+        this.selectedHex = h;
         OpenView();
     }
 
@@ -102,9 +95,7 @@ public class ActionsTabController : IDisposable
 
     private void HandleMoveButtonClicked()
     {
-        if (entityController == null) return;
-
-        if (entityController.TryMove(selectedHex))
+        if (entityController != null && entityController.TryMove(selectedHex))
         {
             CloseView();
         }
@@ -139,17 +130,10 @@ public class ActionsTabController : IDisposable
 
     private void HandleAttackButtonClicked()
     {
-        if (entityController == null) return; 
-
-        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
-        {
-            if (entityController.TryAttack(planet))
-            {
-                CloseView();
-            }
-        }
-
+        if (entityController != null && selectedHex.Occupant is PlanetData planet)
+            if (entityController.TryAttack(planet)) CloseView();
     }
+
 
     private void HandleDiplomacyButtonClicked()
     {
@@ -165,7 +149,15 @@ public class ActionsTabController : IDisposable
     {
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
-            buildMenuController.OpenView(planet, entityController);
+            // Only allow trading with AI controlled planets (Not player, not empty)
+            if (planet.FactionType != FactionType.Nothing && planet.FactionType != entityController.GetModel().FactionType)
+            {
+                tradeMenuController.OpenView(entityController.GetModel(), planet, allAIModels);
+            }
+            else
+            {
+                Debug.LogWarning("Cannot trade with an empty planet or your own planet!");
+            }
         }
     }
 
@@ -185,5 +177,4 @@ public class ActionsTabController : IDisposable
         gridInteractionController.OnHexSelected -= HandleHexSelected;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
-    
 }

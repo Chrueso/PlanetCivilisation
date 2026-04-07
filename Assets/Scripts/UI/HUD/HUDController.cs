@@ -12,7 +12,7 @@ public class HUDController : IDisposable
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
-    private TradeMenuController tradeMenuController;
+    //private TradeMenuController tradeMenuController;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
@@ -30,7 +30,7 @@ public class HUDController : IDisposable
         this.cameraController = cameraController;
         this.planetListController = planetListController;
         this.settingsController = settingsController;
-        this.tradeMenuController = tradeMenuController;
+        //this.tradeMenuController = tradeMenuController;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -77,7 +77,7 @@ public class HUDController : IDisposable
         view.PlanetListButton.onClick.AddListener(HandlePlanetListButtonClicked);
         view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
         view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
-        view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
+        //view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
 
         DisableDebug();
     }
@@ -127,10 +127,10 @@ public class HUDController : IDisposable
 
     private void HandleTradeButtonClicked() 
     {
-        if (tradeMenuController != null)
-        {
-            //tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
-        }
+        //if (tradeMenuController != null)
+        //{
+        //    tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
+        //}
     }
 
     public void Dispose()

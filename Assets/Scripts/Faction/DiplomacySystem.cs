@@ -121,7 +121,7 @@ public class DiplomacySystem
         planetData.RaiseAffection(player.GetModel().FactionType, affection); // 90% of trade amount goes to affect for now? best to prolly just clamp it between 1-10
         return true;
     }
-    
+    /*
     public bool TradeGlobal(EntityModel targetAI, TradeDeal trade)
     {
         //player
@@ -137,12 +137,7 @@ public class DiplomacySystem
         // trade
         player.GetModel().TakeResource(trade.trade2_type, trade.trade2_amount);
         player.GetModel().GainResource(trade.trade1_type, trade.trade1_amount);
-
-        targetAI.TakeResource(trade.trade1_type, trade.trade1_amount);
-        targetAI.GainResource(trade.trade2_type, trade.trade2_amount);
-
-        return true;
-    }
+*/
     public Dictionary<ResourceType, int> GetTradeDeal(PlanetData planetData, bool threaten = false) // Randomly generated based on planet resource amount
     {
         // this function generates the trade deals that will then be display in the trade popup
