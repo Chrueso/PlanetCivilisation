@@ -153,11 +153,7 @@ public class ActionsTabController : IDisposable
 
     private void HandleDiplomacyButtonClicked()
     {
-        if (entityController == null) return;
-        if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
-        {
-            tradeMenuController.OpenView(entityController.GetModel(), planet);
-        }
+        
     }
 
     private void HandleStructuresButtonClicked()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum ResourceClass
@@ -41,7 +42,7 @@ public class PlanetData : IGridHexObject
         this.GeneratedResource = new Dictionary<ResourceType, int>() {
             { resource[ResourceClass.Abundant], UnityEngine.Random.Range(gameConfig.MinAbundantResourceGen, gameConfig.MaxAbundantResourceGen)},
             { resource[ResourceClass.Scarce], UnityEngine.Random.Range(gameConfig.MinScarceResourceGen, gameConfig.MaxScarceResourceGen) } };
-        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 0 }, { ResourceType.Rations, 0 } };
+        this.ResourceInventory = new Dictionary<ResourceType, int>() { { ResourceType.Metals, 10 }, { ResourceType.Rations, 10 } };
         this.Relations = new();
         this.FactionType = faction;
 
@@ -140,6 +141,7 @@ public class PlanetData : IGridHexObject
         if (this.Affection.TryGetValue(rizzler, out int currAffection))
         {
             this.Affection[rizzler] = Math.Clamp(currAffection + affection, 0, 100);
+            Debug.Log($"Rizzer {rizzler} | How much rizz {affection}");
             UpdateRelations();
         }
         OnDataChanged?.Invoke();

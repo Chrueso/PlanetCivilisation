@@ -88,21 +88,24 @@ public class DiplomacySystem
         player = gameStartEvent.PlayerController;
     }
 
-    /*
+    
     // trade can only be done by player for now
     // however pretty much this function should get the current person's turn's stuff and check with the PlanetData
     public bool Trade(PlanetData planetData, TradeDeal trade)
     {
         // do checks here
         // if either guys dont have the amount they are offering, dont let trade happen
+        Debug.Log("WAZZAT");
         if (player.GetModel().Resources[trade.trade2_type] < trade.trade2_amount)
         {
+            Debug.Log("PUSSY");
             return false;
         }
 
         // highly unlikely but have to double check just in case
         if (planetData.ResourceInventory[trade.trade1_type] < trade.trade1_amount)
         {
+            Debug.Log("SLUT");
             return false;
         }
 
@@ -112,13 +115,13 @@ public class DiplomacySystem
         planetData.RemoveResource(trade.trade1_type, trade.trade1_amount);
         planetData.GainResource(trade.trade2_type, trade.trade2_amount);
 
-
+        Debug.Log("WOOHOO");
         // increase affection based on receiving amount
-        int affection = Mathf.RoundToInt(trade.trade2_amount * 0.5f);
+        int affection = Mathf.RoundToInt((trade.trade2_amount*0.5f) + (trade.affectionCoefficient*trade.trade2_amount));
         planetData.RaiseAffection(player.GetModel().FactionType, affection); // 90% of trade amount goes to affect for now? best to prolly just clamp it between 1-10
         return true;
     }
-    */
+    
     public bool TradeGlobal(EntityModel targetAI, TradeDeal trade)
     {
         //player
@@ -146,7 +149,8 @@ public class DiplomacySystem
         // Get current person's turn and their identifier to get their data, for now i just hardcode Player from GameManager
         Dictionary<ResourceType, int> tradePayload = new();
         List<ResourceType> resources = new List<ResourceType>() { ResourceType.Metals, ResourceType.Rations };
-        int rand = UnityEngine.Random.Range(0, resources.Count - 1);
+        int rand = UnityEngine.Random.Range(0, resources.Count);
+        Debug.Log($"MY NUMBER HUEHUE {rand}");
         ResourceType getResource = resources[rand];
         if (planetData.ResourceInventory.TryGetValue(getResource, out int invAmount))
         {

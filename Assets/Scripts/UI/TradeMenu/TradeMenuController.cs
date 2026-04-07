@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TradeMenuController
@@ -9,12 +10,15 @@ public class TradeMenuController
 
     // planet
     private PlanetData planetTradingWith;
+    private ResourceType offeredResource;
+    private int offeredResourceAmount;
 
     // AI Context
     private List<EntityModel> aiModels = new List<EntityModel>();
     private EntityModel currentTargetAI;
 
     // Internal State
+    private ResourceType pResourceType;
     private int currentFactionIndex = 0;
     private int currentGiveAmount = 0;
 
@@ -24,7 +28,7 @@ public class TradeMenuController
         this.diplomacySystem = diplomacySystem;
 
         ConnectView();
-        InitializeDropdowns();
+        //InitializeDropdowns();
     }
 
     private void ConnectView()
@@ -56,6 +60,11 @@ public class TradeMenuController
         currentFactionIndex = 0;
         currentGiveAmount = 0;
         planetTradingWith = planet;
+        Dictionary<ResourceType, int> tradeDeal = diplomacySystem.GetTradeDeal(planetTradingWith);
+        var aiTrade = tradeDeal.First();
+        offeredResource = aiTrade.Key;
+        offeredResourceAmount = aiTrade.Value;
+        pResourceType = offeredResource == ResourceType.Metals ? ResourceType.Rations : ResourceType.Metals;
 
         RefreshView();
         GameScreenManager.Push(view);
@@ -84,7 +93,7 @@ public class TradeMenuController
 
         currentTargetAI = null;
         currentGiveAmount = 0; // Reset amount when changing faction
-        RefreshView();
+        //RefreshView();
     }
 
     private void HandleAmountChange(int delta)
@@ -106,72 +115,43 @@ public class TradeMenuController
 
     private void RefreshView()
     {
-        if (currentTargetAI == null)
+        if (planetTradingWith == null)
         {
-            view.UpdateView(FactionType.Nothing, "Unknown", 0, 0, false);
+            //view.UpdateView(FactionType.Nothing, "Unknown", 0, 0, false);
             return;
         }
 
-        //Calculate Exchange Rate logic
-        float exchangeRate = 1.0f;
-        string relationshipString = "NEUTRAL"; // Default until you implement global relationship
+        bool isValidTrade = currentGiveAmount > 0 && playerModel.Resources[pResourceType] >= currentGiveAmount;
 
-        RelationshipLevel rel = RelationshipLevel.NEUTRAL; 
-
-        switch (rel)
-        {
-            case RelationshipLevel.HOSTILE: exchangeRate = 0.5f; break; // 1:0.5 (bad)
-            case RelationshipLevel.NEUTRAL: exchangeRate = 1.0f; break;
-            case RelationshipLevel.FRIENDLY: exchangeRate = 2.0f; break; // 1:2 (good)
-        }
-        
-
-        // Calculate what AI gives
-        int aiReceives = (int)Mathf.Floor(currentGiveAmount * exchangeRate);
-
-        // Validate Trade
-        ResourceType giveType = view.GetPlayerSelectedResource();
-        ResourceType receiveType = view.GetAISelectedResource();
-
-        bool tradeTypesAreDifferent = giveType != receiveType; 
-        
-        bool aiCanAfford = false;
-        if(currentTargetAI.Resources.TryGetValue(receiveType, out int aiHas))
-        {
-            aiCanAfford = aiHas >= aiReceives;
-        }
-
-        bool isValidTrade = tradeTypesAreDifferent && aiCanAfford && currentGiveAmount > 0;
-
-        view.UpdateView(currentTargetAI.FactionType, relationshipString, currentGiveAmount, aiReceives, isValidTrade);
+        //view.UpdateView(currentTargetAI.FactionType, relationshipString, currentGiveAmount, aiReceives, isValidTrade);
+        view.UpdateView1(planetTradingWith, pResourceType, currentGiveAmount, offeredResource, offeredResourceAmount, isValidTrade);
     }
 
     private void TryExecuteTrade()
     {
-        if (playerModel == null || currentTargetAI == null) return;
+        //if (playerModel == null || currentTargetAI == null) return;
 
-        ResourceType pGiveType = view.GetPlayerSelectedResource();
+        ResourceType pGiveType = pResourceType;
         int pGiveAmount = currentGiveAmount;
-
-        ResourceType aiGiveType = view.GetAISelectedResource();
 
         float exchangeRate = 1.0f;
         
         int aiGiveAmount = (int)Mathf.Floor(pGiveAmount * exchangeRate);
 
         TradeDeal deal = new TradeDeal(
-            trade1_type: aiGiveType,
-            trade1_amount: aiGiveAmount,
+            trade1_type: offeredResource,
+            trade1_amount: offeredResourceAmount,
             trade2_type: pGiveType,
             trade2_amount: pGiveAmount
         );
 
         // global instead of planet
-        if (diplomacySystem.TradeGlobal(currentTargetAI, deal))
+        if (diplomacySystem.Trade(planetTradingWith, deal))
         {
-            Debug.Log($"Trade successful! Traded {pGiveAmount} {pGiveType} for {aiGiveAmount} {aiGiveType}");
+            //Debug.Log($"Trade successful! Traded {pGiveAmount} {pGiveType} for {aiGiveAmount} {aiGiveType}");
             currentGiveAmount = 0;
             RefreshView();
+            CloseView();
         }
         else
         {

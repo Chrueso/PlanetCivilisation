@@ -18,12 +18,15 @@ public class TradeMenuView : ScreenBase
 
     [Header("Player (You) Give")]
     public TMP_Text PlayerGiveAmountText;
+    public TextMeshProUGUI PlayerResourceText;
     public Button PlayerGiveIncreaseBtn;
     public Button PlayerGiveDecreaseBtn;
     public TMP_Dropdown PlayerGiveDropdown;
+    
 
     [Header("AI (Them) Give")]
     public TMP_Text AIGiveAmountText;
+    public TextMeshProUGUI AIResourceText;
     public TMP_Dropdown AIGiveDropdown;
 
     // Callbacks to Controller
@@ -90,5 +93,20 @@ public class TradeMenuView : ScreenBase
 
         // Prevent trading identical resources or if trade amount is 0
         ConfirmTradeButton.interactable = tradeIsValid && giveAmount > 0;
+    }
+
+    public void UpdateView1(PlanetData planet, ResourceType playerOffer, int playerGiveAmount, ResourceType aiOffer, int aiOfferAmount, bool tradeIsValid)
+    {
+
+        SelectedFactionText.text = planet.FactionType.ToString();
+        RelationshipText.text = $"Relationship: {planet.Relations[FactionType.Human].ToString()}";
+        
+        PlayerResourceText.text = playerOffer.ToString();
+        PlayerGiveAmountText.text = playerGiveAmount.ToString();
+
+        AIResourceText.text = aiOffer.ToString();
+        AIGiveAmountText.text = aiOfferAmount.ToString();
+
+        ConfirmTradeButton.interactable = tradeIsValid;
     }
 }
