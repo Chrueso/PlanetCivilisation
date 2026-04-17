@@ -57,13 +57,14 @@ public class TradeMenuController
         // Pact bindings
         view.OnNAPClicked = () => TryExecutePact(PactType.NAP);
         view.OnFCPClicked = () => TryExecutePact(PactType.FCP);
+        InitializeDropdowns();
     }
 
     private void InitializeDropdowns()
     {
         List<string> resources = new List<string> {
             ResourceType.Metals.ToString(),
-            ResourceType.Rations.ToString()
+            ResourceType.Rations.ToString(),
         };
         view.SetupDropdowns(resources);
     }

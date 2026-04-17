@@ -13,6 +13,9 @@ public class HUDView : ScreenBase
     public Button HomeShipButton;
     public Button EndTurnButton;
 
+    public Button ZoomIn;
+    public Button ZoomOut;
+
     //public TMP_Text CurrentTurnText;
     //public FactionWidget FactionWidget;
 

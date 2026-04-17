@@ -49,7 +49,6 @@ public class PlanetData : IGridHexObject
         this.Structures = new List<StructureType>() {  };
 
         this.StationedShips = new Dictionary<ShipType, int>() { 
-            {ShipType.Scout, 0},
             {ShipType.Attacker, 2},
             {ShipType.Worker, 0 }
         };

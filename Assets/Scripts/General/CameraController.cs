@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
     private EventBinding<GameStartEvent> gameStartBinding;
 
     // for pinch zoom cam :D
-    private Dictionary<int, TouchInfo> trackedGestures = new();
+    private List<int> trackedGesture = new();
     private bool isDirty = false;
     private Vector3 CurrentScreenPos1 = Vector3.zero;
     private Vector3 CurrentScreenPos2 = Vector3.zero;
@@ -134,17 +134,6 @@ public class CameraController : MonoBehaviour
     {
         if (!eventsEnabled) return;
         
-        if (e.FingerId == 1)
-        {
-            trackedGestures[e.FingerId] = e;
-            CurrentScreenPos1 = LastScreenPos1 = e.ScreenPos;
-        } else if (e.FingerId == 2)
-        {
-            trackedGestures[e.FingerId] = e;
-            CurrentScreenPos2 = LastScreenPos2 = e.ScreenPos;
-            playerIsPinching = true;
-        }
-        
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         if (waitForReset) waitForReset = false;
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
@@ -156,54 +145,25 @@ public class CameraController : MonoBehaviour
         if (waitForReset) return;
         if (touchStartedOnUI) return;
 
-        if (!playerIsPinching)
-        {
-            Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
-            Vector3 nextPos = startingPos - diff;
-            Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), 55, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
-            CameraInstance.transform.position = boundedPos;
-            
-            if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
-            {
-                startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
 
-            }
-            else
-            {
-                CameraMoving = true;
-            }
+        Vector3 diff = CameraInstance.ScreenToWorldPoint(e.ScreenPos) - CameraInstance.transform.position;
+        Vector3 nextPos = startingPos - diff;
+        Vector3 boundedPos = new Vector3(Mathf.Clamp(nextPos.x, minBounds.x, maxBounds.x), 55, Mathf.Clamp(nextPos.z, minBounds.y, maxBounds.y));
+        CameraInstance.transform.position = boundedPos;
+
+        if (e.Phase == UnityEngine.InputSystem.TouchPhase.Stationary)
+        {
+            startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
+
         } else
         {
-            if (e.FingerId == 1)
-            {
-                LastScreenPos1 = CurrentScreenPos1;
-                CurrentScreenPos1 = e.ScreenPos;
-            }
-            else if (e.FingerId == 2)
-            {
-                LastScreenPos2 = CurrentScreenPos2;
-                CurrentScreenPos2 = e.ScreenPos;
-            }
+            CameraMoving = true;
         }
     }
 
     private void PlayerFingerRelease(object sender, TouchInfo e)
     {
         if (!eventsEnabled) return;
-        if (e.FingerId == 1)
-        {
-            LastScreenPos1 = LastScreenPos2;
-            CurrentScreenPos1 = CurrentScreenPos2;
-            trackedGestures.Remove(e.FingerId); 
-            playerIsPinching = false;
-        }
-        else if (e.FingerId == 2)
-        {
-            LastScreenPos2 = Vector3.zero;
-            CurrentScreenPos2 = Vector3.zero;
-            trackedGestures.Remove(e.FingerId);
-            playerIsPinching = false;
-        }
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
         CameraMoving = false;
@@ -235,36 +195,8 @@ public class CameraController : MonoBehaviour
         eventsEnabled = true;
     }
 
-    private void Update()
-    {
-        /*
-        if (playerIsPinching)
-        {
-            float scale = 1f;
-            float avgCurrDist = 0f;
-            float avgLastDist = 0f;
-            Vector2 currCenter = (CurrentScreenPos1 + CurrentScreenPos2) / 2f;
-            Vector2 lastCenter = (LastScreenPos1 + LastScreenPos2) / 2f;
-            float currDist = Vector2.Distance(CurrentScreenPos1, currCenter) + Vector2.Distance(CurrentScreenPos2, currCenter);
-            float lastDist = Vector2.Distance(LastScreenPos1, lastCenter) + Vector2.Distance(LastScreenPos2, lastCenter);
-            avgCurrDist += currDist;
-            avgLastDist += lastDist;
-            avgCurrDist /= 2f;
-            avgLastDist /= 2f;
-            if (avgLastDist > 0.0f)
-            {
-                scale = avgCurrDist / avgLastDist;
-            }
-            else
-            {
-                scale = 1.0f;
-            }
-            CameraInstance.orthographicSize = Mathf.Clamp(CameraInstance.orthographicSize * scale, 30, 100);
-        }
-        isDirty = false;
-        */
-    }
-
+    public void ZoomIn() => CameraInstance.orthographicSize = Mathf.Max(CameraInstance.orthographicSize - 10, 30);
+    public void ZoomOut() => CameraInstance.orthographicSize = Mathf.Clamp(CameraInstance.orthographicSize + 10, 30, 100);
     public void Disable() => DisableMovement();
     public void Enable() => EnableMovement();
 }

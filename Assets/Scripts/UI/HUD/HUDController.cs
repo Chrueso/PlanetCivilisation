@@ -78,10 +78,12 @@ public class HUDController : IDisposable
         view.HomeShipButton.onClick.AddListener(HandleHomeShipButtonClicked);
         view.EndTurnButton.onClick.AddListener(HandleEndTurnButtonClicked);
         //view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
+        view.ZoomIn.onClick.AddListener(delegate { ZoomButtonClicked(true); });
+        view.ZoomOut.onClick.AddListener(delegate { ZoomButtonClicked(false); });
 
-
-        //DisableDebug();
-        EnableDebug();
+        
+        DisableDebug();
+        //EnableDebug();
     }
 
     public void OpenView()
@@ -133,6 +135,17 @@ public class HUDController : IDisposable
         //{
         //    tradeMenuController.OpenView(playerController.GetModel(), allAIModels); 
         //}
+    }
+
+    private void ZoomButtonClicked(bool zoom)
+    {
+        if (zoom)
+        {
+            cameraController.ZoomIn();
+        } else
+        {
+            cameraController.ZoomOut();
+        }
     }
 
     public void Dispose()
