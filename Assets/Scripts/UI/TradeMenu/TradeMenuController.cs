@@ -260,11 +260,11 @@ public class TradeMenuController
         RefreshView();
     }
 
-    private void TryExecuteGift()
+    private void TryExecuteGift(ResourceType type)
     {
         if (playerModel == null || currentPlanet == null || currentGiftGiveAmount <= 0) return;
 
-        ResourceType giftType = view.GetPlayerGiftResource();
+        ResourceType giftType = type;
 
         playerModel.TakeResource(giftType, currentGiftGiveAmount);
         currentPlanet.GainResource(giftType, currentGiftGiveAmount);

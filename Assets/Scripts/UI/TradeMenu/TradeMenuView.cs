@@ -38,6 +38,7 @@ public class TradeMenuView : ScreenBase
 
     [Header("TAB 2: GIFTING")]
     public Button ConfirmGiftButton;
+    public Button ConfirmRationGiftButton;
     public TMP_Text PlayerGiftAmountText;
     public Button PlayerGiftIncreaseBtn;
     public Button PlayerGiftDecreaseBtn;
@@ -57,7 +58,7 @@ public class TradeMenuView : ScreenBase
 
     public Action<int> OnChangeGiftGiveAmountClicked;
     public Action OnGiftResourceDropdownChanged;
-    public Action OnConfirmGiftClicked;
+    public Action<ResourceType> OnConfirmGiftClicked;
 
     public Action OnNAPClicked;
     public Action OnFCPClicked;
@@ -78,7 +79,8 @@ public class TradeMenuView : ScreenBase
         AITradeDropdown?.onValueChanged.AddListener((val) => OnTradeResourceDropdownChanged?.Invoke());
 
         // Gift
-        ConfirmGiftButton?.onClick.AddListener(() => OnConfirmGiftClicked?.Invoke());
+        ConfirmGiftButton?.onClick.AddListener(() => OnConfirmGiftClicked?.Invoke(ResourceType.Metals));
+        ConfirmRationGiftButton?.onClick.AddListener(() => OnConfirmGiftClicked?.Invoke(ResourceType.Rations));
         PlayerGiftIncreaseBtn?.onClick.AddListener(() => OnChangeGiftGiveAmountClicked?.Invoke(1));
         PlayerGiftDecreaseBtn?.onClick.AddListener(() => OnChangeGiftGiveAmountClicked?.Invoke(-1));
         PlayerGiftDropdown?.onValueChanged.AddListener((val) => OnGiftResourceDropdownChanged?.Invoke());
