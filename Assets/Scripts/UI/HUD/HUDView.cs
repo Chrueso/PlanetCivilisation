@@ -12,6 +12,7 @@ public class HUDView : ScreenBase
     public Button PlanetListButton;
     public Button HomeShipButton;
     public Button EndTurnButton;
+    public Button InfoButton;
 
     public Button ZoomIn;
     public Button ZoomOut;

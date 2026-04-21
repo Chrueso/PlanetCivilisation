@@ -146,6 +146,9 @@ public class TradeMenuView : ScreenBase
         // Pact Buttons
         if (NAPButton != null) NAPButton.interactable = canNAP;
         if (FCPButton != null) FCPButton.interactable = canFCP;
+
+        ConfirmGiftButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Gift {giftAmount} Metals to {faction.ToString()}";
+        ConfirmRationGiftButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Gift {giftAmount} Rations to {faction.ToString()}";
     }
 
     public void UpdateView1(PlanetData planet, ResourceType playerOffer, int playerGiveAmount, ResourceType aiOffer, int aiOfferAmount, bool tradeIsValid)

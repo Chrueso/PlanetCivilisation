@@ -33,7 +33,10 @@ public class MoveScoutShipCommand : ICommand
         await entityView.Move(targetHex.WorldPosition, entityModel.yValue).AsyncWaitForCompletion();
         entityModel.CurrentHex = targetHex;
         await entityView.MoveBack(targetHex.WorldPosition, entityModel.yValue).AsyncWaitForCompletion();
-
+        if (entityModel.CurrentHex.Occupant is PlanetData)
+        {
+            entityModel.AddPlanetDiscovery(entityModel.CurrentHex.Occupant as PlanetData);
+        }
         entityController.IsPerformingAction = false;
         entityView.Release();
         entityModel.CurrentHex = originHex;

@@ -12,6 +12,7 @@ public class HUDController : IDisposable
     private CameraController cameraController;
     private PlanetListController planetListController;
     private SettingsController settingsController;
+    private PlayerInfoController playerInfoController;
     //private TradeMenuController tradeMenuController;
 
     private EventBinding<GameStartEvent> gameStartBinding;
@@ -23,13 +24,14 @@ public class HUDController : IDisposable
     // Store AI Models specifically for trading
     private List<EntityModel> allAIModels = new List<EntityModel>();
 
-    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController, TradeMenuController tradeMenuController) 
+    public HUDController(HUDView view, CameraController cameraController, PlanetListController planetListController, SettingsController settingsController, TradeMenuController tradeMenuController, PlayerInfoController playerInfoController) 
     {
         this.view = view;
 
         this.cameraController = cameraController;
         this.planetListController = planetListController;
         this.settingsController = settingsController;
+        this.playerInfoController = playerInfoController;
         //this.tradeMenuController = tradeMenuController;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
@@ -80,7 +82,7 @@ public class HUDController : IDisposable
         //view.TradeButton.onClick.AddListener(HandleTradeButtonClicked);
         view.ZoomIn.onClick.AddListener(delegate { ZoomButtonClicked(true); });
         view.ZoomOut.onClick.AddListener(delegate { ZoomButtonClicked(false); });
-
+        view.InfoButton.onClick.AddListener(OpenPlayerInfo);
         
         DisableDebug();
         //EnableDebug();
@@ -94,6 +96,12 @@ public class HUDController : IDisposable
     public void CloseView()
     {
         GameScreenManager.Pop();
+    }
+
+    private void OpenPlayerInfo()
+    {
+        playerInfoController.OpenView(entityModel);
+        Debug.Log("HI");
     }
 
     private void HandleResourcesChanged()

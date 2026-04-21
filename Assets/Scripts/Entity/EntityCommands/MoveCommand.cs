@@ -33,6 +33,10 @@ public class MoveCommand : ICommand
 
         entityModel.RemoveAP(1);
         entityModel.CurrentHex = targetHex;
+        if (entityModel.CurrentHex.Occupant is PlanetData)
+        {
+            entityModel.AddPlanetDiscovery(entityModel.CurrentHex.Occupant as PlanetData);
+        }
 
         await entityView.Move(targetHex.WorldPosition, entityModel.yValue).AsyncWaitForCompletion();
 

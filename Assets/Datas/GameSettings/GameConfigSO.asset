@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e86616bebfb0e744a30270fe0a24b0b, type: 3}
   m_Name: GameConfigSO
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigSO
-  MaxTurns: 8
+  MaxTurns: 30
   MaxAP: 50
   MaxPlanetsNeeded: 5
   MinWorkerShipNeededForColonize: 1

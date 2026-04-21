@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BuildMenuView buildMenuView;
     [SerializeField] private StationShipMenuView stationShipMenuView;
     [SerializeField] private TradeMenuView tradeMenuView;
+    [SerializeField] private PlayerInfoView playerInfoView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -61,6 +62,7 @@ public class GameManager : MonoBehaviour
     private DiplomacySystem diplomacySystem;
     private Crafter crafterSystem;
     private TradeMenuController tradeMenuController;
+    private PlayerInfoController playerInfoController;
 
     //Game context
     private MapGrid mapGrid;
@@ -140,9 +142,11 @@ public class GameManager : MonoBehaviour
         settingsController = new SettingsController(settingsView);
         planetListController = new PlanetListController(planetListView, cameraController);
         tradeMenuController = new TradeMenuController(tradeMenuView,diplomacySystem);
-        hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController);
+        playerInfoController = new(playerInfoView);
+        hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController, playerInfoController);
         hudController.EnableDebug();
-        TryRegisterDisposable(settingsController, planetListController, tradeMenuController, hudController);
+        
+        TryRegisterDisposable(settingsController, planetListController, tradeMenuController, hudController, playerInfoController);
     }
 
     private void CreateActionTab()
