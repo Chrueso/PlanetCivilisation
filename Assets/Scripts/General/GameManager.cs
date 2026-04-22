@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<AIAction> aIActions; //I think factions have their own behavior later so store actions there?
     [SerializeField] private StructureRecipeDatabaseSO structureRecipes;
     [SerializeField] private GameConfigSO gameConfig;
+    [SerializeField] private Camera screenshotCamera;
+    [SerializeField] private RenderTexture screenshotRenderTexture;
 
     [Header("Mono Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour
     private TurnManager turnManager;
     private DiplomacySystem diplomacySystem;
     private Crafter crafterSystem;
+    private ObjIconScreenshotter objIconScreenshotter;
 
     //Game context
     private MapGrid mapGrid;
@@ -114,7 +117,8 @@ public class GameManager : MonoBehaviour
     {
         cameraController.Init();
         gridInteractionController.Init(cameraController);
-        planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab, gameConfig);
+        objIconScreenshotter = new ObjIconScreenshotter(screenshotCamera, screenshotRenderTexture);
+        planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab, gameConfig, objIconScreenshotter);
         mapGenerator = new MapGenerator(planetGenerator);
         turnManager = new TurnManager(gameConfig);
         battleManager = new BattleManager(shipDatabase,battleVisualController);

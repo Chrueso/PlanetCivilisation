@@ -147,7 +147,9 @@ public class GridHexView : MonoBehaviour
         {
             propertyBlock.SetColor(edgeColors[key], color);
         }
+        propertyBlock.SetColor("_OutlineColor", color);
         meshRenderer.SetPropertyBlock(propertyBlock);
+
     }
 
     public void SetEdgeColor(GridHexDir dir, Color color)
