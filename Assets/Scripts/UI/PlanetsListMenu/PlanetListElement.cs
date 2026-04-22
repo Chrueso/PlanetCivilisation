@@ -9,10 +9,12 @@ public class PlanetListElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resourceGain;
     [SerializeField] private TextMeshProUGUI structures;
     [SerializeField] private Button planetButton;
+    [SerializeField] private RawImage planetIcon;
 
 
     public void Init(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked)
     {
+        planetIcon.texture = planetData.View.Icon;
         planetName.text = planetData.PlanetName;
 
         // Display each resource in planet with new line

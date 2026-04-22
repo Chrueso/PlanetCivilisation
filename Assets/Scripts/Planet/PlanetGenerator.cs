@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using static PlanetShapeSettings;
 
 public class PlanetGenerator 
@@ -8,13 +10,15 @@ public class PlanetGenerator
     private ShipDatabaseSO shipDatabase;
     private List<PlanetVisualTypesSO> presets;
     private GameObject planetPrefab;
+    private ObjIconScreenshotter objIconScreenshotter;
 
-    public PlanetGenerator(ShipDatabaseSO shipDatabase, List<PlanetVisualTypesSO> presets, GameObject planetPrefab, GameConfigSO gameConfig)
+    public PlanetGenerator(ShipDatabaseSO shipDatabase, List<PlanetVisualTypesSO> presets, GameObject planetPrefab, GameConfigSO gameConfig, ObjIconScreenshotter objIconScreenshotter)
     {
         this.shipDatabase = shipDatabase;
         this.presets = presets;
         this.planetPrefab = planetPrefab;
         this.gameConfig = gameConfig;
+        this.objIconScreenshotter = objIconScreenshotter;
     }
 
     static readonly string[] planetBaseNames =
@@ -224,7 +228,7 @@ public class PlanetGenerator
 
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
         planetView.GeneratePlanetView(shapeSettings, colorSettings);
-
+        planetView.SetIcon(objIconScreenshotter.Screenshot(planetObj));
         PlanetData data = new PlanetData(planetView, shipDatabase, planetName, factionType, additionalResources, gameConfig); // Check out PlanetData.cs
 
         return (planetObj, data);
@@ -241,6 +245,7 @@ public class PlanetGenerator
 
         PlanetView planetView = planetObj.GetComponentInChildren<PlanetView>();
         planetView.GeneratePlanetView(customPlanetData.ShapeSettings, customPlanetData.ColorSettings);
+        planetView.SetIcon(objIconScreenshotter.Screenshot(planetObj));
 
         PlanetData data = new PlanetData(planetView, shipDatabase, customPlanetData.PlanetName, FactionType.Nothing, resource, gameConfig); // Check out PlanetData.cs
 

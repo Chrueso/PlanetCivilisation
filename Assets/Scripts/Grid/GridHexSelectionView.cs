@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -18,7 +17,7 @@ public class GridHexSelectionView : MonoBehaviour
     [SerializeField] private Color outlineColor = Color.cyan;
     [SerializeField] private Color hexColor = Color.black;
 
-    private Dictionary<string, bool> edgeBoolValues = new Dictionary<string, bool>()
+    private Dictionary<string, bool> edgeBools = new Dictionary<string, bool>()
     {
         { "_Edge0", true }, // left
         { "_Edge1", true }, // top left
@@ -26,6 +25,16 @@ public class GridHexSelectionView : MonoBehaviour
         { "_Edge3", true }, // right
         { "_Edge4", true }, // bottom right
         { "_Edge5", true } // bottom left
+    };
+
+    private Dictionary<GridHexDir, string> edgeColors = new Dictionary<GridHexDir, string>()
+    {
+        { GridHexDir.RIGHT,         "_Edge0Color" },
+        { GridHexDir.TOP_RIGHT,     "_Edge1Color" },
+        { GridHexDir.TOP_LEFT,    "_Edge2Color" },
+        { GridHexDir.LEFT,        "_Edge3Color" },
+        { GridHexDir.BOTTOM_LEFT, "_Edge4Color" },
+        { GridHexDir.BOTTOM_RIGHT,  "_Edge5Color" },
     };
 
     public void Init(float cellSize, float gridHexOutlineThickness)
@@ -105,19 +114,28 @@ public class GridHexSelectionView : MonoBehaviour
 
         propertyBlock.SetFloat("_Radius", cellSize * 0.5f);
         propertyBlock.SetFloat("_Thickness", outlineThickness);
-        propertyBlock.SetColor("_OutlineColor", outlineColor);
+        //propertyBlock.SetColor("_OutlineColor", outlineColor);
         propertyBlock.SetColor("_HexColor", hexColor);
-
+        SetEdgeColors(outlineColor);
         EnableEdges(propertyBlock, true);
 
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
 
+    public void SetEdgeColors(Color color)
+    {
+        foreach (var key in edgeColors.Keys.ToList()) // ToList() snapshots the keys
+        {
+            propertyBlock.SetColor(edgeColors[key], color);
+        }
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
     public void EnableEdges(MaterialPropertyBlock propertyBlock, bool value)
     {
-        foreach (var key in edgeBoolValues.Keys.ToList()) // ToList() snapshots the keys
+        foreach (var key in edgeBools.Keys.ToList()) // ToList() snapshots the keys
         {
-            edgeBoolValues[key] = value;
+            edgeBools[key] = value;
             propertyBlock.SetFloat(key, value ? 1f : 0f);
         }
     }

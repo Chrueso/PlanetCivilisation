@@ -38,6 +38,7 @@ public class MapGenerator
         // Instantiate grid
         mapGrid = Object.Instantiate(settings.MapGridPrefab);
         mapGrid.GenerateGrid(settings.MapDimensions.x, settings.MapDimensions.y, settings.MapCellSize);
+        mapGrid.LinkNeighbours();
 
         // Create PlanetMapGenerator
         planetMapGenerator = new PlanetMapGenerator(

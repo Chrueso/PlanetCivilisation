@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlanetView : MonoBehaviour, IHideable
 {
@@ -21,6 +22,8 @@ public class PlanetView : MonoBehaviour, IHideable
 
     [SerializeField] private ParticleSystem colonizeVFX;
     [SerializeField] private ParticleSystem takenOverVFX;
+
+    public Texture2D Icon {  get; private set; }
 
     private void Init(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
@@ -72,7 +75,12 @@ public class PlanetView : MonoBehaviour, IHideable
         }
     }
 
-    public void GeneratePlanetView( PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
+    public void SetIcon(Texture2D icon)
+    {
+        this.Icon = icon;
+    }
+
+    public void GeneratePlanetView(PlanetShapeSettings shapeSettings, PlanetColorSettings colorSettings)
     {
         Init(shapeSettings, colorSettings);
         InitMeshComponents();

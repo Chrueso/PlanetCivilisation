@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -18,6 +19,9 @@ public class ActionsTabController : IDisposable
     private EntityScoutShipPool scoutShipPool;
 // trade
     private List<EntityModel> allAIModels = new List<EntityModel>();
+
+    private List<GridHex> highlightedHexes = new List<GridHex>();
+
     private EventBinding<GameStartEvent> gameStartBinding;
     public ActionsTabController(ActionsTabView view, GridInteractionController gridInteractionController, StructuresMenuController structuresController, InfoMenuView infoMenuView, BuildMenuController buildMenuController, StationShipMenuController stationShipMenuController, EntityScoutShipPool scoutShipPool, TradeMenuController tradeMenuController)
     {
