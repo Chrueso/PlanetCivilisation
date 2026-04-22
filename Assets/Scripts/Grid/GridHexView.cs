@@ -23,6 +23,8 @@ public class GridHexView : MonoBehaviour
     private Color outlineColor;
     private Color hexColor;
 
+    private GridHex hex;
+
     public float OutlineThickness => defaultoutlineThickness;
 
     private Dictionary<GridHexDir, string> edgeBools = new Dictionary<GridHexDir, string>()
@@ -127,6 +129,14 @@ public class GridHexView : MonoBehaviour
         //propertyBlock.SetColor("_OutlineColor", outlineColor);
         propertyBlock.SetColor("_HexColor", hexColor);
         SetEdgeColors(outlineColor);
+        if (hex != null)
+        {
+            if (hex.OccupyingFaction != FactionType.Nothing)
+            {
+                hex.ShowHighlight();
+            }
+        }
+        
         EnableEdges(true);
 
         meshRenderer.SetPropertyBlock(propertyBlock);
@@ -134,6 +144,13 @@ public class GridHexView : MonoBehaviour
 
     public void RestoreDefaultMaterial()
     {
+        if (hex!= null)
+        {
+            if (hex.OccupyingFaction != FactionType.Nothing)
+            {
+                return;
+            }
+        }
         outlineThickness = defaultoutlineThickness;
         outlineColor = defaultoutlineColor;
         hexColor = defaulthexColor;
@@ -143,6 +160,7 @@ public class GridHexView : MonoBehaviour
 
     public void SetEdgeColors(Color color)
     {
+        Debug.Log($"Hex: {hex}, Color {color}, Thingy {color == Color.blue}");
         foreach (var key in edgeColors.Keys.ToList()) // ToList() snapshots the keys
         {
             propertyBlock.SetColor(edgeColors[key], color);
@@ -171,8 +189,9 @@ public class GridHexView : MonoBehaviour
         if (fogMaterial != null) meshRenderer.material = fogMaterial;
     }
 
-    public void HideFog()
+    public void HideFog(GridHex hex)
     {
+        this.hex = hex; 
         UpdateMaterial();
     }
 
@@ -187,7 +206,13 @@ public class GridHexView : MonoBehaviour
     {
         //propertyBlock.SetFloat(edgeBools[dir], 0f);
         //meshRenderer.SetPropertyBlock(propertyBlock);
-
+        if (hex != null)
+        {
+            if (hex.OccupyingFaction != FactionType.Nothing)
+            {
+                return;
+            }
+        }
         propertyBlock.SetColor(edgeColors[dir], defaultoutlineColor);
         meshRenderer.SetPropertyBlock(propertyBlock);
 

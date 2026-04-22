@@ -61,8 +61,17 @@ public class GridInteractionController : MonoBehaviour
 
         foreach (GridHex hex in playerController.HexesInMoveRadius)
         {
-            hex.ShowHighlight(Color.blue);
-            highlightedHexes.Add(hex);
+            if (hex.OccupyingFaction != FactionType.Nothing)
+            {
+                hex.ShowHighlight();
+                highlightedHexes.Add(hex);
+            }
+            else
+            {
+                hex.ShowHighlight(Color.blue);
+                highlightedHexes.Add(hex);
+            }
+                
         }
 
         foreach (GridHex hex in playerController.HexesInMoveRadius)

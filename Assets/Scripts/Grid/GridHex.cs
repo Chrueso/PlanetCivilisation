@@ -10,12 +10,19 @@ public class GridHex : IHideable
     public IGridHexObject Occupant;
     public GridHexView View;
     public bool IsHiddenForPlayer = false;
+    public FactionType OccupyingFaction = FactionType.Nothing;
+    public Dictionary<FactionType, Color> colorCodes = new Dictionary<FactionType, Color>() {
+        { FactionType.Human, Color.orange },
+        { FactionType.DemiHuman,Color.purple },
+        { FactionType.IntelligentConstruct, Color.grey}
+    };
 
     public Dictionary<GridHexDir, GridHex> Neighbours { get; private set; } = new Dictionary<GridHexDir, GridHex>();
 
     public bool IsHighlighted { get; private set; } = false;
-    public Color HighlightColor = Color.white; 
+    public Color HighlightColor = Color.white;
 
+    public GridHex() { }
     public GridHex(float cellSize, Vector2Int gridPosition, Vector3Int gridPositionCube, Vector3 worldPosition, bool isOccupied = false, IGridHexObject occupant = null)
     {
         CellSize = cellSize;
@@ -34,7 +41,7 @@ public class GridHex : IHideable
     public void Show()
     {
         IsHiddenForPlayer = false;
-        View.HideFog();
+        View.HideFog(this);
 
         if (Occupant != null) Occupant.Show();
     }
@@ -48,14 +55,39 @@ public class GridHex : IHideable
 
     public void ShowHighlight(Color color)
     {
+        if (OccupyingFaction != FactionType.Nothing)
+        {
+            return;
+        }
         IsHighlighted = true;
         View.SetEdgeColors(color);
     }
 
+    public void ShowHighlight()
+    {
+        Debug.Log(OccupyingFaction);
+        if (OccupyingFaction == FactionType.Nothing)
+        {
+            return;
+        }
+        IsHighlighted = true;
+        View.SetEdgeColors(colorCodes[OccupyingFaction]);
+    }
+
+    public void SetOccupyingFaction(FactionType factionType)
+    {
+        OccupyingFaction = factionType;
+    }
+
     public void OffHighlight()
     {
-        IsHighlighted = false;
-        View.RestoreDefaultMaterial();
+        if (OccupyingFaction == FactionType.Nothing)
+        {
+            IsHighlighted = false;
+            View.RestoreDefaultMaterial();
+            return;
+        }
+        View.SetEdgeColors(colorCodes[OccupyingFaction]);
     }
 
     public void FixEdges()

@@ -90,10 +90,12 @@ public class GameManager : MonoBehaviour
         mapGenerator.GenerateMap(mapSettings, out mapGrid, out homePlanet, out planets, SeedRNG);
 
         CreatePlayer(homePlanet, out player);
+        homePlanet.CurrentHex.SetOccupyingFaction(player.GetModel().FactionType);
+        
         CreateAI(FactionDatabase.factions.Length - 2, planets.ToList(), out AIEntities);
 
         SetActivePlayer(player);
-
+        homePlanet.CurrentHex.ShowHighlight();
         //3 ai
         //CreateAI(FactionDatabase.factions.Length - 1, planets.ToList(), out AIEntities);
         //player = AIEntities.First().Value;
@@ -207,6 +209,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             EntityController entity = entityFactory.CreateAI(out AIBrain brain, availablePlanets[i], aIActions);
+            availablePlanets[i].CurrentHex.SetOccupyingFaction(entity.GetModel().FactionType);
+            availablePlanets[i].CurrentHex.ShowHighlight();
             if (entity != null)
             {
                 entities.Add(brain, entity);

@@ -82,6 +82,8 @@ public class PlanetData : IGridHexObject
     {
         this.FactionType = factionType;
         OnDataChanged?.Invoke();
+        CurrentHex.SetOccupyingFaction(factionType);
+        CurrentHex.ShowHighlight();
     }
 
     public void AddShips(ShipType shipType, int amount)

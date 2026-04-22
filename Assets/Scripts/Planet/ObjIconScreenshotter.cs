@@ -34,6 +34,7 @@ public class ObjIconScreenshotter
             t.gameObject.layer = oriLayer;
         obj.layer = oriLayer;
         obj.transform.position = oriPos;
+        Debug.Log($"For some reason no image: {screenshot}");
         return screenshot;
     }
 }
