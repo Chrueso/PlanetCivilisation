@@ -69,7 +69,7 @@ public class AIBrain
 
                 await tcs.Task; //for actions/commands which have animation/duration/delay
                 controller.OnActionComplete -= onComplete; 
-                await Awaitable.WaitForSecondsAsync(0.5f); //so the ai doesnt look like its fking sicko doing actions back to back with no delay
+                await Awaitable.WaitForSecondsAsync(2f); //so the ai doesnt look like its fking sicko doing actions back to back with no delay
             }
         }
 
