@@ -29,7 +29,7 @@ public class MoveCommand : ICommand
 
     private async void Move()
     {
-        entityController.IsPerformingAction = true;
+        entityController.IsPerformingAction = true; 
 
         entityModel.RemoveAP(1);
         entityModel.CurrentHex = targetHex;
