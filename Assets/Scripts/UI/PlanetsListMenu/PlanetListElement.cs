@@ -9,10 +9,11 @@ public class PlanetListElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resourceGain;
     [SerializeField] private TextMeshProUGUI structures;
     [SerializeField] private Button planetButton;
+    [SerializeField] private Button teleportButton;
     [SerializeField] private RawImage planetIcon;
 
 
-    public void Init(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked)
+    public void Init(PlanetData planetData, Action<PlanetData> onPlanetButtonClicked, Action<PlanetData> onTeleportButtonClicked)
     {
         planetIcon.texture = planetData.View.Icon;
         planetName.text = planetData.PlanetName;
@@ -32,5 +33,17 @@ public class PlanetListElement : MonoBehaviour
         {
             onPlanetButtonClicked?.Invoke(planetData);
         });
+        if (planetData.Structures.Contains(StructureType.Teleporter))
+        {
+            teleportButton.gameObject.SetActive(true);
+            teleportButton.onClick.RemoveAllListeners();
+            teleportButton.onClick.AddListener(() => {
+                onTeleportButtonClicked?.Invoke(planetData);
+            });
+        } else
+        {
+            teleportButton.gameObject.SetActive(false);
+        }
+       
     }
 }

@@ -7,6 +7,8 @@ public class PlanetListController
 
     private CameraController cameraController;
 
+    private IEntityController currentEntityController;
+
     public PlanetListController(PlanetListView view, CameraController cameraController)
     {
         this.view = view;
@@ -21,15 +23,28 @@ public class PlanetListController
         view.Init();
     }
 
-    public void OpenView(EntityModel entityModel)
+    public void OpenView(EntityModel entityModel, IEntityController entityController)
     {
+        currentEntityController = entityController;
         // Tell the view to populate the scroll list before showing it
         if (entityModel != null)
         {
-            view.InitalizeList(entityModel.OwnedPlanets, HandlePlanetClicked);
+            view.InitalizeList(entityModel.OwnedPlanets, HandlePlanetClicked, HandleTeleportClicked);
         }
 
         GameScreenManager.Push(view);
+    }
+
+    private void HandleTeleportClicked(PlanetData planet)
+    {
+        if (planet.CurrentHex != null)
+        {
+            if (currentEntityController != null)
+            {
+                currentEntityController.GetView().Move(planet.CurrentHex.WorldPosition, 30);
+                CloseView();
+            }
+        }
     }
 
     // Teleport to the planet's location on the map and close the menu

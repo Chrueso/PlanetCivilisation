@@ -227,4 +227,15 @@ public class EntityModel
             OnResourcesChanged?.Invoke();
         }
     }
+
+    public int GetShipTotal()
+    {
+        int total = 0;
+        foreach (var ship in Ships)
+        {
+            total += ship.Value;
+        }
+
+        return total;
+    }
 }

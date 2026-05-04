@@ -9,6 +9,7 @@ public class TurnManager
 {
     private GameConfigSO gameConfig;
     private int currentTurn = 0;
+    public int CurrentTurn => currentTurn;
     private FactionType currentTurnFaction = FactionType.Nothing;
     private int turnIndex = -1; 
     private List<FactionType> turnOrder = new List<FactionType>();
@@ -16,14 +17,16 @@ public class TurnManager
     private IEntityController currEntityController = null;
     private List<IEntityController> entityControllerOrder = new List<IEntityController>();
 
+    private WinScreenView winScreenView;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
-    public TurnManager(GameConfigSO gameConfig)
+    public TurnManager(GameConfigSO gameConfig, WinScreenView winScreenView)
     {
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
         this.gameConfig = gameConfig;
+        this.winScreenView = winScreenView;
     }
 
     public void HandleGameStart(GameStartEvent gameStartEvent)
@@ -95,7 +98,6 @@ public class TurnManager
         currentTurn++;
         if (currentTurn >= gameConfig.MaxTurns)
         {
-            SceneManager.LoadScene("MainMenu");
             IEntityController winner = null;
             int binner = 0;
             foreach (var thingy in entityControllerOrder)
@@ -107,6 +109,8 @@ public class TurnManager
                     winner = thingy;
                 }
             }
+            winScreenView.ShowWinner(winner); 
+            GameScreenManager.Push(winScreenView);
             return;
         }
         turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 

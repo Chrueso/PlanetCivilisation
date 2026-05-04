@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private StationShipMenuView stationShipMenuView;
     [SerializeField] private TradeMenuView tradeMenuView;
     [SerializeField] private PlayerInfoView playerInfoView;
+    [SerializeField] private WinScreenView winScreenView;
 
     // runtime
     private PlanetGenerator planetGenerator;
@@ -126,7 +127,7 @@ public class GameManager : MonoBehaviour
         objIconScreenshotter = new ObjIconScreenshotter(screenshotCamera, screenshotRenderTexture);
         planetGenerator = new PlanetGenerator(shipDatabase, planetVisualPresets, planetPrefab, gameConfig, objIconScreenshotter);
         mapGenerator = new MapGenerator(planetGenerator);
-        turnManager = new TurnManager(gameConfig);
+        turnManager = new TurnManager(gameConfig, winScreenView);
         battleManager = new BattleManager(shipDatabase,battleVisualController);
         commandInvoker = new CommandInvoker();
         diplomacySystem = new();
@@ -151,6 +152,7 @@ public class GameManager : MonoBehaviour
         playerInfoController = new(playerInfoView);
         hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController, playerInfoController);
         hudController.EnableDebug();
+        winScreenView.Init(turnManager);
         
         TryRegisterDisposable(settingsController, planetListController, tradeMenuController, hudController, playerInfoController);
     }

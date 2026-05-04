@@ -40,7 +40,7 @@ public class PlanetListView : ScreenBase
         }
     }
 
-    public void InitalizeList(HashSet<PlanetData> ownedPlanets, Action<PlanetData> onPlanetClicked)
+    public void InitalizeList(HashSet<PlanetData> ownedPlanets, Action<PlanetData> onPlanetClicked, Action<PlanetData> onTeleportToPlanetClicked)
     {
         // Destroy old UI rows
         foreach (var row in activeRows)
@@ -53,7 +53,7 @@ public class PlanetListView : ScreenBase
         foreach (PlanetData planet in ownedPlanets)
         {
             PlanetListElement row = Instantiate(planetListElement, layoutGroup);
-            row.Init(planet, onPlanetClicked); // Fill it with data
+            row.Init(planet, onPlanetClicked, onTeleportToPlanetClicked); // Fill it with data
             activeRows.Add(row.gameObject);
         }
     }
