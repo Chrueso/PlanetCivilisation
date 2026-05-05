@@ -42,6 +42,7 @@ public class WinScreenView : ScreenBase
 
     private void OnReturnButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         SceneManager.LoadScene("MainMenu");
     }
 }

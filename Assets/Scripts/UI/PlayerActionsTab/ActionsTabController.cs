@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System;
-using System.Linq;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class ActionsTabController : IDisposable
 {
@@ -88,17 +86,20 @@ public class ActionsTabController : IDisposable
 
     public void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         gridInteractionController.UnselectHex();
     }
 
     public void HandleHexSelected(GridHex h)
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.clickOnHex, 0.5f);
         this.selectedHex = h;
         OpenView();
     }
 
     public void HandleInfoButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         if (selectedHex.Occupant != null)
         {
             infoMenuView.UpdateInfo(selectedHex.Occupant);
@@ -108,6 +109,7 @@ public class ActionsTabController : IDisposable
 
     private void HandleMoveButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.moveShipButton, 0.5f);
         if (entityController != null && entityController.TryMove(selectedHex))
         {
             CloseView();
@@ -117,6 +119,7 @@ public class ActionsTabController : IDisposable
     private void HandleMoveScoutButtonClicked()
     {
         if (entityController == null) return;
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.moveShipButton, 0.5f);
         EntityScoutShipView ssInstance = scoutShipPool.GetScoutShipInstance();
         ssInstance.SetPos(entityController.GetView().transform.position);
         if (entityController.TryMoveScoutShip(selectedHex, ssInstance))
@@ -130,7 +133,7 @@ public class ActionsTabController : IDisposable
     private void HandleColonizeButtonClicked()
     {
         if (entityController == null) return;
-
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.colonizeButton, 0.5f);
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             if (entityController.TryColonize(planet))
@@ -143,6 +146,7 @@ public class ActionsTabController : IDisposable
 
     private void HandleAttackButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.attackButton, 0.5f);
         if (entityController != null && selectedHex.Occupant is PlanetData planet)
             if (entityController.TryAttack(planet)) CloseView();
     }
@@ -150,17 +154,20 @@ public class ActionsTabController : IDisposable
 
     private void HandleDiplomacyButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         if (entityController != null && selectedHex.Occupant is PlanetData planet)
             tradeMenuController.OpenView(entityController.GetModel(), planet);
     }
 
     private void HandleStructuresButtonClicked()
     {
+        
         structuresController.OpenView(entityController);
     }
 
     private void HandleBuildButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet)
         {
             // Only allow trading with AI controlled planets (Not player, not empty)
@@ -177,6 +184,7 @@ public class ActionsTabController : IDisposable
 
     private void HandleStationShipsButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         if (selectedHex.Occupant != null && selectedHex.Occupant is PlanetData planet && entityController != null)
         {
             stationShipMenuController.OpenView(planet, entityController);

@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameConfigSO gameConfig;
     [SerializeField] private Camera screenshotCamera;
     [SerializeField] private RenderTexture screenshotRenderTexture;
+    [SerializeField] private AudioLibrary audioLibrary;
+    public static AudioLibrary audioLib;
 
     [Header("Mono Controllers")]
     [SerializeField] private CameraController cameraController;
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
+        audioLib = audioLibrary;
         HUDEntityChangeBinding = new EventBinding<HUDEntityChangeEvent>(HandleHUDEntityChange);
         EventBus<HUDEntityChangeEvent>.Register(HUDEntityChangeBinding);
 

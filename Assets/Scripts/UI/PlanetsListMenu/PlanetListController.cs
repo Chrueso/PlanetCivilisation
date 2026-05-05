@@ -59,6 +59,7 @@ public class PlanetListController
 
     public void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         GameScreenManager.Pop();
     }
 }

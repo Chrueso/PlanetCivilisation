@@ -113,6 +113,7 @@ public class TradeMenuController
 
     public void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         GameScreenManager.Pop();
         currentPlanet = null;
         planetOwnerAI = null;
@@ -124,6 +125,7 @@ public class TradeMenuController
     private void HandleTradeAmountChange(int delta)
     {
         Debug.Log(delta);
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         /*
         ResourceType playerGivesType = view.GetPlayerTradeResource();
         float exchangeRate = 1.0f;
@@ -161,6 +163,7 @@ public class TradeMenuController
 
     private void HandleGiftAmountChange(int delta)
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         currentGiftGiveAmount += delta;
         ResourceType selectedGiftResource = view.GetPlayerGiftResource();
         int maxAffordable = playerModel != null && playerModel.Resources.TryGetValue(selectedGiftResource, out int inv) ? inv : 0;
@@ -228,7 +231,7 @@ public class TradeMenuController
     private void TryExecuteTrade()
     {
         //if (playerModel == null || currentTargetAI == null) return;
-
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         ResourceType pGiveType = pResourceType;
         int pGiveAmount = currentTradeGiveAmount;    
         
@@ -263,7 +266,7 @@ public class TradeMenuController
     private void TryExecuteGift(ResourceType type)
     {
         if (playerModel == null || currentPlanet == null || currentGiftGiveAmount <= 0) return;
-
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         ResourceType giftType = type;
 
         playerModel.TakeResource(giftType, currentGiftGiveAmount);
@@ -280,7 +283,7 @@ public class TradeMenuController
     private void TryExecutePact(PactType pactType)
     {
         if (currentPlanet == null) return;
-
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         // Apply pact directly to the selected planet
         diplomacySystem.Agreement(currentPlanet, pactType);
         

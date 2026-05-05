@@ -36,12 +36,14 @@ public class StationShipMenuController
 
     private void HandleStationShipElementClicked(ShipType shipType)
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.stationShip, 0.5f);
         entityController.TryStationShip(planet, shipType, 1);
         view.UpdateView(planet);
     }
 
     public void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         GameScreenManager.Pop();
         view.ClearPreviousElements();
     }

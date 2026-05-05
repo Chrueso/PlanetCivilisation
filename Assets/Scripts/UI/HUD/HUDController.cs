@@ -100,6 +100,7 @@ public class HUDController : IDisposable
 
     private void OpenPlayerInfo()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         playerInfoController.OpenView(entityModel);
         Debug.Log("HI");
     }
@@ -118,22 +119,25 @@ public class HUDController : IDisposable
 
     private void HandleSettingsButtonClicked()
     {
-       settingsController.OpenView();
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
+        settingsController.OpenView();
     }
 
     private void HandlePlanetListButtonClicked()
     {
-
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         planetListController.OpenView(entityModel, entityController);
     }
 
     private void HandleHomeShipButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         cameraController.MoveCamera(entityModel.CurrentHex.WorldPosition);
     }
 
     private void HandleEndTurnButtonClicked()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         if (playerController == null) return;
         playerController.TryEndTurn();
     }
@@ -148,6 +152,7 @@ public class HUDController : IDisposable
 
     private void ZoomButtonClicked(bool zoom)
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general);
         if (zoom)
         {
             cameraController.ZoomIn();

@@ -32,6 +32,7 @@ public class BuildMenuController
 
     public void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         GameScreenManager.Pop();
     }
 
@@ -41,6 +42,7 @@ public class BuildMenuController
 
         if (entityController.TryBuildStructure(currentPlanet, structureType))
         {
+            AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.buildButton, 0.5f);
             CloseView();
         }
         else
