@@ -4413,6 +4413,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5805633844693602110, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
+      propertyPath: gridInteraction
+      value: 
+      objectReference: {fileID: 7507562936090818501}
+    - target: {fileID: 5805633844693602110, guid: c95b6f944d9b0734d966a9a08e2ca8df, type: 3}
       propertyPath: orthographicPanning
       value: 1
       objectReference: {fileID: 0}

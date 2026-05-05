@@ -8,6 +8,7 @@ public class GridHex : IHideable
     public Vector3Int GridPositionCube { get; private set; }
     public Vector3 WorldPosition { get; private set; }
     public IGridHexObject Occupant;
+    public EntityView OccupyingEntity;
     public GridHexView View;
     public bool IsHiddenForPlayer = false;
     public FactionType OccupyingFaction = FactionType.Nothing;
@@ -44,6 +45,7 @@ public class GridHex : IHideable
         View.HideFog(this);
 
         if (Occupant != null) Occupant.Show();
+        if (OccupyingEntity!=null) OccupyingEntity.Show();
     }
 
     public void Hide()
@@ -51,6 +53,17 @@ public class GridHex : IHideable
         IsHiddenForPlayer = true;
         View.ShowFog();
         if (Occupant != null) Occupant.Hide();
+        if (OccupyingEntity != null) OccupyingEntity.Hide();
+    }
+
+    public void EntityLanded(EntityView view)
+    {
+        OccupyingEntity = view;
+    }
+
+    public void EntityLeft()
+    {
+        OccupyingEntity = null;
     }
 
     public void ShowHighlight(Color color)

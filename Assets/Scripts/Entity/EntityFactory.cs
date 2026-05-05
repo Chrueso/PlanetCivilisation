@@ -60,7 +60,7 @@ public class EntityFactory
 
         EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType, gameConfig);
         model.CurrentHex = homePlanet.CurrentHex;
-
+        
         EntityView viewInstance = entityView;
 
         if (factionType == FactionType.DemiHuman)
@@ -72,6 +72,8 @@ public class EntityFactory
         }
 
         EntityView view = Object.Instantiate(viewInstance);
+        model.CurrentHex.EntityLanded(view);
+        model.CurrentHex.Hide();
 
         Vector3 spawnPos = homePlanet.CurrentHex.WorldPosition;
         spawnPos.y = model.yValue;

@@ -123,6 +123,7 @@ public class HUDController : IDisposable
 
     private void HandlePlanetListButtonClicked()
     {
+
         planetListController.OpenView(entityModel, entityController);
     }
 

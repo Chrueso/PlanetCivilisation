@@ -28,7 +28,7 @@ public class GridInteractionController : MonoBehaviour
     public void Init(CameraController cameraController)
     {
         TouchscreenHandler.FingerDownCallback += OnFingerDown;
-        TouchscreenHandler.FingerUpCallback += OnSelectGrid;
+        //TouchscreenHandler.FingerUpCallback += OnSelectGrid;
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
@@ -40,7 +40,7 @@ public class GridInteractionController : MonoBehaviour
     private void OnDisable()
     {
         TouchscreenHandler.FingerDownCallback -= OnFingerDown;
-        TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
+        //TouchscreenHandler.FingerUpCallback -= OnSelectGrid;
         EventBus<GameStartEvent>.Deregister(gameStartBinding);
     }
 
@@ -97,7 +97,7 @@ public class GridInteractionController : MonoBehaviour
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(touchInfo.Current.touchId);
     }
 
-    private void OnSelectGrid(object sender, TouchInfo touchInfo)
+    public void OnSelectGrid(object sender, TouchInfo touchInfo)
     {
         if (mapGrid == null)
         {
@@ -105,7 +105,7 @@ public class GridInteractionController : MonoBehaviour
             return;
         }
         if (cameraController.CameraMoving) return;
-        if (touchStartedOnUI) return;
+        if (cameraController.touchStartedOnUI) return;
 
         Ray ray = cam.ScreenPointToRay(touchInfo.ScreenPos);
 

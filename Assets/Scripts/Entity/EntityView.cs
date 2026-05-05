@@ -2,8 +2,13 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
-public class EntityView : MonoBehaviour
+public class EntityView : MonoBehaviour, IHideable
 {
+    public void Hide()
+    {
+        GetComponentInChildren<Transform>().gameObject.SetActive(false);
+    }
+
     public Sequence Move(Vector3 position, float modelYValue)
     {
         Vector3 targetPos = new Vector3(position.x, modelYValue, position.z);
@@ -13,5 +18,10 @@ public class EntityView : MonoBehaviour
         return DOTween.Sequence()
             .Append(transform.DORotateQuaternion(targetRotation, 0.3f).SetEase(Ease.InOutSine))
             .Append(transform.DOMove(targetPos, 1f).SetEase(Ease.InOutSine));
+    }
+
+    public void Show()
+    {
+        GetComponentInChildren<Transform>().gameObject.SetActive(true);
     }
 }

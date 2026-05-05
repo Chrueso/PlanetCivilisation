@@ -41,7 +41,7 @@ public class PlanetListController
         {
             if (currentEntityController != null)
             {
-                currentEntityController.GetView().Move(planet.CurrentHex.WorldPosition, 30);
+                currentEntityController.TryMove(planet.CurrentHex);
                 CloseView();
             }
         }

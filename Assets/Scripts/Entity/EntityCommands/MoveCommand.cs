@@ -33,6 +33,9 @@ public class MoveCommand : ICommand
 
         entityModel.RemoveAP(1);
         entityModel.CurrentHex = targetHex;
+        originHex.EntityLeft();
+        targetHex.EntityLanded(entityView);
+
         if (entityModel.CurrentHex.Occupant is PlanetData)
         {
             entityModel.AddPlanetDiscovery(entityModel.CurrentHex.Occupant as PlanetData);

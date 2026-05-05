@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private bool orthographicPanning = false;
+    [SerializeField] private GridInteractionController gridInteraction;
 
     // can hardcode for now since map size is fixed
     private Vector2 minBounds = Vector2.zero;
@@ -20,7 +21,7 @@ public class CameraController : MonoBehaviour
     public Vector3 CurrPos { get; private set; }
     private float z = 0f;
 
-    private bool touchStartedOnUI = false;
+    public bool touchStartedOnUI = false;
 
     private EventBinding<GameStartEvent> gameStartBinding;
 
@@ -159,6 +160,7 @@ public class CameraController : MonoBehaviour
         {
             CameraMoving = true;
         }
+        
     }
 
     private void PlayerFingerRelease(object sender, TouchInfo e)
@@ -166,6 +168,7 @@ public class CameraController : MonoBehaviour
         if (!eventsEnabled) return;
         startingPos = CameraInstance.ScreenToWorldPoint(e.ScreenPos);
         CurrPos = new Vector3(CameraInstance.transform.position.x, 55, CameraInstance.transform.position.z);
+        gridInteraction.OnSelectGrid(sender, e);
         CameraMoving = false;
         touchStartedOnUI = EventSystem.current.IsPointerOverGameObject(e.Current.touchId);
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameConfigSO
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigSO
   MaxTurns: 30
-  MaxAP: 50
+  MaxAP: 4
   MaxPlanetsNeeded: 5
   MinWorkerShipNeededForColonize: 1
   MaxStationedWorkerShips: 10
