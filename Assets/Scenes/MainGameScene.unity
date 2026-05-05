@@ -11445,6 +11445,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1698070666}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: entityViewIConst
+      value: 
+      objectReference: {fileID: 4940589599925654052, guid: 9090100298890d246a11e00dc542b21f, type: 3}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: screenshotCamera
       value: 
       objectReference: {fileID: 1991127603}
@@ -11460,6 +11464,10 @@ PrefabInstance:
       propertyPath: entityScoutShipPool
       value: 
       objectReference: {fileID: 89480982}
+    - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
+      propertyPath: entityViewDemihuman
+      value: 
+      objectReference: {fileID: 9179279007696645999, guid: 0d27bb9324a131e40897242b4669d34f, type: 3}
     - target: {fileID: 1766306238438235574, guid: c2d1bbdef64f49b4ab7a8c7ee0b0e843, type: 3}
       propertyPath: stationShipMenuView
       value: 

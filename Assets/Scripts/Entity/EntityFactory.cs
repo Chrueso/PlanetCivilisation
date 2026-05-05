@@ -4,6 +4,8 @@ using UnityEngine;
 public class EntityFactory 
 {
     private EntityView entityView;
+    private EntityView entityViewDemihuman;
+    private EntityView entityViewIC;
     private CommandInvoker commandInvoker;
     private TurnManager turnManager;
     private BattleManager battleManager;
@@ -15,10 +17,12 @@ public class EntityFactory
 
     ShipDatabaseSO shipDatabase;
 
-    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig, Crafter crafter) //We want different ship view for player and the ai so maybe a database of SOs later?
+    public EntityFactory(ShipDatabaseSO shipDatabase, EntityView entityView, EntityView entityViewDemi, EntityView entityViewIC, CommandInvoker commandInvoker, TurnManager turnManager, BattleManager battleManager, DiplomacySystem diplomacySystem, GameConfigSO gameConfig, Crafter crafter) //We want different ship view for player and the ai so maybe a database of SOs later?
     {
         this.shipDatabase = shipDatabase;
         this.entityView = entityView;
+        this.entityViewDemihuman = entityViewDemi;
+        this.entityViewIC = entityViewIC;
         this.commandInvoker = commandInvoker;
         this.turnManager = turnManager;
         this.battleManager = battleManager;
@@ -57,7 +61,17 @@ public class EntityFactory
         EntityModel model = new EntityModel(shipDatabase, homePlanet, factionType, gameConfig);
         model.CurrentHex = homePlanet.CurrentHex;
 
-        EntityView view = Object.Instantiate(entityView);
+        EntityView viewInstance = entityView;
+
+        if (factionType == FactionType.DemiHuman)
+        {
+            viewInstance = entityViewDemihuman;
+        } else if (factionType == FactionType.IntelligentConstruct)
+        {
+            viewInstance = entityViewIC;
+        }
+
+        EntityView view = Object.Instantiate(viewInstance);
 
         Vector3 spawnPos = homePlanet.CurrentHex.WorldPosition;
         spawnPos.y = model.yValue;

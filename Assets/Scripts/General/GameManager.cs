@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     [Header("Views")]
     [SerializeField] private GameObject planetPrefab;
     [SerializeField] private EntityView entityView;
+    [SerializeField] private EntityView entityViewDemihuman;
+    [SerializeField] private EntityView entityViewIConst;
     [SerializeField] private List<PlanetVisualTypesSO> planetVisualPresets;
 
     [Header("UI Views")]
@@ -133,7 +135,7 @@ public class GameManager : MonoBehaviour
         diplomacySystem = new();
         crafterSystem = new(structureRecipes);
         AudioService.SetAudioInstance(audioSystem);
-        entityFactory = new EntityFactory(shipDatabase, entityView, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig, crafterSystem);
+        entityFactory = new EntityFactory(shipDatabase, entityView, entityViewDemihuman, entityViewIConst, commandInvoker, turnManager, battleManager, diplomacySystem, gameConfig, crafterSystem);
 
         TryRegisterDisposable(
             planetGenerator,
