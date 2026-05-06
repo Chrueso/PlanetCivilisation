@@ -55,8 +55,8 @@ public class TradeMenuController
         view.OnGiftResourceDropdownChanged = RefreshView;
 
         // Pact bindings
-        view.OnNAPClicked = () => TryExecutePact(PactType.NAP);
-        view.OnFCPClicked = () => TryExecutePact(PactType.FCP);
+        view.OnNAPClicked += TryExecutePact;
+        view.OnFCPClicked += TryExecutePact;
         InitializeDropdowns();
     }
 
@@ -220,7 +220,7 @@ public class TradeMenuController
         bool hasInvGift = playerModel.Resources.TryGetValue(giftGiveType, out int pgInv) && pgInv >= currentGiftGiveAmount;
 
         // PACTS 
-        bool canNAP = rel >= RelationshipLevel.INDIFFERENT && !currentPlanet.HasNAPact; 
+        bool canNAP = rel >= RelationshipLevel.HOSTILE && !currentPlanet.HasNAPact; 
         bool canFCP = rel == RelationshipLevel.FRIENDLY; 
 
         // Update UI
@@ -282,6 +282,7 @@ public class TradeMenuController
 
     private void TryExecutePact(PactType pactType)
     {
+        Debug.Log("MOSHI MOSHI");
         if (currentPlanet == null) return;
         AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         // Apply pact directly to the selected planet

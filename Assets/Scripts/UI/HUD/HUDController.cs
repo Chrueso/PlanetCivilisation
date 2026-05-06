@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class HUDController : IDisposable
@@ -16,6 +15,7 @@ public class HUDController : IDisposable
     //private TradeMenuController tradeMenuController;
 
     private EventBinding<GameStartEvent> gameStartBinding;
+    private EventBinding<TurnChangeEvent> turnChangeEventBinding;
 
     //Debug
     private int currentEntityIndex = 0;
@@ -36,6 +36,8 @@ public class HUDController : IDisposable
 
         gameStartBinding = new EventBinding<GameStartEvent>(HandleGameStart);
         EventBus<GameStartEvent>.Register(gameStartBinding);
+        turnChangeEventBinding = new EventBinding<TurnChangeEvent>(OnTurnChange);
+        EventBus<TurnChangeEvent>.Register(turnChangeEventBinding);
     }
 
     private void HandleGameStart(GameStartEvent gameStartEvent)
@@ -58,6 +60,15 @@ public class HUDController : IDisposable
             allAIModels.Add(ai.GetModel()); // Gather EntityModels specifically for Trade Menu
         }
     }
+
+    private void OnTurnChange(TurnChangeEvent turn)
+    {
+        if (view == null) return;
+        view.UpdateTurnsSignal(turn.CurrentTurnFaction);
+    }
+
+    
+
 
     public void ConnectView()
     {

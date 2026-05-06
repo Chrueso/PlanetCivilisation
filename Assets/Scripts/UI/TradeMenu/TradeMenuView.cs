@@ -60,8 +60,8 @@ public class TradeMenuView : ScreenBase
     public Action OnGiftResourceDropdownChanged;
     public Action<ResourceType> OnConfirmGiftClicked;
 
-    public Action OnNAPClicked;
-    public Action OnFCPClicked;
+    public Action<PactType> OnNAPClicked;
+    public Action<PactType> OnFCPClicked;
 
     private void OnEnable()
     {
@@ -86,8 +86,8 @@ public class TradeMenuView : ScreenBase
         PlayerGiftDropdown?.onValueChanged.AddListener((val) => OnGiftResourceDropdownChanged?.Invoke());
 
         // Pacts
-        NAPButton?.onClick.AddListener(() => OnNAPClicked?.Invoke());
-        FCPButton?.onClick.AddListener(() => OnFCPClicked?.Invoke());
+        NAPButton.onClick.AddListener(() => { Debug.Log("FISH"); OnNAPClicked?.Invoke(PactType.NAP); });
+        FCPButton.onClick.AddListener(() => OnFCPClicked?.Invoke(PactType.FCP));
     }
 
     private void OnDisable()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e86616bebfb0e744a30270fe0a24b0b, type: 3}
   m_Name: GameConfigSO
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigSO
-  MaxTurns: 30
+  MaxTurns: 10
   MaxAP: 4
   MaxPlanetsNeeded: 5
   MinWorkerShipNeededForColonize: 1
@@ -27,7 +27,7 @@ MonoBehaviour:
   MaxHeldScoutShips: 10
   MaxHeldAssaultShips: 10
   StartingResourcesAmount: 10
-  StartingShipsAmount: 10
+  StartingShipsAmount: 1
   AssaultShipAttackValue: 1
   WorkerShipEfficacyValue: 1
   ScoutShipRangeValue: 10

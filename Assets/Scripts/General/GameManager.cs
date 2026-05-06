@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
 
         //Start first turn
         turnManager.ChangeTurn();
+        AudioService.CurrentAudioInstance.PlayMusic(audioLib.BGM);
     }
 
     private void CreateSystems()
@@ -154,7 +155,7 @@ public class GameManager : MonoBehaviour
         settingsController = new SettingsController(settingsView);
         planetListController = new PlanetListController(planetListView, cameraController);
         tradeMenuController = new TradeMenuController(tradeMenuView,diplomacySystem);
-        playerInfoController = new(playerInfoView);
+        playerInfoController = new(playerInfoView, turnManager);
         hudController = new HUDController(hudView, cameraController, planetListController, settingsController, tradeMenuController, playerInfoController);
         hudController.EnableDebug();
         winScreenView.Init(turnManager);
@@ -282,5 +283,7 @@ public class GameManager : MonoBehaviour
     {
         SetActivePlayer(HUDEntityChangeEvent.NewEntity);
     }
+
+
 
 }

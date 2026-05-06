@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Collections;
 
 public class HUDView : ScreenBase
 {
@@ -16,6 +17,8 @@ public class HUDView : ScreenBase
 
     public Button ZoomIn;
     public Button ZoomOut;
+
+    [SerializeField] public TextMeshProUGUI CurrTurnText;
 
     //public TMP_Text CurrentTurnText;
     //public FactionWidget FactionWidget;
@@ -32,6 +35,30 @@ public class HUDView : ScreenBase
         CurrentAPText.text = $"{currentAP}/{maxAP} AP";
     }
 
+    public void UpdateTurnsSignal(FactionType currentTurn)
+    {
+        if (currentTurn == FactionType.Human)
+        {
+            StartCoroutine(ShowText());
+        }
+        else
+        {
+            string displayText = $"CURRENT TURN: {currentTurn}\n(CURRENTLY NOT YOUR TURN)";
+            CurrTurnText.text = displayText;
+            CurrTurnText.enabled = true;
+        }
+    }
+    private IEnumerator ShowText()
+    {
+
+        string displayText = $"CURRENT TURN: {FactionType.Human}\n(YOUR TURN)";
+        CurrTurnText.text = displayText;
+        CurrTurnText.enabled = true;
+
+        yield return new WaitForSeconds(1f);       
+        CurrTurnText.enabled = false;
+
+    }
     public void HandleResources()
     {
         foreach (var widget in resourcesWidgets)

@@ -61,7 +61,7 @@ public class ShipBattleView : MonoBehaviour
                 line.LineColor = GetColor(factionType);
 
             laser.transform.LookAt(target.transform);
-
+            AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.laserSound, 0.5f);
             laser.transform.DOMove(target.transform.position, duration)
                 .OnComplete(() =>
                 {

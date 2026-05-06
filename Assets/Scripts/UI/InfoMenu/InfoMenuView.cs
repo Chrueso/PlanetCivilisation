@@ -39,7 +39,6 @@ public class InfoMenuView : ScreenBase
                 : "  None";
 
             PlanetName.text = planetData.PlanetName;
-
             Faction.ChangeText("Faction:", planetData.FactionType.ToString());
 
             Abundant.ChangeText("Abundant:", planetData.PlanetResource[ResourceClass.Abundant].ToString());

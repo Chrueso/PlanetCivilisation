@@ -174,12 +174,17 @@ public class DiplomacySystem
 
     public void Agreement(PlanetData planetData, PactType pactType)
     {
+        Debug.Log("GREETINGS");
         if (pactType == PactType.NAP)
         {
+            Debug.Log("IM FISH");
             if (planetData.HasNAPact) return;
-            if (planetData.Relations[player.GetModel().FactionType] >= RelationshipLevel.INDIFFERENT)
+            Debug.Log("HOW R U");
+            if (planetData.Relations[player.GetModel().FactionType] == RelationshipLevel.HOSTILE)
             {
+                Debug.Log("FINE WHY THANK YOU");
                 planetData.AddPact(PactType.NAP, currentFactionTurn);
+                planetData.RaiseAffection(currentFactionTurn, 21);
             }
         }
         else if (pactType == PactType.FCP)

@@ -68,8 +68,9 @@ public class AIBrain
                 bestAction.Execute(context);
 
                 await tcs.Task; //for actions/commands which have animation/duration/delay
+                Debug.Log($"<color=yellow>FIH</color>");
                 controller.OnActionComplete -= onComplete; 
-                await Awaitable.WaitForSecondsAsync(2f); //so the ai doesnt look like its fking sicko doing actions back to back with no delay
+                await Awaitable.WaitForSecondsAsync(1f); //so the ai doesnt look like its fking sicko doing actions back to back with no delay
             }
         }
 

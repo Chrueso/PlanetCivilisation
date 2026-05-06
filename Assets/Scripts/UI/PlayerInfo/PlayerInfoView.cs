@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class PlayerInfoView : ScreenBase
 {
     [SerializeField] private Button closeButton;
+    [SerializeField] private InfoElements turns;
     [SerializeField] private InfoElements faction;
     [SerializeField] private InfoElements planetsOwned;
     [SerializeField] private InfoElements planetsDiscovered;
@@ -13,6 +14,7 @@ public class PlayerInfoView : ScreenBase
     [SerializeField] private InfoElements mpt;
     [SerializeField] private InfoElements rpt; 
     private EntityModel playerInfo;
+    private TurnManager turnManager;
 
     private void OnEnable()
     {
@@ -24,24 +26,27 @@ public class PlayerInfoView : ScreenBase
         closeButton.onClick.RemoveListener(CloseView);
     }
 
-    public void SetPlayer(EntityModel playerInfo)
+    public void SetPlayer(EntityModel playerInfo, TurnManager turnMan)
     {
         this.playerInfo = playerInfo;
+        this.turnManager = turnMan;
     }
 
     private void CloseView()
     {
+        AudioService.CurrentAudioInstance.PlayOneShot(GameManager.audioLib.general, 0.5f);
         GameScreenManager.Pop();
     }
 
     protected override void OnShow()
     {
+        turns.ChangeText("Turn:", turnManager.CurrentTurn.ToString());
         faction.ChangeText("Faction", playerInfo.FactionType.ToString());
         planetsOwned.ChangeText("Planets Owned:", playerInfo.OwnedPlanets.Count.ToString());
         planetsDiscovered.ChangeText("Planets Discovered:", playerInfo.DiscoveredPlanets.Count.ToString());
         assault.ChangeText("Assault Ships:", playerInfo.Ships.ContainsKey(ShipType.Attacker) ? playerInfo.Ships[ShipType.Attacker].ToString() : "0");
-        worker.ChangeText("Assault Ships:", playerInfo.Ships.ContainsKey(ShipType.Worker) ? playerInfo.Ships[ShipType.Worker].ToString() : "0");
-        scout.ChangeText("Assault Ships:", playerInfo.Ships.ContainsKey(ShipType.Scout) ? playerInfo.Ships[ShipType.Scout].ToString() : "0");
+        worker.ChangeText("Worker Ships:", playerInfo.Ships.ContainsKey(ShipType.Worker) ? playerInfo.Ships[ShipType.Worker].ToString() : "0");
+        scout.ChangeText("Scout Ships:", playerInfo.Ships.ContainsKey(ShipType.Scout) ? playerInfo.Ships[ShipType.Scout].ToString() : "0");
         int totalMetalGain = 0;
         int totalRationGain = 0;
         foreach (var planet in playerInfo.OwnedPlanets)

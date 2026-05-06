@@ -6,7 +6,7 @@ public class AIBuildShipAction : AIAction
 
     public override float CalculateUtility(AIContext context)
     {
-        if (context.IsOnOwnedPlanet)
+        if (context.IsOnOwnedPlanet && !context.CurrentPlanet.CheckPlanetShipyardActive())
         {
             int shipCount = context.Model.Ships[ShipType.Attacker] + context.Model.Ships[ShipType.Worker];
             int maxShipCount = context.GameConfig.MaxStationedAssaultShips + context.GameConfig.MaxStationedWorkerShips;

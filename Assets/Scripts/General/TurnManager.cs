@@ -95,7 +95,16 @@ public class TurnManager
 
     public void ChangeTurn()
     {
-        currentTurn++;
+        
+        turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 
+        var prevTurnFaction = currentTurnFaction;
+        currentTurnFaction = turnOrder[turnIndex];
+        currEntityController = entityControllerOrder[turnIndex];
+        if (currentTurnFaction == FactionType.Human)
+        {
+            currentTurn++;
+        }
+
         if (currentTurn >= gameConfig.MaxTurns)
         {
             IEntityController winner = null;
@@ -109,15 +118,10 @@ public class TurnManager
                     winner = thingy;
                 }
             }
-            winScreenView.ShowWinner(winner); 
+            winScreenView.ShowWinner(winner);
             GameScreenManager.Push(winScreenView);
             return;
         }
-        turnIndex = (turnIndex + 1) % turnOrder.Count; // increment index but loops around 
-        var prevTurnFaction = currentTurnFaction;
-        currentTurnFaction = turnOrder[turnIndex];
-        currEntityController = entityControllerOrder[turnIndex];
-
         Debug.Log($"Current turn: {currentTurnFaction}");
 
         EventBus<TurnChangeEvent>.Raise(new TurnChangeEvent
